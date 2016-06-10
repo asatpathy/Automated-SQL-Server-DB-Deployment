@@ -1,0 +1,12 @@
+
+
+Extract -- sqlpackage /Action:Extract /SourceServerName:EMETRIC-S3\DEV2008R2 /SourceDatabaseName:PortalAPIP /TargetFile:C:\Users\asatpathy\Desktop\localtestSQLServer\NewTests\LivePortalAPIP2016.dacpac
+
+Publish -- sqlpackage /Action:Publish /SourceFile:C:\Users\asatpathy\Desktop\localtestSQLServer\NewTests\LivePortalAPIP2016.dacpac /TargetServerName:localhost /TargetDatabaseName:PortalAPIP2016 /p:ExcludeObjectTypes=RoleMembership;Users /p:ScriptDatabaseOptions=False
+
+Check script with source as Dacpac -- sqlpackage /Action:Script /SourceFile:C:\Users\asatpathy\Desktop\localtestSQLServer\NewTests\LiveToLivetoCompare.dacpac /TargetFile:C:\Users\asatpathy\Desktop\localtestSQLServer\NewTests\LiveToLive.dacpac /OutputPath:C:\Users\asatpathy\Desktop\localtestSQLServer\NewTests\DacpactoDacpactoCompare.sql /TargetDatabaseName:newSQLPackage1
+
+Execute script -- sqlcmd -S localhost -d newSQLPackage1 -i C:\Users\asatpathy\Desktop\localtestSQLServer\NewTests\LivetoLive.sql
+
+Find data difference and generate script -- tablediff -sourceserver localhost -sourcedatabase newSQLpackage -sourcetable test1 -destinationserver localhost -destinationdatabase newSQLPackage1 
+-destinationtable test1 -f C:\Users\asatpathy\Desktop\localtestSQLServer\NewTests\diffScript.sql
