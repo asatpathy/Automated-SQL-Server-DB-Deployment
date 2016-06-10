@@ -27,9 +27,13 @@ class Application(Frame):
 
         self.WinAuthSrcVariable=BooleanVar()
         self.WinAuthSrcVariable.set(True)
-
         self.WinAuthTrgtVariable=BooleanVar()
         self.WinAuthTrgtVariable.set(True)
+
+        self.EncryptSrcVariable=BooleanVar()
+        self.EncryptSrcVariable.set(False)
+        self.EncryptTrgtVariable=BooleanVar()
+        self.EncryptTrgtVariable.set(False)
 
 
         #Create widgets ##########################################################
@@ -66,7 +70,6 @@ class Application(Frame):
         #Windows Authentication checkboxes
         self.WinAuthSrcCheckButton=Checkbutton(self,text="Source Windows Auth", var=self.WinAuthSrcVariable, command=self.SrcCredentials_Visibility)
         self.WinAuthSrcCheckButton.grid(row=3,column=0,sticky=W)
-
         self.WinAuthTrgtCheckButton=Checkbutton(self,text="Target Windows Auth", var=self.WinAuthTrgtVariable, command=self.TrgtCredentials_Visibility)
         self.WinAuthTrgtCheckButton.grid(row=3,column=2,sticky=W)
 
@@ -76,11 +79,17 @@ class Application(Frame):
         self.SourcePasswordLabel=Label(self, text="Source Password")
         self.SourcePasswordEntry=Entry(self, show="*")
 
-        # Label and Textbox for Target Credentials
+        #Label and Textbox for Target Credentials
         self.TargetUsernameLabel=Label(self, text="Target Username")
         self.TargetUsernameEntry=Entry(self)
         self.TargetPasswordLabel=Label(self, text="Target Password")
         self.TargetPasswordEntry=Entry(self, show="*")
+
+        #Encryption connection checkboxes
+        self.EncryptSrcCheckButton=Checkbutton(self,text="Source Encrypt Connection", var=self.EncryptSrcVariable)
+        self.EncryptSrcCheckButton.grid(row=6,column=0,sticky=W)
+        self.EncryptTrgtCheckButton=Checkbutton(self,text="Target Encrypt Connection", var=self.EncryptTrgtVariable)
+        self.EncryptTrgtCheckButton.grid(row=6,column=2,sticky=W)
 
         #Button for initiating the deployment
         self.ExecuteButton=Button(self,text="Compare & Deploy",command=self.execute_all)  #button click calls execute_all method
