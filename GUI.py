@@ -2,44 +2,43 @@ from tkinter import *
 # from tkinter.ttk import *
 import subprocess
 
-class Application(Frame):
 
+class Application(Frame):
     def __init__(self, master):
-        Frame.__init__(self,master)
+        Frame.__init__(self, master)
         self.grid()
         self.create_widgets()
 
     def create_widgets(self):
-        #Declare variables ######################################################
-        self.SourceServerString=StringVar()
-        self.SourceDatabaseString=StringVar()
+        # Declare variables ######################################################
+        self.SourceServerString = StringVar()
+        self.SourceDatabaseString = StringVar()
 
-        self.TargetServerString=StringVar()
-        self.TargetDatabaseString=StringVar()
+        self.TargetServerString = StringVar()
+        self.TargetDatabaseString = StringVar()
 
-        self.InformationString=StringVar()
+        self.InformationString = StringVar()
 
-        self.PreDeploymentQueryString=StringVar()
+        # self.PreDeploymentQueryString = StringVar()
 
-        self.ShellOutputPreDeploymentString=StringVar()
-        self.ShellOutputExtractString=StringVar()
-        self.ShellOutputPublishString=StringVar()
+        self.ShellOutputPreDeploymentString = StringVar()
+        self.ShellOutputExtractString = StringVar()
+        self.ShellOutputPublishString = StringVar()
 
-        self.WinAuthSrcVariable=BooleanVar()
+        self.WinAuthSrcVariable = BooleanVar()
         self.WinAuthSrcVariable.set(True)
-        self.WinAuthTrgtVariable=BooleanVar()
+        self.WinAuthTrgtVariable = BooleanVar()
         self.WinAuthTrgtVariable.set(True)
 
-        self.EncryptSrcVariable=BooleanVar()
+        self.EncryptSrcVariable = BooleanVar()
         self.EncryptSrcVariable.set(False)
-        self.EncryptTrgtVariable=BooleanVar()
+        self.EncryptTrgtVariable = BooleanVar()
         self.EncryptTrgtVariable.set(False)
 
-        self.SetDplyPropertyVariable=BooleanVar()
+        self.SetDplyPropertyVariable = BooleanVar()
         self.SetDplyPropertyVariable.set(False)
 
-
-        #Declare variables for CHECKBUTTONS of Scroll Options #####################################
+        # Declare variables for CHECKBUTTONS of Scroll Options #####################################
         ###########################################################################
         self.ChkButtonAllowDropBlockingAssemblies = BooleanVar()
         self.ChkButtonAllowIncompatiblePlatform = BooleanVar()
@@ -204,7 +203,7 @@ class Application(Frame):
         # ###########################################################################
 
 
-        #Declare variables for Values of ScrollOptions ENTRY/DROPDOWN #############################
+        # Declare variables for Values of ScrollOptions ENTRY/DROPDOWN #############################
         ###########################################################################
         self.ValueAllowDropBlockingAssemblies = StringVar()
         self.ValueAllowIncompatiblePlatform = StringVar()
@@ -370,7 +369,7 @@ class Application(Frame):
         # ###########################################################################
 
 
-        #Declare variables CHECKBUTTON for DoNotDropObjectType objects #########################
+        # Declare variables CHECKBUTTON for DoNotDropObjectType objects #########################
         ###########################################################################
         self.DoNotDropObjectTypesAggregates = BooleanVar()
         self.DoNotDropObjectTypesApplicationRoles = BooleanVar()
@@ -487,7 +486,7 @@ class Application(Frame):
         # ###########################################################################
 
 
-        #Declare variables CHECKHUTTON for ExcludeObjectType objects ##########################
+        # Declare variables CHECKHUTTON for ExcludeObjectType objects ##########################
         ###########################################################################
         self.ExcludeObjectTypesAggregates = BooleanVar()
         self.ExcludeObjectTypesApplicationRoles = BooleanVar()
@@ -609,70 +608,74 @@ class Application(Frame):
 
 
 
-########  Widgets  ######################################################################################
-#########################################################################################################
-        #Create widgets ###########################################################
-        #Label and Text Area for Pre-Deployment Script#############################
-        self.PreDeploymentLabel=Label(self,text="Enter Pre-deployment script")
-        self.PreDeploymentLabel.grid(row=0,column=0,sticky=W)
+        ########  Widgets  ######################################################################################
+        #########################################################################################################
+        # Create widgets ###########################################################
+        # Label and Text Area for Pre-Deployment Script#############################
+        self.PreDeploymentLabel = Label(self, text="Enter Pre-deployment script")
+        self.PreDeploymentLabel.grid(row=0, column=0, sticky=W)
 
-        self.PreDeploymentText=Text(self, width=40, height=5, wrap=WORD)
+        self.PreDeploymentText = Text(self, width=40, height=5, wrap=WORD)
         self.PreDeploymentText.grid(row=0, column=1, columnspan=2, sticky=W)
 
-        #Label and Textbox for Source Connection
-        self.SourceServerLabel=Label(self, text="Source Server")
-        self.SourceServerLabel.grid(row=1,column=0,sticky=W)
-        self.SourceServerEntry=Entry(self)
-        self.SourceServerEntry.grid(row=1,column=1,sticky=W)
+        self.emetricImage=PhotoImage(file="emetric.gif")
+        self.emetricImageLabel=Label(self,image=self.emetricImage)
+        self.emetricImageLabel.grid(row=0,column=3,sticky=W)
 
-        self.SourceDatabaseLabel=Label(self, text="Source Database")
-        self.SourceDatabaseLabel.grid(row=2,column=0,sticky=W)
-        self.SourceDatabaseEntry=Entry(self)
-        self.SourceDatabaseEntry.grid(row=2,column=1,sticky=W)
+        # Label and Textbox for Source Connection
+        self.SourceServerLabel = Label(self, text="Source Server")
+        self.SourceServerLabel.grid(row=1, column=0, sticky=W)
+        self.SourceServerEntry = Entry(self)
+        self.SourceServerEntry.grid(row=1, column=1, sticky=W)
+
+        self.SourceDatabaseLabel = Label(self, text="Source Database")
+        self.SourceDatabaseLabel.grid(row=2, column=0, sticky=W)
+        self.SourceDatabaseEntry = Entry(self)
+        self.SourceDatabaseEntry.grid(row=2, column=1, sticky=W)
 
         # Label and Textbox for Target Connection
-        self.TargetServerLabel=Label(self, text="Target Server")
-        self.TargetServerLabel.grid(row=1,column=2,sticky=W)
-        self.TargetServerEntry=Entry(self)
-        self.TargetServerEntry.grid(row=1,column=3,sticky=W)
-        self.TargetServerEntry.insert(0,"localhost")
+        self.TargetServerLabel = Label(self, text="Target Server")
+        self.TargetServerLabel.grid(row=1, column=2, sticky=W)
+        self.TargetServerEntry = Entry(self)
+        self.TargetServerEntry.grid(row=1, column=3, sticky=W)
+        self.TargetServerEntry.insert(0, "localhost")
 
-        self.TargetDatabaseLabel=Label(self, text="Target Database")
-        self.TargetDatabaseLabel.grid(row=2,column=2,sticky=W)
-        self.TargetDatabaseEntry=Entry(self)
-        self.TargetDatabaseEntry.grid(row=2,column=3,sticky=W)
+        self.TargetDatabaseLabel = Label(self, text="Target Database")
+        self.TargetDatabaseLabel.grid(row=2, column=2, sticky=W)
+        self.TargetDatabaseEntry = Entry(self)
+        self.TargetDatabaseEntry.grid(row=2, column=3, sticky=W)
 
-        #Windows Authentication checkboxes
-        self.WinAuthSrcCheckButton=Checkbutton(self,text="Source Windows Auth", var=self.WinAuthSrcVariable, command=self.SrcCredentials_Visibility)
-        self.WinAuthSrcCheckButton.grid(row=3,column=0,sticky=W)
-        self.WinAuthTrgtCheckButton=Checkbutton(self,text="Target Windows Auth", var=self.WinAuthTrgtVariable, command=self.TrgtCredentials_Visibility)
-        self.WinAuthTrgtCheckButton.grid(row=3,column=2,sticky=W)
+        # Windows Authentication checkboxes
+        self.WinAuthSrcCheckButton = Checkbutton(self, text="Source Windows Auth", var=self.WinAuthSrcVariable, command=self.SrcCredentials_Visibility)
+        self.WinAuthSrcCheckButton.grid(row=3, column=0, sticky=W)
+        self.WinAuthTrgtCheckButton = Checkbutton(self, text="Target Windows Auth", var=self.WinAuthTrgtVariable, command=self.TrgtCredentials_Visibility)
+        self.WinAuthTrgtCheckButton.grid(row=3, column=2, sticky=W)
 
-        #Label and Textbox for Source Credentials
-        self.SourceUsernameLabel=Label(self, text="Source Username")
-        self.SourceUsernameEntry=Entry(self)
-        self.SourcePasswordLabel=Label(self, text="Source Password")
-        self.SourcePasswordEntry=Entry(self, show="*")
+        # Label and Textbox for Source Credentials
+        self.SourceUsernameLabel = Label(self, text="Source Username")
+        self.SourceUsernameEntry = Entry(self)
+        self.SourcePasswordLabel = Label(self, text="Source Password")
+        self.SourcePasswordEntry = Entry(self, show="*")
 
-        #Label and Textbox for Target Credentials
-        self.TargetUsernameLabel=Label(self, text="Target Username")
-        self.TargetUsernameEntry=Entry(self)
-        self.TargetPasswordLabel=Label(self, text="Target Password")
-        self.TargetPasswordEntry=Entry(self, show="*")
+        # Label and Textbox for Target Credentials
+        self.TargetUsernameLabel = Label(self, text="Target Username")
+        self.TargetUsernameEntry = Entry(self)
+        self.TargetPasswordLabel = Label(self, text="Target Password")
+        self.TargetPasswordEntry = Entry(self, show="*")
 
-        #Encryption connection checkboxes
-        self.EncryptSrcCheckButton=Checkbutton(self,text="Source Encrypt Connection", var=self.EncryptSrcVariable)
-        self.EncryptSrcCheckButton.grid(row=6,column=0,sticky=W)
-        self.EncryptTrgtCheckButton=Checkbutton(self,text="Target Encrypt Connection", var=self.EncryptTrgtVariable)
-        self.EncryptTrgtCheckButton.grid(row=6,column=2,sticky=W)
+        # Encryption connection checkboxes
+        self.EncryptSrcCheckButton = Checkbutton(self, text="Source Encrypt Connection", var=self.EncryptSrcVariable)
+        self.EncryptSrcCheckButton.grid(row=6, column=0, sticky=W)
+        self.EncryptTrgtCheckButton = Checkbutton(self, text="Target Encrypt Connection", var=self.EncryptTrgtVariable)
+        self.EncryptTrgtCheckButton.grid(row=6, column=2, sticky=W)
 
-        #Set Deployment Property default parameters
-        self.EncryptTrgtCheckButton=Checkbutton(self,text="Set Deployment Properties", var=self.SetDplyPropertyVariable, command=self.DplyScroll_Visibility)
-        self.EncryptTrgtCheckButton.grid(row=7,column=2,sticky=W)
+        # Set Deployment Property default parameters
+        self.EncryptTrgtCheckButton = Checkbutton(self, text="Set Deployment Properties", var=self.SetDplyPropertyVariable, command=self.DplyScroll_Visibility)
+        self.EncryptTrgtCheckButton.grid(row=7, column=2, sticky=W)
 
         # Button(self, text="Ok", command=self.print_variable_values).grid(row=20, column=1, sticky=W)
 
-        #Create Scrolling bar for Extract Properties################################
+        # Create Scrolling bar for Extract Properties################################
         ############################################################################
         # def ExtPrpWidgetsFunction():
         #     Checkbutton(ExtPrpCanvasFrame,var=self.ChkButtonAllowDropBlockingAssemblies).grid(row=0, column=0, sticky=W)
@@ -698,10 +701,10 @@ class Application(Frame):
         ############################################################################
 
 
-        #Create Scrolling bar for Deploy Properties#################################
+        # Create Scrolling bar for Deploy Properties#################################
         ############################################################################
         def DplyPrpWidgetsFunction():
-            #Checkbuttons, Labels and option menus #################################
+            # Checkbuttons, Labels and option menus #################################
             ########################################################################
             self.LblAllowDropBlockingAssemblies = Label(DplyPrpCanvasFrame, text="AllowDropBlockingAssemblies")
             self.LblAllowIncompatiblePlatform = Label(DplyPrpCanvasFrame, text="AllowIncompatiblePlatform")
@@ -781,7 +784,7 @@ class Application(Frame):
             self.LblVerifyCollationCompatibility = Label(DplyPrpCanvasFrame, text="VerifyCollationCompatibility")
             self.LblVerifyDeployment = Label(DplyPrpCanvasFrame, text="VerifyDeployment")
 
-            #Insert labels inside the grid ############################################################################################
+            # Insert labels inside the grid ############################################################################################
             self.LblAllowDropBlockingAssemblies.grid(row=0, column=1, sticky=W)
             self.LblAllowIncompatiblePlatform.grid(row=1, column=1, sticky=W)
             self.LblBackupDatabaseBeforeChanges.grid(row=2, column=1, sticky=W)
@@ -861,7 +864,7 @@ class Application(Frame):
             self.LblVerifyDeployment.grid(row=76, column=1, sticky=W)
 
             ###########################################################################################################################
-            #Declare and create DROPDOWNS   ###########################################################################################
+            # Declare and create DROPDOWNS   ###########################################################################################
             self.EnDisValueAllowDropBlockingAssemblies = OptionMenu(DplyPrpCanvasFrame, self.ValueAllowDropBlockingAssemblies, "True", "False")
             self.EnDisValueAllowIncompatiblePlatform = OptionMenu(DplyPrpCanvasFrame, self.ValueAllowIncompatiblePlatform, "True", "False")
             self.EnDisValueBackupDatabaseBeforeChanges = OptionMenu(DplyPrpCanvasFrame, self.ValueBackupDatabaseBeforeChanges, "True", "False")
@@ -947,7 +950,7 @@ class Application(Frame):
             self.EnDisValueVerifyCollationCompatibility = OptionMenu(DplyPrpCanvasFrame, self.ValueVerifyCollationCompatibility, "True", "False")
             self.EnDisValueVerifyDeployment = OptionMenu(DplyPrpCanvasFrame, self.ValueVerifyDeployment, "True", "False")
 
-            #Put DROPDOWNS inside Grid
+            # Put DROPDOWNS inside Grid
             self.EnDisValueAllowDropBlockingAssemblies.grid(row=0, column=2, sticky=W)
             self.EnDisValueAllowIncompatiblePlatform.grid(row=1, column=2, sticky=W)
             self.EnDisValueBackupDatabaseBeforeChanges.grid(row=2, column=2, sticky=W)
@@ -1026,84 +1029,83 @@ class Application(Frame):
             self.EnDisValueVerifyCollationCompatibility.grid(row=75, column=2, sticky=W)
             self.EnDisValueVerifyDeployment.grid(row=76, column=2, sticky=W)
 
-
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonAllowDropBlockingAssemblies, command=self.Enable_Disable_ScrollBarArtifacts).grid(row=0, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonAllowIncompatiblePlatform).grid(row=1, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonBackupDatabaseBeforeChanges).grid(row=2, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonBlockOnPossibleDataLoss).grid(row=3, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonBlockWhenDriftDetected).grid(row=4, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonCommandTimeout).grid(row=5, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonCommentOutSetVarDeclarations).grid(row=6, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonCompareUsingTargetCollation).grid(row=7, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonCreateNewDatabase).grid(row=8, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDeployDatabaseInSingleUserMode).grid(row=9, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDisableAndReenableDdlTriggers).grid(row=10, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDoNotAlterChangeDataCaptureObjects).grid(row=11, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDoNotAlterReplicatedObjects).grid(row=12, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDoNotDropObjectTypes).grid(row=13, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropConstraintsNotInSource).grid(row=14, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropDmlTriggersNotInSource).grid(row=15, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropExtendedPropertiesNotInSource).grid(row=16, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropIndexesNotInSource).grid(row=17, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropObjectsNotInSource).grid(row=18, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropPermissionsNotInSource).grid(row=19, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropRoleMembersNotInSource).grid(row=20, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonExcludeObjectTypes).grid(row=21, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonGenerateSmartDefaults).grid(row=22, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreAnsiNulls).grid(row=23, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreAuthorizer).grid(row=24, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreColumnCollation).grid(row=25, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreComments).grid(row=26, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreCryptographicProviderFilePath).grid(row=27,column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreDdlTriggerOrder).grid(row=28, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreDdlTriggerState).grid(row=29, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreDefaultSchema).grid(row=30, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreDmlTriggerOrder).grid(row=31, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreDmlTriggerState).grid(row=32, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreExtendedProperties).grid(row=33, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreFileAndLogFilePath).grid(row=34, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreFilegroupPlacement).grid(row=35, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreFileSize).grid(row=36, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreFillFactor).grid(row=37, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreFullTextCatalogFilePath).grid(row=38, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreIdentitySeed).grid(row=39, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreIncrement).grid(row=40, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreIndexOptions).grid(row=41, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreIndexPadding).grid(row=42, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreKeywordCasing).grid(row=43, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreLockHintsOnIndexes).grid(row=44, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreLoginSids).grid(row=45, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreNotForReplication).grid(row=46, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreObjectPlacementOnPartitionScheme).grid(row=47,column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnorePartitionSchemes).grid(row=48, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnorePermissions).grid(row=49, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreQuotedIdentifiers).grid(row=50, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreRoleMembership).grid(row=51, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreRouteLifetime).grid(row=52, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreSemicolonBetweenStatements).grid(row=53, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreTableOptions).grid(row=54, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreUserSettingsObjects).grid(row=55, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreWhitespace).grid(row=56, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreWithNocheckOnCheckConstraints).grid(row=57,column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreWithNocheckOnForeignKeys).grid(row=58, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIncludeCompositeObjects).grid(row=59, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIncludeTransactionalScripts).grid(row=60, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonNoAlterStatementsToChangeClrTypes).grid(row=61, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonPopulateFilesOnFilegroups).grid(row=62, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonRegisterDataTierApplication).grid(row=63, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonRunDeploymentPlanExecutors).grid(row=64, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptDatabaseCollation).grid(row=65, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptDatabaseCompatibility).grid(row=66, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptDatabaseOptions).grid(row=67, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptDeployStateChecks).grid(row=68, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptFileSize).grid(row=69, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptNewConstraintValidation).grid(row=70, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptRefreshModule).grid(row=71, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonStorage).grid(row=72, column=0, sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonTreatVerificationErrorsAsWarnings).grid(row=73, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonUnmodifiableObjectWarnings).grid(row=74, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonVerifyCollationCompatibility).grid(row=75, column=0,sticky=W)
-            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonVerifyDeployment).grid(row=76, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonAllowDropBlockingAssemblies, command=self.EnDisScrAllowDropBlockingAssemblies).grid(row=0, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonAllowIncompatiblePlatform, command=self.EnDisScrAllowIncompatiblePlatform).grid(row=1, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonBackupDatabaseBeforeChanges, command=self.EnDisScrBackupDatabaseBeforeChanges).grid(row=2, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonBlockOnPossibleDataLoss, command=self.EnDisScrBlockOnPossibleDataLoss).grid(row=3, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonBlockWhenDriftDetected, command=self.EnDisScrBlockWhenDriftDetected).grid(row=4, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonCommandTimeout, command=self.EnDisScrCommandTimeout).grid(row=5, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonCommentOutSetVarDeclarations, command=self.EnDisScrCommentOutSetVarDeclarations).grid(row=6, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonCompareUsingTargetCollation, command=self.EnDisScrCompareUsingTargetCollation).grid(row=7, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonCreateNewDatabase, command=self.EnDisScrCreateNewDatabase).grid(row=8, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDeployDatabaseInSingleUserMode, command=self.EnDisScrDeployDatabaseInSingleUserMode).grid(row=9, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDisableAndReenableDdlTriggers, command=self.EnDisScrDisableAndReenableDdlTriggers).grid(row=10, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDoNotAlterChangeDataCaptureObjects, command=self.EnDisScrDoNotAlterChangeDataCaptureObjects).grid(row=11, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDoNotAlterReplicatedObjects, command=self.EnDisScrDoNotAlterReplicatedObjects).grid(row=12, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDoNotDropObjectTypes, command=self.EnDisScrDoNotDropObjectTypes).grid(row=13, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropConstraintsNotInSource, command=self.EnDisScrDropConstraintsNotInSource).grid(row=14, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropDmlTriggersNotInSource, command=self.EnDisScrDropDmlTriggersNotInSource).grid(row=15, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropExtendedPropertiesNotInSource, command=self.EnDisScrDropExtendedPropertiesNotInSource).grid(row=16, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropIndexesNotInSource, command=self.EnDisScrDropIndexesNotInSource).grid(row=17, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropObjectsNotInSource, command=self.EnDisScrDropObjectsNotInSource).grid(row=18, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropPermissionsNotInSource, command=self.EnDisScrDropPermissionsNotInSource).grid(row=19, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonDropRoleMembersNotInSource, command=self.EnDisScrDropRoleMembersNotInSource).grid(row=20, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonExcludeObjectTypes, command=self.EnDisScrExcludeObjectTypes).grid(row=21, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonGenerateSmartDefaults, command=self.EnDisScrGenerateSmartDefaults).grid(row=22, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreAnsiNulls, command=self.EnDisScrIgnoreAnsiNulls).grid(row=23, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreAuthorizer, command=self.EnDisScrIgnoreAuthorizer).grid(row=24, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreColumnCollation, command=self.EnDisScrIgnoreColumnCollation).grid(row=25, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreComments, command=self.EnDisScrIgnoreComments).grid(row=26, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreCryptographicProviderFilePath, command=self.EnDisScrIgnoreCryptographicProviderFilePath).grid(row=27, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreDdlTriggerOrder, command=self.EnDisScrIgnoreDdlTriggerOrder).grid(row=28, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreDdlTriggerState, command=self.EnDisScrIgnoreDdlTriggerState).grid(row=29, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreDefaultSchema, command=self.EnDisScrIgnoreDefaultSchema).grid(row=30, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreDmlTriggerOrder, command=self.EnDisScrIgnoreDmlTriggerOrder).grid(row=31, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreDmlTriggerState, command=self.EnDisScrIgnoreDmlTriggerState).grid(row=32, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreExtendedProperties, command=self.EnDisScrIgnoreExtendedProperties).grid(row=33, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreFileAndLogFilePath, command=self.EnDisScrIgnoreFileAndLogFilePath).grid(row=34, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreFilegroupPlacement, command=self.EnDisScrIgnoreFilegroupPlacement).grid(row=35, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreFileSize, command=self.EnDisScrIgnoreFileSize).grid(row=36, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreFillFactor, command=self.EnDisScrIgnoreFillFactor).grid(row=37, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreFullTextCatalogFilePath, command=self.EnDisScrIgnoreFullTextCatalogFilePath).grid(row=38, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreIdentitySeed, command=self.EnDisScrIgnoreIdentitySeed).grid(row=39, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreIncrement, command=self.EnDisScrIgnoreIncrement).grid(row=40, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreIndexOptions, command=self.EnDisScrIgnoreIndexOptions).grid(row=41, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreIndexPadding, command=self.EnDisScrIgnoreIndexPadding).grid(row=42, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreKeywordCasing, command=self.EnDisScrIgnoreKeywordCasing).grid(row=43, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreLockHintsOnIndexes, command=self.EnDisScrIgnoreLockHintsOnIndexes).grid(row=44, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreLoginSids, command=self.EnDisScrIgnoreLoginSids).grid(row=45, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreNotForReplication, command=self.EnDisScrIgnoreNotForReplication).grid(row=46, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreObjectPlacementOnPartitionScheme, command=self.EnDisScrIgnoreObjectPlacementOnPartitionScheme).grid(row=47, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnorePartitionSchemes, command=self.EnDisScrIgnorePartitionSchemes).grid(row=48, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnorePermissions, command=self.EnDisScrIgnorePermissions).grid(row=49, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreQuotedIdentifiers, command=self.EnDisScrIgnoreQuotedIdentifiers).grid(row=50, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreRoleMembership, command=self.EnDisScrIgnoreRoleMembership).grid(row=51, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreRouteLifetime, command=self.EnDisScrIgnoreRouteLifetime).grid(row=52, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreSemicolonBetweenStatements, command=self.EnDisScrIgnoreSemicolonBetweenStatements).grid(row=53, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreTableOptions, command=self.EnDisScrIgnoreTableOptions).grid(row=54, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreUserSettingsObjects, command=self.EnDisScrIgnoreUserSettingsObjects).grid(row=55, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreWhitespace, command=self.EnDisScrIgnoreWhitespace).grid(row=56, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreWithNocheckOnCheckConstraints, command=self.EnDisScrIgnoreWithNocheckOnCheckConstraints).grid(row=57, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIgnoreWithNocheckOnForeignKeys, command=self.EnDisScrIgnoreWithNocheckOnForeignKeys).grid(row=58, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIncludeCompositeObjects, command=self.EnDisScrIncludeCompositeObjects).grid(row=59, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonIncludeTransactionalScripts, command=self.EnDisScrIncludeTransactionalScripts).grid(row=60, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonNoAlterStatementsToChangeClrTypes, command=self.EnDisScrNoAlterStatementsToChangeClrTypes).grid(row=61, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonPopulateFilesOnFilegroups, command=self.EnDisScrPopulateFilesOnFilegroups).grid(row=62, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonRegisterDataTierApplication, command=self.EnDisScrRegisterDataTierApplication).grid(row=63, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonRunDeploymentPlanExecutors, command=self.EnDisScrRunDeploymentPlanExecutors).grid(row=64, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptDatabaseCollation, command=self.EnDisScrScriptDatabaseCollation).grid(row=65, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptDatabaseCompatibility, command=self.EnDisScrScriptDatabaseCompatibility).grid(row=66, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptDatabaseOptions, command=self.EnDisScrScriptDatabaseOptions).grid(row=67, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptDeployStateChecks, command=self.EnDisScrScriptDeployStateChecks).grid(row=68, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptFileSize, command=self.EnDisScrScriptFileSize).grid(row=69, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptNewConstraintValidation, command=self.EnDisScrScriptNewConstraintValidation).grid(row=70, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonScriptRefreshModule, command=self.EnDisScrScriptRefreshModule).grid(row=71, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonStorage, command=self.EnDisScrStorage).grid(row=72, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonTreatVerificationErrorsAsWarnings, command=self.EnDisScrTreatVerificationErrorsAsWarnings).grid(row=73, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonUnmodifiableObjectWarnings, command=self.EnDisScrUnmodifiableObjectWarnings).grid(row=74, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonVerifyCollationCompatibility, command=self.EnDisScrVerifyCollationCompatibility).grid(row=75, column=0, sticky=W)
+            Checkbutton(DplyPrpCanvasFrame, var=self.ChkButtonVerifyDeployment, command=self.EnDisScrVerifyDeployment).grid(row=76, column=0, sticky=W)
 
             # USED TO RESET THE SCROLLBAR, also used with DplyScroll_Visibility function
             #####################
@@ -1116,86 +1118,118 @@ class Application(Frame):
 
         ########################################################################
         ########################################################################
-            
-        def configDplyPrpCanvasFunction(event):
-            DplyPrpCanvas.configure(scrollregion=DplyPrpCanvas.bbox("all"),width=350,height=200)
 
-        self.DplyPrpFrame=Frame(self,relief=GROOVE,width=80,height=100, bd=1)
+        def configDplyPrpCanvasFunction(event):
+            DplyPrpCanvas.configure(scrollregion=DplyPrpCanvas.bbox("all"), width=350, height=200)
+
+        self.DplyPrpFrame = Frame(self, relief=GROOVE, width=80, height=100, bd=1)
         # self.DplyPrpFrame.grid(row=8,column=2,sticky=W)
 
-        DplyPrpCanvas=Canvas(self.DplyPrpFrame)
-        DplyPrpCanvasFrame=Frame(DplyPrpCanvas)
-        DplyPrpScrollbar=Scrollbar(self.DplyPrpFrame,orient="vertical",command=DplyPrpCanvas.yview)
+        DplyPrpCanvas = Canvas(self.DplyPrpFrame)
+        DplyPrpCanvasFrame = Frame(DplyPrpCanvas)
+        DplyPrpScrollbar = Scrollbar(self.DplyPrpFrame, orient="vertical", command=DplyPrpCanvas.yview)
         DplyPrpCanvas.configure(yscrollcommand=DplyPrpScrollbar.set)
 
-        DplyPrpScrollbar.pack(side="right",fill="y")
+        DplyPrpScrollbar.pack(side="right", fill="y")
         DplyPrpCanvas.pack(side="left")
-        DplyPrpCanvas.create_window((0,0),window=DplyPrpCanvasFrame,anchor='nw')
-        DplyPrpCanvasFrame.bind("<Configure>",configDplyPrpCanvasFunction)
+        DplyPrpCanvas.create_window((0, 0), window=DplyPrpCanvasFrame, anchor='nw')
+        DplyPrpCanvasFrame.bind("<Configure>", configDplyPrpCanvasFunction)
         DplyPrpWidgetsFunction()
         ############################################################################
         ############################################################################
 
-        #Button for initiating the deployment
-        self.ExecuteButton=Button(self,text="Compare & Deploy",command=self.execute_all)  #button click calls execute_all method
-        self.ExecuteButton.grid(row=10,column=1,sticky=W)
+        # Button for initiating the deployment
+        self.ExecuteButton = Button(self, text="Compare & Deploy", command=self.execute_all)  # button click calls execute_all method
+        self.ExecuteButton.grid(row=10, column=1, sticky=W)
 
-        #Button to compare and Generate script
-        self.ExecuteButton=Button(self,text="Compare & Generate Script",command=self.compare_generate_script)  #button click calls shell output
-        self.ExecuteButton.grid(row=10,column=2,sticky=W)
+        # Button to compare and Generate script
+        self.ExecuteButton = Button(self, text="Compare & Generate Script", command=self.compare_generate_script)  # button click calls shell output
+        self.ExecuteButton.grid(row=10, column=2, sticky=W)
 
-        #Button to check Shell Output
-        self.ExecuteButton=Button(self,text="Shell Output",command=self.shell_output)  #button click calls shell output
-        self.ExecuteButton.grid(row=10,column=3,sticky=W)
+        # Button to check Shell Output
+        self.ExecuteButton = Button(self, text="Shell Output", command=self.shell_output)  # button click calls shell output
+        self.ExecuteButton.grid(row=10, column=3, sticky=W)
 
-        #Connection information
-        self.InformationLabel=Label(self,text="Connection Info:",justify=LEFT)
-        self.InformationLabel.grid(row=11,column=0,sticky=W)
+        # Connection information
+        self.InformationLabel = Label(self, text="Connection Info:", justify=LEFT)
+        self.InformationLabel.grid(row=11, column=0, sticky=W)
 
+    # Methods######################################################################
+    # method that initiates the process to compare & deploy SQL Server database
+    #self.PreDeploymentText.get(1.0, END)
+    #self.SourceServerEntry.get()   |   self.SourceDatabaseEntry.get()
+    #self.TargetServerEntry.get()   |   self.TargetDatabaseEntry.get()
+    #self.SourceUsernameEntry.get() |   self.SourcePasswordEntry.get()
+    #self.TargetUsernameEntry.get() |   self.TargetPasswordEntry.get()
 
-
-    #Methods######################################################################
-    #method that initiates the process to compare & deploy SQL Server database
     def execute_all(self):
-        self.SourceServerString=self.SourceServerEntry.get()
-        self.SourceDatabaseString=self.SourceDatabaseEntry.get()
+        #Query string for Publish
+        #self.CmpExePublishQuery
+
+        self.SourceServerString = self.SourceServerEntry.get()
+        self.SourceDatabaseString = self.SourceDatabaseEntry.get()
 
         self.TargetServerString = self.TargetServerEntry.get()
-        self.TargetDatabaseString=self.TargetDatabaseEntry.get()
+        self.TargetDatabaseString = self.TargetDatabaseEntry.get()
 
-        self.PreDeploymentQueryString=self.PreDeploymentText.get(1.0,END)
+        # self.PreDeploymentQueryString = self.PreDeploymentText.get(1.0, END)
 
-        # self.TargetServerEntry.delete(0, END)
-        # self.TargetDatabaseEntry.delete(0, END)
-        #
-        # self.TargetServerEntry.insert(0,self.SourceServerString)
-        # self.TargetDatabaseEntry.insert(0,self.SourceDatabaseString)
+        #Query string for Pre-Deployment
+        self.CmpExePreDeploymentQuery = 'sqlcmd -S ' + self.TargetServerEntry.get()
+        #Query string for Extract
+        self.CmpExeExtractQuery = 'CompareDeploy\\sqlpackage /Action:Extract /SourceServerName:' + self.SourceServerEntry.get() + ' /SourceDatabaseName:' + self.SourceDatabaseEntry.get()
+        # Query string for Publish
+        self.CmpExePublishQuery = 'CompareDeploy\\sqlpackage /Action:Publish /SourceFile:CompareDeploy\\temp\\' + self.SourceDatabaseEntry.get() + '.dacpac /TargetServerName:' + self.TargetServerEntry.get() + ' /TargetDatabaseName:' + self.TargetDatabaseEntry.get()
 
-        # subprocess.call(
-        #     'sqlcmd -S '+ self.SourceServerString +' -d '+ self.SourceDatabaseString +' -i CompareDeploy\\insertNewSQLPackage1.sql',shell=True)
+        if self.WinAuthSrcVariable.get() is False:
+            self.CmpExeExtractQuery += ' /SourceUser:' + self.SourceUsernameEntry.get() + ' /SourcePassword:' + self.SourcePasswordEntry.get()
 
-        SPPreDeployment=subprocess.Popen('sqlcmd -S '+ self.TargetServerString +' -d master -Q " ' + self.PreDeploymentQueryString + ' "',stdout=subprocess.PIPE)
-        SPExtract=subprocess.Popen('CompareDeploy\\sqlpackage /Action:Extract /SourceServerName:'+ self.SourceServerString +' /SourceDatabaseName:'+ self.SourceDatabaseString +' /TargetFile:CompareDeploy\\temp\\'+ self.SourceDatabaseString +'.dacpac',stdout=subprocess.PIPE)
+        if self.WinAuthTrgtVariable.get() is False:
+            self.CmpExePreDeploymentQuery += ' -U '+ self.TargetUsernameEntry.get() +' -P '+ self.TargetPasswordEntry.get()
+            self.CmpExePublishQuery +=  ' /TargetUser:' + self.TargetUsernameEntry.get() + ' /TargetPassword:' + self.TargetPasswordEntry.get()
+
+        if self.EncryptSrcVariable.get() is True:
+            self.CmpExeExtractQuery += ' /SourceEncryptConnection=True '
+
+        if self.EncryptTrgtVariable.get() is True:
+            self.CmpExePreDeploymentQuery += ' -N '
+            self.CmpExePublishQuery += ' /TargetEncryptConnection=True'
+
+
+
+        self.CmpExePreDeploymentQuery += ' -d master -Q " ' + self.PreDeploymentText.get(1.0, END) + ' "'
+        print("self.CmpExePreDeploymentQuery=", self.CmpExePreDeploymentQuery)
+
+        self.CmpExeExtractQuery += ' /TargetFile:CompareDeploy\\temp\\' + self.SourceDatabaseString + '.dacpac'
+        print("self.CmpExeExtractQuery=", self.CmpExeExtractQuery)
+
+        self.CmpExePublishQuery += ' /p:ExcludeObjectTypes=RoleMembership;Users /p:ScriptDatabaseOptions=False'
+        print("self.CmpExePublishQuery=", self.CmpExePublishQuery)
+
+
+
+        SPPreDeployment = subprocess.Popen(self.CmpExePreDeploymentQuery, stdout=subprocess.PIPE)
+        SPPreDeployment.wait()
+        SPExtract = subprocess.Popen(self.CmpExeExtractQuery,stdout=subprocess.PIPE)
         SPExtract.wait()
-        SPPublish=subprocess.Popen('CompareDeploy\\sqlpackage /Action:Publish /SourceFile:CompareDeploy\\temp\\'+ self.SourceDatabaseString +'.dacpac /TargetServerName:'+ self.TargetServerString +' /TargetDatabaseName:'+ self.TargetDatabaseString +' /p:ExcludeObjectTypes=RoleMembership;Users /p:ScriptDatabaseOptions=False /p:BlockOnPossibleDataLoss=False',stdout=subprocess.PIPE)
+        SPPublish = subprocess.Popen(self.CmpExePublishQuery,stdout=subprocess.PIPE)
+        SPPublish.wait()
 
-        self.ShellOutputPreDeploymentString=SPPreDeployment.communicate()[0]
-        self.ShellOutputExtractString=SPExtract.communicate()[0]
-        self.ShellOutputPublishString=SPPublish.communicate()[0]
+        self.ShellOutputPreDeploymentString = SPPreDeployment.communicate()[0]
+        self.ShellOutputExtractString = SPExtract.communicate()[0]
+        self.ShellOutputPublishString = SPPublish.communicate()[0]
 
-        self.InformationString='Connection Info:\nSource Server: ' + self.SourceServerString + '\nSource Database: ' + self.SourceDatabaseString + '\nTarget Server: ' + self.TargetServerString + '\nTarget Database: ' + self.TargetDatabaseString
-        self.InformationLabel["text"]=self.InformationString
+        self.InformationString = 'Connection Info:\nSource Server: ' + self.SourceServerString + '\nSource Database: ' + self.SourceDatabaseString + '\nTarget Server: ' + self.TargetServerString + '\nTarget Database: ' + self.TargetDatabaseString
+        self.InformationLabel["text"] = self.InformationString
 
-
-
-    #method to display shell output
+    # method to display shell output
     def shell_output(self):
         # Shell output window
-        ShellOutputWindow = Toplevel(width=500,height=700)
+        ShellOutputWindow = Toplevel(width=500, height=700)
         ShellOutputWindow.title("Shell Output")
         ShellOutputWindow.grid()
 
-        ShellOutputText=Text(ShellOutputWindow, width=100, height=40, wrap=WORD)
+        ShellOutputText = Text(ShellOutputWindow, width=100, height=40, wrap=WORD)
         ShellOutputText.grid(row=0, column=1, columnspan=2, sticky=W)
         ShellOutputText.insert(END, self.ShellOutputPreDeploymentString + self.ShellOutputExtractString + self.ShellOutputPublishString)
 
@@ -1203,8 +1237,6 @@ class Application(Frame):
         # print("Value Drop Down Allow Drop Block Assemblies",self.ValueAllowDropBlockingAssemblies)
         # print("Check Button Aggregates - Do Not Drop",self.DoNotDropObjectTypesAggregates)
         # print("Check Button Aggregates - Exclude Objects",self.ExcludeObjectTypesAggregates)
-
-
 
     def SrcCredentials_Visibility(self):
         if self.WinAuthSrcVariable.get() is True:
@@ -1219,8 +1251,6 @@ class Application(Frame):
             self.SourcePasswordLabel.grid(row=5, column=0, sticky=W)
             self.SourcePasswordEntry.grid(row=5, column=1, sticky=W)
 
-
-
     def TrgtCredentials_Visibility(self):
         if self.WinAuthTrgtVariable.get() is True:
             self.TargetUsernameLabel.grid_forget()
@@ -1234,7 +1264,6 @@ class Application(Frame):
             self.TargetPasswordLabel.grid(row=5, column=2, sticky=W)
             self.TargetPasswordEntry.grid(row=5, column=3, sticky=W)
 
-
     def DplyScroll_Visibility(self):
         if self.SetDplyPropertyVariable.get() is False:
             self.DplyPrpFrame.grid_forget()
@@ -1247,7 +1276,7 @@ class Application(Frame):
         print("To be implemented")
 
     def DoNotDropObjectTypes(self):
-        DoNotDropObjectTypesWindow=Toplevel(width=500,height=700)
+        DoNotDropObjectTypesWindow = Toplevel(width=500, height=700)
         DoNotDropObjectTypesWindow.title("Select the Objects not to drop during deployment")
         DoNotDropObjectTypesWindow.grid()
 
@@ -1295,47 +1324,44 @@ class Application(Frame):
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesXmlSchemaCollections, text="XmlSchemaCollections").grid(row=39, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesAudits, text="Audits").grid(row=40, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesCredentials, text="Credentials").grid(row=41, column=0, sticky=W)
-            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesCryptographicProviders, text="CryptographicProviders").grid(row=42, column=0,sticky=W)
-            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesDatabaseAuditSpecifications, text="DatabaseAuditSpecifications").grid(row=43,column=0,sticky=W)
+            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesCryptographicProviders, text="CryptographicProviders").grid(row=42, column=0, sticky=W)
+            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesDatabaseAuditSpecifications, text="DatabaseAuditSpecifications").grid(row=43, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesEndpoints, text="Endpoints").grid(row=44, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesErrorMessages, text="ErrorMessages").grid(row=45, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesEventNotifications, text="EventNotifications").grid(row=46, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesEventSessions, text="EventSessions").grid(row=47, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesLinkedServerLogins, text="LinkedServerLogins").grid(row=48, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesRoutes, text="Routes").grid(row=49, column=0, sticky=W)
-            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerAuditSpecifications, text="ServerAuditSpecifications").grid(row=50, column=0,sticky=W)
+            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerAuditSpecifications, text="ServerAuditSpecifications").grid(row=50, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerRoleMembership, text="ServerRoleMembership").grid(row=51, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerRoles, text="ServerRoles").grid(row=52, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerTriggers, text="ServerTriggers").grid(row=53, column=0, sticky=W)
 
         def configDoNotDropCanvasFunction(event):
-            DoNotDropCanvas.configure(scrollregion=DoNotDropCanvas.bbox("all"),width=200,height=400)
+            DoNotDropCanvas.configure(scrollregion=DoNotDropCanvas.bbox("all"), width=200, height=400)
 
         def DoNotDrop_window_visibility():
             DoNotDropObjectTypesWindow.withdraw()
 
-        self.DoNotDropFrame=Frame(DoNotDropObjectTypesWindow,relief=GROOVE,width=100,height=200, bd=1)
-        self.DoNotDropFrame.grid(row=0,column=0,sticky=W)
+        self.DoNotDropFrame = Frame(DoNotDropObjectTypesWindow, relief=GROOVE, width=100, height=200, bd=1)
+        self.DoNotDropFrame.grid(row=0, column=0, sticky=W)
 
-        DoNotDropCanvas=Canvas(self.DoNotDropFrame)
-        DoNotDropCanvasFrame=Frame(DoNotDropCanvas)
-        DoNotDropScrollbar=Scrollbar(self.DoNotDropFrame,orient="vertical",command=DoNotDropCanvas.yview)
+        DoNotDropCanvas = Canvas(self.DoNotDropFrame)
+        DoNotDropCanvasFrame = Frame(DoNotDropCanvas)
+        DoNotDropScrollbar = Scrollbar(self.DoNotDropFrame, orient="vertical", command=DoNotDropCanvas.yview)
         DoNotDropCanvas.configure(yscrollcommand=DoNotDropScrollbar.set)
 
-        DoNotDropScrollbar.pack(side="right",fill="y")
+        DoNotDropScrollbar.pack(side="right", fill="y")
         DoNotDropCanvas.pack(side="left")
-        DoNotDropCanvas.create_window((0,0),window=DoNotDropCanvasFrame,anchor='nw')
-        DoNotDropCanvasFrame.bind("<Configure>",configDoNotDropCanvasFunction)
+        DoNotDropCanvas.create_window((0, 0), window=DoNotDropCanvasFrame, anchor='nw')
+        DoNotDropCanvasFrame.bind("<Configure>", configDoNotDropCanvasFunction)
         DoNotDropWidgetsFunction()
 
-        Label(DoNotDropObjectTypesWindow,text="Note: Only Applicable when DropObjectsNotInSource is true").grid(row=0,column=1,sticky=W)
-        Button(DoNotDropObjectTypesWindow,text="Ok",command=DoNotDrop_window_visibility).grid(row=1,column=1,sticky=W)
-
-
-
+        Label(DoNotDropObjectTypesWindow, text="Note: Only Applicable when DropObjectsNotInSource is true").grid(row=0, column=1, sticky=W)
+        Button(DoNotDropObjectTypesWindow, text="Ok", command=DoNotDrop_window_visibility).grid(row=1, column=1, sticky=W)
 
     def ExcludeObjectTypes(self):
-        ExcludeObjectTypesWindow=Toplevel(width=500,height=700)
+        ExcludeObjectTypesWindow = Toplevel(width=500, height=700)
         ExcludeObjectTypesWindow.title("Select the Objects to Exclude from Deployment")
         ExcludeObjectTypesWindow.grid()
 
@@ -1383,40 +1409,40 @@ class Application(Frame):
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesXmlSchemaCollections, text="XmlSchemaCollections").grid(row=39, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesAudits, text="Audits").grid(row=40, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesCredentials, text="Credentials").grid(row=41, column=0, sticky=W)
-            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesCryptographicProviders, text="CryptographicProviders").grid(row=42, column=0,sticky=W)
-            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesDatabaseAuditSpecifications, text="DatabaseAuditSpecifications").grid(row=43,column=0,sticky=W)
+            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesCryptographicProviders, text="CryptographicProviders").grid(row=42, column=0, sticky=W)
+            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesDatabaseAuditSpecifications, text="DatabaseAuditSpecifications").grid(row=43, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesEndpoints, text="Endpoints").grid(row=44, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesErrorMessages, text="ErrorMessages").grid(row=45, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesEventNotifications, text="EventNotifications").grid(row=46, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesEventSessions, text="EventSessions").grid(row=47, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesLinkedServerLogins, text="LinkedServerLogins").grid(row=48, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesRoutes, text="Routes").grid(row=49, column=0, sticky=W)
-            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerAuditSpecifications, text="ServerAuditSpecifications").grid(row=50, column=0,sticky=W)
+            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerAuditSpecifications, text="ServerAuditSpecifications").grid(row=50, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerRoleMembership, text="ServerRoleMembership").grid(row=51, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerRoles, text="ServerRoles").grid(row=52, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerTriggers, text="ServerTriggers").grid(row=53, column=0, sticky=W)
 
         def configExcludeObjectCanvasFunction(event):
-            ExcludeObjectCanvas.configure(scrollregion=ExcludeObjectCanvas.bbox("all"),width=200,height=400)
+            ExcludeObjectCanvas.configure(scrollregion=ExcludeObjectCanvas.bbox("all"), width=200, height=400)
 
         def ExcludeObject_window_visibility():
             ExcludeObjectTypesWindow.withdraw()
 
-        self.ExcludeObjectFrame=Frame(ExcludeObjectTypesWindow,relief=GROOVE,width=100,height=200, bd=1)
-        self.ExcludeObjectFrame.grid(row=0,column=0,sticky=W)
+        self.ExcludeObjectFrame = Frame(ExcludeObjectTypesWindow, relief=GROOVE, width=100, height=200, bd=1)
+        self.ExcludeObjectFrame.grid(row=0, column=0, sticky=W)
 
-        ExcludeObjectCanvas=Canvas(self.ExcludeObjectFrame)
-        ExcludeObjectCanvasFrame=Frame(ExcludeObjectCanvas)
-        ExcludeObjectScrollbar=Scrollbar(self.ExcludeObjectFrame,orient="vertical",command=ExcludeObjectCanvas.yview)
+        ExcludeObjectCanvas = Canvas(self.ExcludeObjectFrame)
+        ExcludeObjectCanvasFrame = Frame(ExcludeObjectCanvas)
+        ExcludeObjectScrollbar = Scrollbar(self.ExcludeObjectFrame, orient="vertical", command=ExcludeObjectCanvas.yview)
         ExcludeObjectCanvas.configure(yscrollcommand=ExcludeObjectScrollbar.set)
 
-        ExcludeObjectScrollbar.pack(side="right",fill="y")
+        ExcludeObjectScrollbar.pack(side="right", fill="y")
         ExcludeObjectCanvas.pack(side="left")
-        ExcludeObjectCanvas.create_window((0,0),window=ExcludeObjectCanvasFrame,anchor='nw')
-        ExcludeObjectCanvasFrame.bind("<Configure>",configExcludeObjectCanvasFunction)
+        ExcludeObjectCanvas.create_window((0, 0), window=ExcludeObjectCanvasFrame, anchor='nw')
+        ExcludeObjectCanvasFrame.bind("<Configure>", configExcludeObjectCanvasFunction)
         ExcludeObjectWidgetsFunction()
 
-        Button(ExcludeObjectTypesWindow,text="Ok",command=ExcludeObject_window_visibility).grid(row=1,column=1,sticky=W)
+        Button(ExcludeObjectTypesWindow, text="Ok", command=ExcludeObject_window_visibility).grid(row=1, column=1, sticky=W)
 
     # def print_variable_values(self):
     #     abc=self.ChkButtonAllowDropBlockingAssemblies.get()
@@ -1425,9 +1451,9 @@ class Application(Frame):
     #     print("Check Button Aggregates - Do Not Drop: ",self.DoNotDropObjectTypesAggregates.get())
     #     print("Check Button Aggregates - Exclude Objects: ",self.ExcludeObjectTypesAggregates.get())
 
-    def SetScrollBarDefault(self,Reset_Value):
-        if Reset_Value=="all":
-            #RESET CHECKBUTTONS ALL
+    def SetScrollBarDefault(self, Reset_Value):
+        if Reset_Value == "all":
+            # RESET CHECKBUTTONS ALL
             self.ChkButtonAllowDropBlockingAssemblies.set(False)
             self.ChkButtonAllowIncompatiblePlatform.set(False)
             self.ChkButtonBackupDatabaseBeforeChanges.set(False)
@@ -1509,7 +1535,7 @@ class Application(Frame):
             self.reset_DoNotDropObjects("all")
             self.reset_ExcludeObjectTypes("all")
 
-            #Reset VALUES
+            # Reset VALUES
             self.ValueAllowDropBlockingAssemblies.set("False")
             self.ValueAllowIncompatiblePlatform.set("False")
             self.ValueBackupDatabaseBeforeChanges.set("False")
@@ -1591,8 +1617,7 @@ class Application(Frame):
             # self.EntryCommandTimeout.delete(0, END)
             self.EntryCommandTimeout.insert(0, "60")
 
-
-            #DISABLE LABELS ALL
+            # DISABLE LABELS ALL
             self.LblAllowDropBlockingAssemblies.config(state='disabled')
             self.LblAllowIncompatiblePlatform.config(state='disabled')
             self.LblBackupDatabaseBeforeChanges.config(state='disabled')
@@ -1671,8 +1696,7 @@ class Application(Frame):
             self.LblVerifyCollationCompatibility.config(state='disabled')
             self.LblVerifyDeployment.config(state='disabled')
 
-
-            #DISABLE DROPDOWNS/BUTTONS ALL
+            # DISABLE DROPDOWNS/BUTTONS ALL
             self.EnDisValueAllowDropBlockingAssemblies.config(state='disabled')
             self.EnDisValueAllowIncompatiblePlatform.config(state='disabled')
             self.EnDisValueBackupDatabaseBeforeChanges.config(state='disabled')
@@ -1750,16 +1774,13 @@ class Application(Frame):
             self.EnDisValueUnmodifiableObjectWarnings.config(state='disabled')
             self.EnDisValueVerifyCollationCompatibility.config(state='disabled')
             self.EnDisValueVerifyDeployment.config(state='disabled')
+            #
+            # elif Reset_Value=="AllowDropBlockingAssemblies":
+            #     self.LblAllowDropBlockingAssemblies.config(state='disabled')
+            #     self.EnDisValueAllowDropBlockingAssemblies.config(state='disabled')
 
-        elif Reset_Value=="AllowDropBlockingAssemblies":
-            self.LblAllowDropBlockingAssemblies.config(state='disabled')
-            self.EnDisValueAllowDropBlockingAssemblies.config(state='disabled')
-
-
-
-
-    def reset_DoNotDropObjects(self,DoNotDrop_Reset_Value):
-        if DoNotDrop_Reset_Value=="all":
+    def reset_DoNotDropObjects(self, DoNotDrop_Reset_Value):
+        if DoNotDrop_Reset_Value == "all":
             self.DoNotDropObjectTypesAggregates.set(False)
             self.DoNotDropObjectTypesApplicationRoles.set(False)
             self.DoNotDropObjectTypesAssemblies.set(False)
@@ -1814,9 +1835,8 @@ class Application(Frame):
             self.DoNotDropObjectTypesServerRoles.set(False)
             self.DoNotDropObjectTypesServerTriggers.set(False)
 
-
-    def reset_ExcludeObjectTypes(self,ExcludeObject_Reset_Value):
-        if ExcludeObject_Reset_Value=="all":
+    def reset_ExcludeObjectTypes(self, ExcludeObject_Reset_Value):
+        if ExcludeObject_Reset_Value == "all":
             self.ExcludeObjectTypesAggregates.set(False)
             self.ExcludeObjectTypesApplicationRoles.set(False)
             self.ExcludeObjectTypesAssemblies.set(False)
@@ -1871,19 +1891,820 @@ class Application(Frame):
             self.ExcludeObjectTypesServerRoles.set(False)
             self.ExcludeObjectTypesServerTriggers.set(False)
 
-    def Enable_Disable_ScrollBarArtifacts(self):
+
+    def EnDisScrAllowDropBlockingAssemblies(self):
         if self.ChkButtonAllowDropBlockingAssemblies.get() is True:
             self.LblAllowDropBlockingAssemblies.config(state='normal')
             self.EnDisValueAllowDropBlockingAssemblies.config(state='normal')
-        else:
+
+        elif self.ChkButtonAllowDropBlockingAssemblies.get() is False:
             self.ValueAllowDropBlockingAssemblies.set("False")
             self.LblAllowDropBlockingAssemblies.config(state='disabled')
             self.EnDisValueAllowDropBlockingAssemblies.config(state='disabled')
 
+    def EnDisScrAllowIncompatiblePlatform(self):
+        if self.ChkButtonAllowIncompatiblePlatform.get() is True:
+            self.LblAllowIncompatiblePlatform
+            self.LblAllowIncompatiblePlatform.config(state='normal')
+            self.EnDisValueAllowIncompatiblePlatform.config(state='normal')
+
+        elif self.ChkButtonAllowIncompatiblePlatform.get() is False:
+            self.ValueAllowIncompatiblePlatform.set("False")
+            self.LblAllowIncompatiblePlatform.config(state='disabled')
+            self.EnDisValueAllowIncompatiblePlatform.config(state='disabled')
+
+    def EnDisScrBackupDatabaseBeforeChanges(self):
+        if self.ChkButtonBackupDatabaseBeforeChanges.get() is True:
+            self.LblBackupDatabaseBeforeChanges.config(state='normal')
+            self.EnDisValueBackupDatabaseBeforeChanges.config(state='normal')
+
+        elif self.ChkButtonBackupDatabaseBeforeChanges.get() is False:
+            self.ValueBackupDatabaseBeforeChanges.set("False")
+            self.LblBackupDatabaseBeforeChanges.config(state='disabled')
+            self.EnDisValueBackupDatabaseBeforeChanges.config(state='disabled')
 
 
-root=Tk()
+    def EnDisScrBlockOnPossibleDataLoss(self):
+        if self.ChkButtonBlockOnPossibleDataLoss.get() is True:
+            self.LblBlockOnPossibleDataLoss.config(state='normal')
+            self.EnDisValueBlockOnPossibleDataLoss.config(state='normal')
+
+        elif self.ChkButtonBlockOnPossibleDataLoss.get() is False:
+            self.ValueBlockOnPossibleDataLoss.set("True")
+            self.LblBlockOnPossibleDataLoss.config(state='disabled')
+            self.EnDisValueBlockOnPossibleDataLoss.config(state='disabled')
+
+
+    def EnDisScrBlockWhenDriftDetected(self):
+        if self.ChkButtonBlockWhenDriftDetected.get() is True:
+            self.LblBlockWhenDriftDetected.config(state='normal')
+            self.EnDisValueBlockWhenDriftDetected.config(state='normal')
+
+        elif self.ChkButtonBlockWhenDriftDetected.get() is False:
+            self.ValueBlockWhenDriftDetected.set("True")
+            self.LblBlockWhenDriftDetected.config(state='disabled')
+            self.EnDisValueBlockWhenDriftDetected.config(state='disabled')
+
+
+    def EnDisScrCommandTimeout(self):
+        if self.ChkButtonCommandTimeout.get() is True:
+            self.LblCommandTimeout.config(state='normal')
+            self.EntryCommandTimeout.config(state='normal')
+
+        elif self.ChkButtonCommandTimeout.get() is False:
+            self.EntryCommandTimeout.delete(0,END)
+            self.EntryCommandTimeout.insert(0, "60")
+            self.LblCommandTimeout.config(state='disabled')
+            self.EntryCommandTimeout.config(state='disabled')
+
+
+    def EnDisScrCommentOutSetVarDeclarations(self):
+        if self.ChkButtonCommentOutSetVarDeclarations.get() is True:
+            self.LblCommentOutSetVarDeclarations.config(state='normal')
+            self.EnDisValueCommentOutSetVarDeclarations.config(state='normal')
+
+        elif self.ChkButtonCommentOutSetVarDeclarations.get() is False:
+            self.ValueCommentOutSetVarDeclarations.set("False")
+            self.LblCommentOutSetVarDeclarations.config(state='disabled')
+            self.EnDisValueCommentOutSetVarDeclarations.config(state='disabled')
+
+
+    def EnDisScrCompareUsingTargetCollation(self):
+        if self.ChkButtonCompareUsingTargetCollation.get() is True:
+            self.LblCompareUsingTargetCollation.config(state='normal')
+            self.EnDisValueCompareUsingTargetCollation.config(state='normal')
+
+        elif self.ChkButtonCompareUsingTargetCollation.get() is False:
+            self.ValueCompareUsingTargetCollation.set("False")
+            self.LblCompareUsingTargetCollation.config(state='disabled')
+            self.EnDisValueCompareUsingTargetCollation.config(state='disabled')
+
+
+    def EnDisScrCreateNewDatabase(self):
+        if self.ChkButtonCreateNewDatabase.get() is True:
+            self.LblCreateNewDatabase.config(state='normal')
+            self.EnDisValueCreateNewDatabase.config(state='normal')
+
+        elif self.ChkButtonCreateNewDatabase.get() is False:
+            self.ValueCreateNewDatabase.set("False")
+            self.LblCreateNewDatabase.config(state='disabled')
+            self.EnDisValueCreateNewDatabase.config(state='disabled')
+
+
+    def EnDisScrDeployDatabaseInSingleUserMode(self):
+        if self.ChkButtonDeployDatabaseInSingleUserMode.get() is True:
+            self.LblDeployDatabaseInSingleUserMode.config(state='normal')
+            self.EnDisValueDeployDatabaseInSingleUserMode.config(state='normal')
+
+        elif self.ChkButtonDeployDatabaseInSingleUserMode.get() is False:
+            self.ValueDeployDatabaseInSingleUserMode.set("False")
+            self.LblDeployDatabaseInSingleUserMode.config(state='disabled')
+            self.EnDisValueDeployDatabaseInSingleUserMode.config(state='disabled')
+
+
+    def EnDisScrDisableAndReenableDdlTriggers(self):
+        if self.ChkButtonDisableAndReenableDdlTriggers.get() is True:
+            self.LblDisableAndReenableDdlTriggers.config(state='normal')
+            self.EnDisValueDisableAndReenableDdlTriggers.config(state='normal')
+
+        elif self.ChkButtonDisableAndReenableDdlTriggers.get() is False:
+            self.ValueDisableAndReenableDdlTriggers.set("True")
+            self.LblDisableAndReenableDdlTriggers.config(state='disabled')
+            self.EnDisValueDisableAndReenableDdlTriggers.config(state='disabled')
+
+
+    def EnDisScrDoNotAlterChangeDataCaptureObjects(self):
+        if self.ChkButtonDoNotAlterChangeDataCaptureObjects.get() is True:
+            self.LblDoNotAlterChangeDataCaptureObjects.config(state='normal')
+            self.EnDisValueDoNotAlterChangeDataCaptureObjects.config(state='normal')
+
+        elif self.ChkButtonDoNotAlterChangeDataCaptureObjects.get() is False:
+            self.ValueDoNotAlterChangeDataCaptureObjects.set("True")
+            self.LblDoNotAlterChangeDataCaptureObjects.config(state='disabled')
+            self.EnDisValueDoNotAlterChangeDataCaptureObjects.config(state='disabled')
+
+
+    def EnDisScrDoNotAlterReplicatedObjects(self):
+        if self.ChkButtonDoNotAlterReplicatedObjects.get() is True:
+            self.LblDoNotAlterReplicatedObjects.config(state='normal')
+            self.EnDisValueDoNotAlterReplicatedObjects.config(state='normal')
+
+        elif self.ChkButtonDoNotAlterReplicatedObjects.get() is False:
+            self.ValueDoNotAlterReplicatedObjects.set("True")
+            self.LblDoNotAlterReplicatedObjects.config(state='disabled')
+            self.EnDisValueDoNotAlterReplicatedObjects.config(state='disabled')
+
+
+    def EnDisScrDoNotDropObjectTypes(self):
+        if self.ChkButtonDoNotDropObjectTypes.get() is True:
+            self.LblDoNotDropObjectTypes.config(state='normal')
+            self.EnDisValueDoNotDropObjectTypes.config(state='normal')
+
+        elif self.ChkButtonDoNotDropObjectTypes.get() is False:
+            # self.ValueDoNotDropObjectTypes.set("N/A.")
+            self.reset_DoNotDropObjects("all")
+            self.LblDoNotDropObjectTypes.config(state='disabled')
+            self.EnDisValueDoNotDropObjectTypes.config(state='disabled')
+
+
+    def EnDisScrDropConstraintsNotInSource(self):
+        if self.ChkButtonDropConstraintsNotInSource.get() is True:
+            self.LblDropConstraintsNotInSource.config(state='normal')
+            self.EnDisValueDropConstraintsNotInSource.config(state='normal')
+
+        elif self.ChkButtonDropConstraintsNotInSource.get() is False:
+            self.ValueDropConstraintsNotInSource.set("True")
+            self.LblDropConstraintsNotInSource.config(state='disabled')
+            self.EnDisValueDropConstraintsNotInSource.config(state='disabled')
+
+
+    def EnDisScrDropDmlTriggersNotInSource(self):
+        if self.ChkButtonDropDmlTriggersNotInSource.get() is True:
+            self.LblDropDmlTriggersNotInSource.config(state='normal')
+            self.EnDisValueDropDmlTriggersNotInSource.config(state='normal')
+
+        elif self.ChkButtonDropDmlTriggersNotInSource.get() is False:
+            self.ValueDropDmlTriggersNotInSource.set("True")
+            self.LblDropDmlTriggersNotInSource.config(state='disabled')
+            self.EnDisValueDropDmlTriggersNotInSource.config(state='disabled')
+
+
+    def EnDisScrDropExtendedPropertiesNotInSource(self):
+        if self.ChkButtonDropExtendedPropertiesNotInSource.get() is True:
+            self.LblDropExtendedPropertiesNotInSource.config(state='normal')
+            self.EnDisValueDropExtendedPropertiesNotInSource.config(state='normal')
+
+        elif self.ChkButtonDropExtendedPropertiesNotInSource.get() is False:
+            self.ValueDropExtendedPropertiesNotInSource.set("True")
+            self.LblDropExtendedPropertiesNotInSource.config(state='disabled')
+            self.EnDisValueDropExtendedPropertiesNotInSource.config(state='disabled')
+
+
+    def EnDisScrDropIndexesNotInSource(self):
+        if self.ChkButtonDropIndexesNotInSource.get() is True:
+            self.LblDropIndexesNotInSource.config(state='normal')
+            self.EnDisValueDropIndexesNotInSource.config(state='normal')
+
+        elif self.ChkButtonDropIndexesNotInSource.get() is False:
+            self.ValueDropIndexesNotInSource.set("True")
+            self.LblDropIndexesNotInSource.config(state='disabled')
+            self.EnDisValueDropIndexesNotInSource.config(state='disabled')
+
+
+    def EnDisScrDropObjectsNotInSource(self):
+        if self.ChkButtonDropObjectsNotInSource.get() is True:
+            self.LblDropObjectsNotInSource.config(state='normal')
+            self.EnDisValueDropObjectsNotInSource.config(state='normal')
+
+        elif self.ChkButtonDropObjectsNotInSource.get() is False:
+            self.ValueDropObjectsNotInSource.set("False")
+            self.LblDropObjectsNotInSource.config(state='disabled')
+            self.EnDisValueDropObjectsNotInSource.config(state='disabled')
+
+
+    def EnDisScrDropPermissionsNotInSource(self):
+        if self.ChkButtonDropPermissionsNotInSource.get() is True:
+            self.LblDropPermissionsNotInSource.config(state='normal')
+            self.EnDisValueDropPermissionsNotInSource.config(state='normal')
+
+        elif self.ChkButtonDropPermissionsNotInSource.get() is False:
+            self.ValueDropPermissionsNotInSource.set("False")
+            self.LblDropPermissionsNotInSource.config(state='disabled')
+            self.EnDisValueDropPermissionsNotInSource.config(state='disabled')
+
+
+    def EnDisScrDropRoleMembersNotInSource(self):
+        if self.ChkButtonDropRoleMembersNotInSource.get() is True:
+            self.LblDropRoleMembersNotInSource.config(state='normal')
+            self.EnDisValueDropRoleMembersNotInSource.config(state='normal')
+
+        elif self.ChkButtonDropRoleMembersNotInSource.get() is False:
+            self.ValueDropRoleMembersNotInSource.set("False")
+            self.LblDropRoleMembersNotInSource.config(state='disabled')
+            self.EnDisValueDropRoleMembersNotInSource.config(state='disabled')
+
+
+    def EnDisScrExcludeObjectTypes(self):
+        if self.ChkButtonExcludeObjectTypes.get() is True:
+            self.LblExcludeObjectTypes.config(state='normal')
+            self.EnDisValueExcludeObjectTypes.config(state='normal')
+
+        elif self.ChkButtonExcludeObjectTypes.get() is False:
+            # self.ValueExcludeObjectTypes.set("N/A.")
+            self.reset_ExcludeObjectTypes("all")
+            self.LblExcludeObjectTypes.config(state='disabled')
+            self.EnDisValueExcludeObjectTypes.config(state='disabled')
+
+
+    def EnDisScrGenerateSmartDefaults(self):
+        if self.ChkButtonGenerateSmartDefaults.get() is True:
+            self.LblGenerateSmartDefaults.config(state='normal')
+            self.EnDisValueGenerateSmartDefaults.config(state='normal')
+
+        elif self.ChkButtonGenerateSmartDefaults.get() is False:
+            self.ValueGenerateSmartDefaults.set("False")
+            self.LblGenerateSmartDefaults.config(state='disabled')
+            self.EnDisValueGenerateSmartDefaults.config(state='disabled')
+
+
+    def EnDisScrIgnoreAnsiNulls(self):
+        if self.ChkButtonIgnoreAnsiNulls.get() is True:
+            self.LblIgnoreAnsiNulls.config(state='normal')
+            self.EnDisValueIgnoreAnsiNulls.config(state='normal')
+
+        elif self.ChkButtonIgnoreAnsiNulls.get() is False:
+            self.ValueIgnoreAnsiNulls.set("False")
+            self.LblIgnoreAnsiNulls.config(state='disabled')
+            self.EnDisValueIgnoreAnsiNulls.config(state='disabled')
+
+
+    def EnDisScrIgnoreAuthorizer(self):
+        if self.ChkButtonIgnoreAuthorizer.get() is True:
+            self.LblIgnoreAuthorizer.config(state='normal')
+            self.EnDisValueIgnoreAuthorizer.config(state='normal')
+
+        elif self.ChkButtonIgnoreAuthorizer.get() is False:
+            self.ValueIgnoreAuthorizer.set("False")
+            self.LblIgnoreAuthorizer.config(state='disabled')
+            self.EnDisValueIgnoreAuthorizer.config(state='disabled')
+
+
+    def EnDisScrIgnoreColumnCollation(self):
+        if self.ChkButtonIgnoreColumnCollation.get() is True:
+            self.LblIgnoreColumnCollation.config(state='normal')
+            self.EnDisValueIgnoreColumnCollation.config(state='normal')
+
+        elif self.ChkButtonIgnoreColumnCollation.get() is False:
+            self.ValueIgnoreColumnCollation.set("False")
+            self.LblIgnoreColumnCollation.config(state='disabled')
+            self.EnDisValueIgnoreColumnCollation.config(state='disabled')
+
+
+    def EnDisScrIgnoreComments(self):
+        if self.ChkButtonIgnoreComments.get() is True:
+            self.LblIgnoreComments.config(state='normal')
+            self.EnDisValueIgnoreComments.config(state='normal')
+
+        elif self.ChkButtonIgnoreComments.get() is False:
+            self.ValueIgnoreComments.set("False")
+            self.LblIgnoreComments.config(state='disabled')
+            self.EnDisValueIgnoreComments.config(state='disabled')
+
+
+    def EnDisScrIgnoreCryptographicProviderFilePath(self):
+        if self.ChkButtonIgnoreCryptographicProviderFilePath.get() is True:
+            self.LblIgnoreCryptographicProviderFilePath.config(state='normal')
+            self.EnDisValueIgnoreCryptographicProviderFilePath.config(state='normal')
+
+        elif self.ChkButtonIgnoreCryptographicProviderFilePath.get() is False:
+            self.ValueIgnoreCryptographicProviderFilePath.set("True")
+            self.LblIgnoreCryptographicProviderFilePath.config(state='disabled')
+            self.EnDisValueIgnoreCryptographicProviderFilePath.config(state='disabled')
+
+
+    def EnDisScrIgnoreDdlTriggerOrder(self):
+        if self.ChkButtonIgnoreDdlTriggerOrder.get() is True:
+            self.LblIgnoreDdlTriggerOrder.config(state='normal')
+            self.EnDisValueIgnoreDdlTriggerOrder.config(state='normal')
+
+        elif self.ChkButtonIgnoreDdlTriggerOrder.get() is False:
+            self.ValueIgnoreDdlTriggerOrder.set("False")
+            self.LblIgnoreDdlTriggerOrder.config(state='disabled')
+            self.EnDisValueIgnoreDdlTriggerOrder.config(state='disabled')
+
+
+    def EnDisScrIgnoreDdlTriggerState(self):
+        if self.ChkButtonIgnoreDdlTriggerState.get() is True:
+            self.LblIgnoreDdlTriggerState.config(state='normal')
+            self.EnDisValueIgnoreDdlTriggerState.config(state='normal')
+
+        elif self.ChkButtonIgnoreDdlTriggerState.get() is False:
+            self.ValueIgnoreDdlTriggerState.set("False")
+            self.LblIgnoreDdlTriggerState.config(state='disabled')
+            self.EnDisValueIgnoreDdlTriggerState.config(state='disabled')
+
+
+    def EnDisScrIgnoreDefaultSchema(self):
+        if self.ChkButtonIgnoreDefaultSchema.get() is True:
+            self.LblIgnoreDefaultSchema.config(state='normal')
+            self.EnDisValueIgnoreDefaultSchema.config(state='normal')
+
+        elif self.ChkButtonIgnoreDefaultSchema.get() is False:
+            self.ValueIgnoreDefaultSchema.set("False")
+            self.LblIgnoreDefaultSchema.config(state='disabled')
+            self.EnDisValueIgnoreDefaultSchema.config(state='disabled')
+
+
+    def EnDisScrIgnoreDmlTriggerOrder(self):
+        if self.ChkButtonIgnoreDmlTriggerOrder.get() is True:
+            self.LblIgnoreDmlTriggerOrder.config(state='normal')
+            self.EnDisValueIgnoreDmlTriggerOrder.config(state='normal')
+
+        elif self.ChkButtonIgnoreDmlTriggerOrder.get() is False:
+            self.ValueIgnoreDmlTriggerOrder.set("False")
+            self.LblIgnoreDmlTriggerOrder.config(state='disabled')
+            self.EnDisValueIgnoreDmlTriggerOrder.config(state='disabled')
+
+
+    def EnDisScrIgnoreDmlTriggerState(self):
+        if self.ChkButtonIgnoreDmlTriggerState.get() is True:
+            self.LblIgnoreDmlTriggerState.config(state='normal')
+            self.EnDisValueIgnoreDmlTriggerState.config(state='normal')
+
+        elif self.ChkButtonIgnoreDmlTriggerState.get() is False:
+            self.ValueIgnoreDmlTriggerState.set("False")
+            self.LblIgnoreDmlTriggerState.config(state='disabled')
+            self.EnDisValueIgnoreDmlTriggerState.config(state='disabled')
+
+
+    def EnDisScrIgnoreExtendedProperties(self):
+        if self.ChkButtonIgnoreExtendedProperties.get() is True:
+            self.LblIgnoreExtendedProperties.config(state='normal')
+            self.EnDisValueIgnoreExtendedProperties.config(state='normal')
+
+        elif self.ChkButtonIgnoreExtendedProperties.get() is False:
+            self.ValueIgnoreExtendedProperties.set("False")
+            self.LblIgnoreExtendedProperties.config(state='disabled')
+            self.EnDisValueIgnoreExtendedProperties.config(state='disabled')
+
+
+    def EnDisScrIgnoreFileAndLogFilePath(self):
+        if self.ChkButtonIgnoreFileAndLogFilePath.get() is True:
+            self.LblIgnoreFileAndLogFilePath.config(state='normal')
+            self.EnDisValueIgnoreFileAndLogFilePath.config(state='normal')
+
+        elif self.ChkButtonIgnoreFileAndLogFilePath.get() is False:
+            self.ValueIgnoreFileAndLogFilePath.set("True")
+            self.LblIgnoreFileAndLogFilePath.config(state='disabled')
+            self.EnDisValueIgnoreFileAndLogFilePath.config(state='disabled')
+
+
+    def EnDisScrIgnoreFilegroupPlacement(self):
+        if self.ChkButtonIgnoreFilegroupPlacement.get() is True:
+            self.LblIgnoreFilegroupPlacement.config(state='normal')
+            self.EnDisValueIgnoreFilegroupPlacement.config(state='normal')
+
+        elif self.ChkButtonIgnoreFilegroupPlacement.get() is False:
+            self.ValueIgnoreFilegroupPlacement.set("True")
+            self.LblIgnoreFilegroupPlacement.config(state='disabled')
+            self.EnDisValueIgnoreFilegroupPlacement.config(state='disabled')
+
+
+    def EnDisScrIgnoreFileSize(self):
+        if self.ChkButtonIgnoreFileSize.get() is True:
+            self.LblIgnoreFileSize.config(state='normal')
+            self.EnDisValueIgnoreFileSize.config(state='normal')
+
+        elif self.ChkButtonIgnoreFileSize.get() is False:
+            self.ValueIgnoreFileSize.set("True")
+            self.LblIgnoreFileSize.config(state='disabled')
+            self.EnDisValueIgnoreFileSize.config(state='disabled')
+
+
+    def EnDisScrIgnoreFillFactor(self):
+        if self.ChkButtonIgnoreFillFactor.get() is True:
+            self.LblIgnoreFillFactor.config(state='normal')
+            self.EnDisValueIgnoreFillFactor.config(state='normal')
+
+        elif self.ChkButtonIgnoreFillFactor.get() is False:
+            self.ValueIgnoreFillFactor.set("True")
+            self.LblIgnoreFillFactor.config(state='disabled')
+            self.EnDisValueIgnoreFillFactor.config(state='disabled')
+
+
+    def EnDisScrIgnoreFullTextCatalogFilePath(self):
+        if self.ChkButtonIgnoreFullTextCatalogFilePath.get() is True:
+            self.LblIgnoreFullTextCatalogFilePath.config(state='normal')
+            self.EnDisValueIgnoreFullTextCatalogFilePath.config(state='normal')
+
+        elif self.ChkButtonIgnoreFullTextCatalogFilePath.get() is False:
+            self.ValueIgnoreFullTextCatalogFilePath.set("True")
+            self.LblIgnoreFullTextCatalogFilePath.config(state='disabled')
+            self.EnDisValueIgnoreFullTextCatalogFilePath.config(state='disabled')
+
+    def EnDisScrIgnoreIdentitySeed(self):
+        if self.ChkButtonIgnoreIdentitySeed.get() is True:
+            self.LblIgnoreIdentitySeed.config(state='normal')
+            self.EnDisValueIgnoreIdentitySeed.config(state='normal')
+
+        elif self.ChkButtonIgnoreIdentitySeed.get() is False:
+            self.ValueIgnoreIdentitySeed.set("False")
+            self.LblIgnoreIdentitySeed.config(state='disabled')
+            self.EnDisValueIgnoreIdentitySeed.config(state='disabled')
+
+    def EnDisScrIgnoreIncrement(self):
+        if self.ChkButtonIgnoreIncrement.get() is True:
+            self.LblIgnoreIncrement.config(state='normal')
+            self.EnDisValueIgnoreIncrement.config(state='normal')
+
+        elif self.ChkButtonIgnoreIncrement.get() is False:
+            self.ValueIgnoreIncrement.set("False")
+            self.LblIgnoreIncrement.config(state='disabled')
+            self.EnDisValueIgnoreIncrement.config(state='disabled')
+
+    def EnDisScrIgnoreIndexOptions(self):
+        if self.ChkButtonIgnoreIndexOptions.get() is True:
+            self.LblIgnoreIndexOptions.config(state='normal')
+            self.EnDisValueIgnoreIndexOptions.config(state='normal')
+
+        elif self.ChkButtonIgnoreIndexOptions.get() is False:
+            self.ValueIgnoreIndexOptions.set("False")
+            self.LblIgnoreIndexOptions.config(state='disabled')
+            self.EnDisValueIgnoreIndexOptions.config(state='disabled')
+
+    def EnDisScrIgnoreIndexPadding(self):
+        if self.ChkButtonIgnoreIndexPadding.get() is True:
+            self.LblIgnoreIndexPadding.config(state='normal')
+            self.EnDisValueIgnoreIndexPadding.config(state='normal')
+
+        elif self.ChkButtonIgnoreIndexPadding.get() is False:
+            self.ValueIgnoreIndexPadding.set("True")
+            self.LblIgnoreIndexPadding.config(state='disabled')
+            self.EnDisValueIgnoreIndexPadding.config(state='disabled')
+
+    def EnDisScrIgnoreKeywordCasing(self):
+        if self.ChkButtonIgnoreKeywordCasing.get() is True:
+            self.LblIgnoreKeywordCasing.config(state='normal')
+            self.EnDisValueIgnoreKeywordCasing.config(state='normal')
+
+        elif self.ChkButtonIgnoreKeywordCasing.get() is False:
+            self.ValueIgnoreKeywordCasing.set("True")
+            self.LblIgnoreKeywordCasing.config(state='disabled')
+            self.EnDisValueIgnoreKeywordCasing.config(state='disabled')
+
+    def EnDisScrIgnoreLockHintsOnIndexes(self):
+        if self.ChkButtonIgnoreLockHintsOnIndexes.get() is True:
+            self.LblIgnoreLockHintsOnIndexes.config(state='normal')
+            self.EnDisValueIgnoreLockHintsOnIndexes.config(state='normal')
+
+        elif self.ChkButtonIgnoreLockHintsOnIndexes.get() is False:
+            self.ValueIgnoreLockHintsOnIndexes.set("False")
+            self.LblIgnoreLockHintsOnIndexes.config(state='disabled')
+            self.EnDisValueIgnoreLockHintsOnIndexes.config(state='disabled')
+
+    def EnDisScrIgnoreLoginSids(self):
+        if self.ChkButtonIgnoreLoginSids.get() is True:
+            self.LblIgnoreLoginSids.config(state='normal')
+            self.EnDisValueIgnoreLoginSids.config(state='normal')
+
+        elif self.ChkButtonIgnoreLoginSids.get() is False:
+            self.ValueIgnoreLoginSids.set("True")
+            self.LblIgnoreLoginSids.config(state='disabled')
+            self.EnDisValueIgnoreLoginSids.config(state='disabled')
+
+    def EnDisScrIgnoreNotForReplication(self):
+        if self.ChkButtonIgnoreNotForReplication.get() is True:
+            self.LblIgnoreNotForReplication.config(state='normal')
+            self.EnDisValueIgnoreNotForReplication.config(state='normal')
+
+        elif self.ChkButtonIgnoreNotForReplication.get() is False:
+            self.ValueIgnoreNotForReplication.set("False")
+            self.LblIgnoreNotForReplication.config(state='disabled')
+            self.EnDisValueIgnoreNotForReplication.config(state='disabled')
+
+    def EnDisScrIgnoreObjectPlacementOnPartitionScheme(self):
+        if self.ChkButtonIgnoreObjectPlacementOnPartitionScheme.get() is True:
+            self.LblIgnoreObjectPlacementOnPartitionScheme.config(state='normal')
+            self.EnDisValueIgnoreObjectPlacementOnPartitionScheme.config(state='normal')
+
+        elif self.ChkButtonIgnoreObjectPlacementOnPartitionScheme.get() is False:
+            self.ValueIgnoreObjectPlacementOnPartitionScheme.set("True")
+            self.LblIgnoreObjectPlacementOnPartitionScheme.config(state='disabled')
+            self.EnDisValueIgnoreObjectPlacementOnPartitionScheme.config(state='disabled')
+
+    def EnDisScrIgnorePartitionSchemes(self):
+        if self.ChkButtonIgnorePartitionSchemes.get() is True:
+            self.LblIgnorePartitionSchemes.config(state='normal')
+            self.EnDisValueIgnorePartitionSchemes.config(state='normal')
+
+        elif self.ChkButtonIgnorePartitionSchemes.get() is False:
+            self.ValueIgnorePartitionSchemes.set("False")
+            self.LblIgnorePartitionSchemes.config(state='disabled')
+            self.EnDisValueIgnorePartitionSchemes.config(state='disabled')
+
+    def EnDisScrIgnorePermissions(self):
+        if self.ChkButtonIgnorePermissions.get() is True:
+            self.LblIgnorePermissions.config(state='normal')
+            self.EnDisValueIgnorePermissions.config(state='normal')
+
+        elif self.ChkButtonIgnorePermissions.get() is False:
+            self.ValueIgnorePermissions.set("False")
+            self.LblIgnorePermissions.config(state='disabled')
+            self.EnDisValueIgnorePermissions.config(state='disabled')
+
+    def EnDisScrIgnoreQuotedIdentifiers(self):
+        if self.ChkButtonIgnoreQuotedIdentifiers.get() is True:
+            self.LblIgnoreQuotedIdentifiers.config(state='normal')
+            self.EnDisValueIgnoreQuotedIdentifiers.config(state='normal')
+
+        elif self.ChkButtonIgnoreQuotedIdentifiers.get() is False:
+            self.ValueIgnoreQuotedIdentifiers.set("False")
+            self.LblIgnoreQuotedIdentifiers.config(state='disabled')
+            self.EnDisValueIgnoreQuotedIdentifiers.config(state='disabled')
+
+    def EnDisScrIgnoreRoleMembership(self):
+        if self.ChkButtonIgnoreRoleMembership.get() is True:
+            self.LblIgnoreRoleMembership.config(state='normal')
+            self.EnDisValueIgnoreRoleMembership.config(state='normal')
+
+        elif self.ChkButtonIgnoreRoleMembership.get() is False:
+            self.ValueIgnoreRoleMembership.set("False")
+            self.LblIgnoreRoleMembership.config(state='disabled')
+            self.EnDisValueIgnoreRoleMembership.config(state='disabled')
+
+    def EnDisScrIgnoreRouteLifetime(self):
+        if self.ChkButtonIgnoreRouteLifetime.get() is True:
+            self.LblIgnoreRouteLifetime.config(state='normal')
+            self.EnDisValueIgnoreRouteLifetime.config(state='normal')
+
+        elif self.ChkButtonIgnoreRouteLifetime.get() is False:
+            self.ValueIgnoreRouteLifetime.set("True")
+            self.LblIgnoreRouteLifetime.config(state='disabled')
+            self.EnDisValueIgnoreRouteLifetime.config(state='disabled')
+
+    def EnDisScrIgnoreSemicolonBetweenStatements(self):
+        if self.ChkButtonIgnoreSemicolonBetweenStatements.get() is True:
+            self.LblIgnoreSemicolonBetweenStatements.config(state='normal')
+            self.EnDisValueIgnoreSemicolonBetweenStatements.config(state='normal')
+
+        elif self.ChkButtonIgnoreSemicolonBetweenStatements.get() is False:
+            self.ValueIgnoreSemicolonBetweenStatements.set("True")
+            self.LblIgnoreSemicolonBetweenStatements.config(state='disabled')
+            self.EnDisValueIgnoreSemicolonBetweenStatements.config(state='disabled')
+
+    def EnDisScrIgnoreTableOptions(self):
+        if self.ChkButtonIgnoreTableOptions.get() is True:
+            self.LblIgnoreTableOptions.config(state='normal')
+            self.EnDisValueIgnoreTableOptions.config(state='normal')
+
+        elif self.ChkButtonIgnoreTableOptions.get() is False:
+            self.ValueIgnoreTableOptions.set("False")
+            self.LblIgnoreTableOptions.config(state='disabled')
+            self.EnDisValueIgnoreTableOptions.config(state='disabled')
+
+    def EnDisScrIgnoreUserSettingsObjects(self):
+        if self.ChkButtonIgnoreUserSettingsObjects.get() is True:
+            self.LblIgnoreUserSettingsObjects.config(state='normal')
+            self.EnDisValueIgnoreUserSettingsObjects.config(state='normal')
+
+        elif self.ChkButtonIgnoreUserSettingsObjects.get() is False:
+            self.ValueIgnoreUserSettingsObjects.set("False")
+            self.LblIgnoreUserSettingsObjects.config(state='disabled')
+            self.EnDisValueIgnoreUserSettingsObjects.config(state='disabled')
+
+    def EnDisScrIgnoreWhitespace(self):
+        if self.ChkButtonIgnoreWhitespace.get() is True:
+            self.LblIgnoreWhitespace.config(state='normal')
+            self.EnDisValueIgnoreWhitespace.config(state='normal')
+
+        elif self.ChkButtonIgnoreWhitespace.get() is False:
+            self.ValueIgnoreWhitespace.set("True")
+            self.LblIgnoreWhitespace.config(state='disabled')
+            self.EnDisValueIgnoreWhitespace.config(state='disabled')
+
+    def EnDisScrIgnoreWithNocheckOnCheckConstraints(self):
+        if self.ChkButtonIgnoreWithNocheckOnCheckConstraints.get() is True:
+            self.LblIgnoreWithNocheckOnCheckConstraints.config(state='normal')
+            self.EnDisValueIgnoreWithNocheckOnCheckConstraints.config(state='normal')
+
+        elif self.ChkButtonIgnoreWithNocheckOnCheckConstraints.get() is False:
+            self.ValueIgnoreWithNocheckOnCheckConstraints.set("False")
+            self.LblIgnoreWithNocheckOnCheckConstraints.config(state='disabled')
+            self.EnDisValueIgnoreWithNocheckOnCheckConstraints.config(state='disabled')
+
+    def EnDisScrIgnoreWithNocheckOnForeignKeys(self):
+        if self.ChkButtonIgnoreWithNocheckOnForeignKeys.get() is True:
+            self.LblIgnoreWithNocheckOnForeignKeys.config(state='normal')
+            self.EnDisValueIgnoreWithNocheckOnForeignKeys.config(state='normal')
+
+        elif self.ChkButtonIgnoreWithNocheckOnForeignKeys.get() is False:
+            self.ValueIgnoreWithNocheckOnForeignKeys.set("False")
+            self.LblIgnoreWithNocheckOnForeignKeys.config(state='disabled')
+            self.EnDisValueIgnoreWithNocheckOnForeignKeys.config(state='disabled')
+
+    def EnDisScrIncludeCompositeObjects(self):
+        if self.ChkButtonIncludeCompositeObjects.get() is True:
+            self.LblIncludeCompositeObjects.config(state='normal')
+            self.EnDisValueIncludeCompositeObjects.config(state='normal')
+
+        elif self.ChkButtonIncludeCompositeObjects.get() is False:
+            self.ValueIncludeCompositeObjects.set("False")
+            self.LblIncludeCompositeObjects.config(state='disabled')
+            self.EnDisValueIncludeCompositeObjects.config(state='disabled')
+
+    def EnDisScrIncludeTransactionalScripts(self):
+        if self.ChkButtonIncludeTransactionalScripts.get() is True:
+            self.LblIncludeTransactionalScripts.config(state='normal')
+            self.EnDisValueIncludeTransactionalScripts.config(state='normal')
+
+        elif self.ChkButtonIncludeTransactionalScripts.get() is False:
+            self.ValueIncludeTransactionalScripts.set("False")
+            self.LblIncludeTransactionalScripts.config(state='disabled')
+            self.EnDisValueIncludeTransactionalScripts.config(state='disabled')
+
+    def EnDisScrNoAlterStatementsToChangeClrTypes(self):
+        if self.ChkButtonNoAlterStatementsToChangeClrTypes.get() is True:
+            self.LblNoAlterStatementsToChangeClrTypes.config(state='normal')
+            self.EnDisValueNoAlterStatementsToChangeClrTypes.config(state='normal')
+
+        elif self.ChkButtonNoAlterStatementsToChangeClrTypes.get() is False:
+            self.ValueNoAlterStatementsToChangeClrTypes.set("False")
+            self.LblNoAlterStatementsToChangeClrTypes.config(state='disabled')
+            self.EnDisValueNoAlterStatementsToChangeClrTypes.config(state='disabled')
+
+    def EnDisScrPopulateFilesOnFilegroups(self):
+        if self.ChkButtonPopulateFilesOnFilegroups.get() is True:
+            self.LblPopulateFilesOnFilegroups.config(state='normal')
+            self.EnDisValuePopulateFilesOnFilegroups.config(state='normal')
+
+        elif self.ChkButtonPopulateFilesOnFilegroups.get() is False:
+            self.ValuePopulateFilesOnFilegroups.set("True")
+            self.LblPopulateFilesOnFilegroups.config(state='disabled')
+            self.EnDisValuePopulateFilesOnFilegroups.config(state='disabled')
+
+    def EnDisScrRegisterDataTierApplication(self):
+        if self.ChkButtonRegisterDataTierApplication.get() is True:
+            self.LblRegisterDataTierApplication.config(state='normal')
+            self.EnDisValueRegisterDataTierApplication.config(state='normal')
+
+        elif self.ChkButtonRegisterDataTierApplication.get() is False:
+            self.ValueRegisterDataTierApplication.set("False")
+            self.LblRegisterDataTierApplication.config(state='disabled')
+            self.EnDisValueRegisterDataTierApplication.config(state='disabled')
+
+    def EnDisScrRunDeploymentPlanExecutors(self):
+        if self.ChkButtonRunDeploymentPlanExecutors.get() is True:
+            self.LblRunDeploymentPlanExecutors.config(state='normal')
+            self.EnDisValueRunDeploymentPlanExecutors.config(state='normal')
+
+        elif self.ChkButtonRunDeploymentPlanExecutors.get() is False:
+            self.ValueRunDeploymentPlanExecutors.set("False")
+            self.LblRunDeploymentPlanExecutors.config(state='disabled')
+            self.EnDisValueRunDeploymentPlanExecutors.config(state='disabled')
+
+    def EnDisScrScriptDatabaseCollation(self):
+        if self.ChkButtonScriptDatabaseCollation.get() is True:
+            self.LblScriptDatabaseCollation.config(state='normal')
+            self.EnDisValueScriptDatabaseCollation.config(state='normal')
+
+        elif self.ChkButtonScriptDatabaseCollation.get() is False:
+            self.ValueScriptDatabaseCollation.set("False")
+            self.LblScriptDatabaseCollation.config(state='disabled')
+            self.EnDisValueScriptDatabaseCollation.config(state='disabled')
+
+    def EnDisScrScriptDatabaseCompatibility(self):
+        if self.ChkButtonScriptDatabaseCompatibility.get() is True:
+            self.LblScriptDatabaseCompatibility.config(state='normal')
+            self.EnDisValueScriptDatabaseCompatibility.config(state='normal')
+
+        elif self.ChkButtonScriptDatabaseCompatibility.get() is False:
+            self.ValueScriptDatabaseCompatibility.set("True")
+            self.LblScriptDatabaseCompatibility.config(state='disabled')
+            self.EnDisValueScriptDatabaseCompatibility.config(state='disabled')
+
+    def EnDisScrScriptDatabaseOptions(self):
+        if self.ChkButtonScriptDatabaseOptions.get() is True:
+            self.LblScriptDatabaseOptions.config(state='normal')
+            self.EnDisValueScriptDatabaseOptions.config(state='normal')
+
+        elif self.ChkButtonScriptDatabaseOptions.get() is False:
+            self.ValueScriptDatabaseOptions.set("True")
+            self.LblScriptDatabaseOptions.config(state='disabled')
+            self.EnDisValueScriptDatabaseOptions.config(state='disabled')
+
+    def EnDisScrScriptDeployStateChecks(self):
+        if self.ChkButtonScriptDeployStateChecks.get() is True:
+            self.LblScriptDeployStateChecks.config(state='normal')
+            self.EnDisValueScriptDeployStateChecks.config(state='normal')
+
+        elif self.ChkButtonScriptDeployStateChecks.get() is False:
+            self.ValueScriptDeployStateChecks.set("False")
+            self.LblScriptDeployStateChecks.config(state='disabled')
+            self.EnDisValueScriptDeployStateChecks.config(state='disabled')
+
+    def EnDisScrScriptFileSize(self):
+        if self.ChkButtonScriptFileSize.get() is True:
+            self.LblScriptFileSize.config(state='normal')
+            self.EnDisValueScriptFileSize.config(state='normal')
+
+        elif self.ChkButtonScriptFileSize.get() is False:
+            self.ValueScriptFileSize.set("False")
+            self.LblScriptFileSize.config(state='disabled')
+            self.EnDisValueScriptFileSize.config(state='disabled')
+
+    def EnDisScrScriptNewConstraintValidation(self):
+        if self.ChkButtonScriptNewConstraintValidation.get() is True:
+            self.LblScriptNewConstraintValidation.config(state='normal')
+            self.EnDisValueScriptNewConstraintValidation.config(state='normal')
+
+        elif self.ChkButtonScriptNewConstraintValidation.get() is False:
+            self.ValueScriptNewConstraintValidation.set("True")
+            self.LblScriptNewConstraintValidation.config(state='disabled')
+            self.EnDisValueScriptNewConstraintValidation.config(state='disabled')
+
+    def EnDisScrScriptRefreshModule(self):
+        if self.ChkButtonScriptRefreshModule.get() is True:
+            self.LblScriptRefreshModule.config(state='normal')
+            self.EnDisValueScriptRefreshModule.config(state='normal')
+
+        elif self.ChkButtonScriptRefreshModule.get() is False:
+            self.ValueScriptRefreshModule.set("True")
+            self.LblScriptRefreshModule.config(state='disabled')
+            self.EnDisValueScriptRefreshModule.config(state='disabled')
+
+    def EnDisScrStorage(self):
+        if self.ChkButtonStorage.get() is True:
+            self.LblStorage.config(state='normal')
+            self.EnDisValueStorage.config(state='normal')
+
+        elif self.ChkButtonStorage.get() is False:
+            self.ValueStorage.set("Memory")
+            self.LblStorage.config(state='disabled')
+            self.EnDisValueStorage.config(state='disabled')
+
+    def EnDisScrTreatVerificationErrorsAsWarnings(self):
+        if self.ChkButtonTreatVerificationErrorsAsWarnings.get() is True:
+            self.LblTreatVerificationErrorsAsWarnings.config(state='normal')
+            self.EnDisValueTreatVerificationErrorsAsWarnings.config(state='normal')
+
+        elif self.ChkButtonTreatVerificationErrorsAsWarnings.get() is False:
+            self.ValueTreatVerificationErrorsAsWarnings.set("False")
+            self.LblTreatVerificationErrorsAsWarnings.config(state='disabled')
+            self.EnDisValueTreatVerificationErrorsAsWarnings.config(state='disabled')
+
+    def EnDisScrUnmodifiableObjectWarnings(self):
+        if self.ChkButtonUnmodifiableObjectWarnings.get() is True:
+            self.LblUnmodifiableObjectWarnings.config(state='normal')
+            self.EnDisValueUnmodifiableObjectWarnings.config(state='normal')
+
+        elif self.ChkButtonUnmodifiableObjectWarnings.get() is False:
+            self.ValueUnmodifiableObjectWarnings.set("True")
+            self.LblUnmodifiableObjectWarnings.config(state='disabled')
+            self.EnDisValueUnmodifiableObjectWarnings.config(state='disabled')
+
+    def EnDisScrVerifyCollationCompatibility(self):
+        if self.ChkButtonVerifyCollationCompatibility.get() is True:
+            self.LblVerifyCollationCompatibility.config(state='normal')
+            self.EnDisValueVerifyCollationCompatibility.config(state='normal')
+
+        elif self.ChkButtonVerifyCollationCompatibility.get() is False:
+            self.ValueVerifyCollationCompatibility.set("True")
+            self.LblVerifyCollationCompatibility.config(state='disabled')
+            self.EnDisValueVerifyCollationCompatibility.config(state='disabled')
+
+    def EnDisScrVerifyDeployment(self):
+        if self.ChkButtonVerifyDeployment.get() is True:
+            self.LblVerifyDeployment.config(state='normal')
+            self.EnDisValueVerifyDeployment.config(state='normal')
+
+        elif self.ChkButtonVerifyDeployment.get() is False:
+            self.ValueVerifyDeployment.set("True")
+            self.LblVerifyDeployment.config(state='disabled')
+            self.EnDisValueVerifyDeployment.config(state='disabled')
+
+
+root = Tk()
 root.title("Compare and Deploy SQL Server database")
-root.geometry("800x900")
-app=Application(root)
+root.geometry("850x900")
+app = Application(root)
 root.mainloop()
