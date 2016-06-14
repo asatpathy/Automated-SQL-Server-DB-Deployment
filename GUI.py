@@ -11,11 +11,11 @@ class Application(Frame):
 
     def create_widgets(self):
         # Declare variables ######################################################
-        self.SourceServerString = StringVar()
-        self.SourceDatabaseString = StringVar()
+        # self.SourceServerString = StringVar()
+        # self.SourceDatabaseString = StringVar()
 
-        self.TargetServerString = StringVar()
-        self.TargetDatabaseString = StringVar()
+        # self.TargetServerString = StringVar()
+        # self.TargetDatabaseString = StringVar()
 
         self.InformationString = StringVar()
 
@@ -1166,60 +1166,28 @@ class Application(Frame):
         #Query string for Publish
         #self.CmpExePublishQuery
 
-        self.SourceServerString = self.SourceServerEntry.get()
-        self.SourceDatabaseString = self.SourceDatabaseEntry.get()
+        # self.SourceServerString = self.SourceServerEntry.get()
+        # self.SourceDatabaseString = self.SourceDatabaseEntry.get()
 
-        self.TargetServerString = self.TargetServerEntry.get()
-        self.TargetDatabaseString = self.TargetDatabaseEntry.get()
+        # self.TargetServerString = self.TargetServerEntry.get()
+        # self.TargetDatabaseString = self.TargetDatabaseEntry.get()
 
         # self.PreDeploymentQueryString = self.PreDeploymentText.get(1.0, END)
 
-        #Query string for Pre-Deployment
-        self.CmpExePreDeploymentQuery = 'sqlcmd -S ' + self.TargetServerEntry.get()
-        #Query string for Extract
-        self.CmpExeExtractQuery = 'CompareDeploy\\sqlpackage /Action:Extract /SourceServerName:' + self.SourceServerEntry.get() + ' /SourceDatabaseName:' + self.SourceDatabaseEntry.get()
-        # Query string for Publish
-        self.CmpExePublishQuery = 'CompareDeploy\\sqlpackage /Action:Publish /SourceFile:CompareDeploy\\temp\\' + self.SourceDatabaseEntry.get() + '.dacpac /TargetServerName:' + self.TargetServerEntry.get() + ' /TargetDatabaseName:' + self.TargetDatabaseEntry.get()
-
-        if self.WinAuthSrcVariable.get() is False:
-            self.CmpExeExtractQuery += ' /SourceUser:' + self.SourceUsernameEntry.get() + ' /SourcePassword:' + self.SourcePasswordEntry.get()
-
-        if self.WinAuthTrgtVariable.get() is False:
-            self.CmpExePreDeploymentQuery += ' -U '+ self.TargetUsernameEntry.get() +' -P '+ self.TargetPasswordEntry.get()
-            self.CmpExePublishQuery +=  ' /TargetUser:' + self.TargetUsernameEntry.get() + ' /TargetPassword:' + self.TargetPasswordEntry.get()
-
-        if self.EncryptSrcVariable.get() is True:
-            self.CmpExeExtractQuery += ' /SourceEncryptConnection=True '
-
-        if self.EncryptTrgtVariable.get() is True:
-            self.CmpExePreDeploymentQuery += ' -N '
-            self.CmpExePublishQuery += ' /TargetEncryptConnection=True'
-
-
-
-        self.CmpExePreDeploymentQuery += ' -d master -Q " ' + self.PreDeploymentText.get(1.0, END) + ' "'
-        print("self.CmpExePreDeploymentQuery=", self.CmpExePreDeploymentQuery)
-
-        self.CmpExeExtractQuery += ' /TargetFile:CompareDeploy\\temp\\' + self.SourceDatabaseString + '.dacpac'
-        print("self.CmpExeExtractQuery=", self.CmpExeExtractQuery)
-
-        self.CmpExePublishQuery += ' /p:ExcludeObjectTypes=RoleMembership;Users /p:ScriptDatabaseOptions=False'
-        print("self.CmpExePublishQuery=", self.CmpExePublishQuery)
-
-
+        self.Prepare_Queries("CompareDeployButton")
 
         SPPreDeployment = subprocess.Popen(self.CmpExePreDeploymentQuery, stdout=subprocess.PIPE)
         SPPreDeployment.wait()
         SPExtract = subprocess.Popen(self.CmpExeExtractQuery,stdout=subprocess.PIPE)
         SPExtract.wait()
         SPPublish = subprocess.Popen(self.CmpExePublishQuery,stdout=subprocess.PIPE)
-        SPPublish.wait()
+
 
         self.ShellOutputPreDeploymentString = SPPreDeployment.communicate()[0]
         self.ShellOutputExtractString = SPExtract.communicate()[0]
         self.ShellOutputPublishString = SPPublish.communicate()[0]
 
-        self.InformationString = 'Connection Info:\nSource Server: ' + self.SourceServerString + '\nSource Database: ' + self.SourceDatabaseString + '\nTarget Server: ' + self.TargetServerString + '\nTarget Database: ' + self.TargetDatabaseString
+        self.InformationString = 'Connection Info:\nSource Server: ' + self.SourceServerEntry.get() + '\nSource Database: ' + self.SourceDatabaseEntry.get() + '\nTarget Server: ' + self.TargetServerEntry.get() + '\nTarget Database: ' + self.TargetDatabaseEntry.get()
         self.InformationLabel["text"] = self.InformationString
 
     # method to display shell output
@@ -2702,8 +2670,528 @@ class Application(Frame):
             self.LblVerifyDeployment.config(state='disabled')
             self.EnDisValueVerifyDeployment.config(state='disabled')
 
+    def Prepare_Queries(self, source_button):
+        #Query string for Pre-Deployment
+        self.CmpExePreDeploymentQuery = 'sqlcmd -S ' + self.TargetServerEntry.get()
+        #Query string for Extract
+        self.CmpExeExtractQuery = 'CompareDeploy\\sqlpackage /Action:Extract /SourceServerName:' + self.SourceServerEntry.get() + ' /SourceDatabaseName:' + self.SourceDatabaseEntry.get()
+        # Query string for Publish
+        self.CmpExePublishQuery = 'CompareDeploy\\sqlpackage /Action:Publish /SourceFile:CompareDeploy\\temp\\' + self.SourceDatabaseEntry.get() + '.dacpac /TargetServerName:' + self.TargetServerEntry.get() + ' /TargetDatabaseName:' + self.TargetDatabaseEntry.get()
+
+        if self.WinAuthSrcVariable.get() is False:
+            self.CmpExeExtractQuery += ' /SourceUser:' + self.SourceUsernameEntry.get() + ' /SourcePassword:' + self.SourcePasswordEntry.get()
+
+        if self.WinAuthTrgtVariable.get() is False:
+            self.CmpExePreDeploymentQuery += ' -U '+ self.TargetUsernameEntry.get() +' -P '+ self.TargetPasswordEntry.get()
+            self.CmpExePublishQuery +=  ' /TargetUser:' + self.TargetUsernameEntry.get() + ' /TargetPassword:' + self.TargetPasswordEntry.get()
+
+        if self.EncryptSrcVariable.get() is True:
+            self.CmpExeExtractQuery += ' /SourceEncryptConnection=True '
+
+        if self.EncryptTrgtVariable.get() is True:
+            self.CmpExePreDeploymentQuery += ' -N '
+            self.CmpExePublishQuery += ' /TargetEncryptConnection=True'
+
+
+
+        self.CmpExePreDeploymentQuery += ' -d master -Q " ' + self.PreDeploymentText.get(1.0, END) + ' "'
+        print("self.CmpExePreDeploymentQuery=", self.CmpExePreDeploymentQuery)
+
+        self.CmpExeExtractQuery += ' /TargetFile:CompareDeploy\\temp\\' + self.SourceDatabaseEntry.get() + '.dacpac'
+        print("self.CmpExeExtractQuery=", self.CmpExeExtractQuery)
+
+        # self.CmpExePublishQuery += ' /p:ExcludeObjectTypes=RoleMembership;Users /p:ScriptDatabaseOptions=False'
+
+        if self.ChkButtonAllowDropBlockingAssemblies.get() is True and self.ValueAllowDropBlockingAssemblies.get() == "True":
+            self.CmpExePublishQuery += ' /p:AllowDropBlockingAssemblies=True '
+
+        if self.ChkButtonAllowIncompatiblePlatform.get() is True and self.ValueAllowIncompatiblePlatform.get() == "True":
+            self.CmpExePublishQuery += ' /p:AllowIncompatiblePlatform=True '
+
+        if self.ChkButtonBackupDatabaseBeforeChanges.get() is True and self.ValueBackupDatabaseBeforeChanges.get() == "True":
+            self.CmpExePublishQuery += ' /p:BackupDatabaseBeforeChanges=True '
+
+        if self.ChkButtonBlockOnPossibleDataLoss.get() is True and self.ValueBlockOnPossibleDataLoss.get() == "False":
+            self.CmpExePublishQuery += ' /p:BlockOnPossibleDataLoss=False '
+
+        if self.ChkButtonBlockWhenDriftDetected.get() is True and self.ValueBlockWhenDriftDetected.get() == "False":
+            self.CmpExePublishQuery += ' /p:BlockWhenDriftDetected=False '
+
+        if self.ChkButtonCommandTimeout.get() is True and  self.EntryCommandTimeout.get()!="60":
+            self.CmpExePublishQuery += ' /p:CommandTimeout=' + self.EntryCommandTimeout.get() + ' '
+
+        if self.ChkButtonCommentOutSetVarDeclarations.get() is True and self.ValueCommentOutSetVarDeclarations.get() == "True":
+            self.CmpExePublishQuery += ' /p:CommentOutSetVarDeclarations=True '
+
+        if self.ChkButtonCompareUsingTargetCollation.get() is True and self.ValueCompareUsingTargetCollation.get() == "True":
+            self.CmpExePublishQuery += ' /p:CompareUsingTargetCollation=True '
+
+        if self.ChkButtonCreateNewDatabase.get() is True and self.ValueCreateNewDatabase.get() == "True":
+            self.CmpExePublishQuery += ' /p:CreateNewDatabase=True '
+
+        if self.ChkButtonDeployDatabaseInSingleUserMode.get() is True and self.ValueDeployDatabaseInSingleUserMode.get() == "True":
+            self.CmpExePublishQuery += ' /p:DeployDatabaseInSingleUserMode=True '
+
+        if self.ChkButtonDisableAndReenableDdlTriggers.get() is True and self.ValueDisableAndReenableDdlTriggers.get() == "False":
+            self.CmpExePublishQuery += ' /p:DisableAndReenableDdlTriggers=False '
+
+        if self.ChkButtonDoNotAlterChangeDataCaptureObjects.get() is True and self.ValueDoNotAlterChangeDataCaptureObjects.get() == "False":
+            self.CmpExePublishQuery += ' /p:DoNotAlterChangeDataCaptureObjects=False '
+
+        if self.ChkButtonDoNotAlterReplicatedObjects.get() is True and self.ValueDoNotAlterReplicatedObjects.get() == "False":
+            self.CmpExePublishQuery += ' /p:DoNotAlterReplicatedObjects=False '
+
+        if self.ChkButtonDoNotDropObjectTypes.get() is True:
+            self.CmpExePublishQuery += ' /p:DoNotDropObjectTypes='
+            if self.DoNotDropObjectTypesAggregates.get() is True:
+                self.CmpExePublishQuery += 'Aggregates;'
+            if self.DoNotDropObjectTypesApplicationRoles.get() is True:
+                self.CmpExePublishQuery += 'ApplicationRoles;'
+
+            if self.DoNotDropObjectTypesAssemblies.get() is True:
+                self.CmpExePublishQuery += 'Assemblies;'
+
+            if self.DoNotDropObjectTypesAsymmetricKeys.get() is True:
+                self.CmpExePublishQuery += 'AsymmetricKeys;'
+
+            if self.DoNotDropObjectTypesBrokerPriorities.get() is True:
+                self.CmpExePublishQuery += 'BrokerPriorities;'
+
+            if self.DoNotDropObjectTypesCertificates.get() is True:
+                self.CmpExePublishQuery += 'Certificates;'
+
+            if self.DoNotDropObjectTypesContracts.get() is True:
+                self.CmpExePublishQuery += 'Contracts;'
+
+            if self.DoNotDropObjectTypesDatabaseRoles.get() is True:
+                self.CmpExePublishQuery += 'DatabaseRoles;'
+
+            if self.DoNotDropObjectTypesDatabaseTriggers.get() is True:
+                self.CmpExePublishQuery += 'DatabaseTriggers;'
+
+            if self.DoNotDropObjectTypesDefaults.get() is True:
+                self.CmpExePublishQuery += 'Defaults;'
+
+            if self.DoNotDropObjectTypesExtendedProperties.get() is True:
+                self.CmpExePublishQuery += 'ExtendedProperties;'
+
+            if self.DoNotDropObjectTypesFilegroups.get() is True:
+                self.CmpExePublishQuery += 'Filegroups;'
+
+            if self.DoNotDropObjectTypesFileTables.get() is True:
+                self.CmpExePublishQuery += 'FileTables;'
+
+            if self.DoNotDropObjectTypesFullTextCatalogs.get() is True:
+                self.CmpExePublishQuery += 'FullTextCatalogs;'
+
+            if self.DoNotDropObjectTypesFullTextStoplists.get() is True:
+                self.CmpExePublishQuery += 'FullTextStoplists;'
+
+            if self.DoNotDropObjectTypesMessageTypes.get() is True:
+                self.CmpExePublishQuery += 'MessageTypes;'
+
+            if self.DoNotDropObjectTypesPartitionFunctions.get() is True:
+                self.CmpExePublishQuery += 'PartitionFunctions;'
+
+            if self.DoNotDropObjectTypesPartitionSchemes.get() is True:
+                self.CmpExePublishQuery += 'PartitionSchemes;'
+
+            if self.DoNotDropObjectTypesPermissions.get() is True:
+                self.CmpExePublishQuery += 'Permissions;'
+
+            if self.DoNotDropObjectTypesQueues.get() is True:
+                self.CmpExePublishQuery += 'Queues;'
+
+            if self.DoNotDropObjectTypesRemoteServiceBindings.get() is True:
+                self.CmpExePublishQuery += 'RemoteServiceBindings;'
+
+            if self.DoNotDropObjectTypesRoleMembership.get() is True:
+                self.CmpExePublishQuery += 'RoleMembership;'
+
+            if self.DoNotDropObjectTypesRules.get() is True:
+                self.CmpExePublishQuery += 'Rules;'
+
+            if self.DoNotDropObjectTypesScalarValuedFunctions.get() is True:
+                self.CmpExePublishQuery += 'ScalarValuedFunctions;'
+
+            if self.DoNotDropObjectTypesSearchPropertyLists.get() is True:
+                self.CmpExePublishQuery += 'SearchPropertyLists;'
+
+            if self.DoNotDropObjectTypesSequences.get() is True:
+                self.CmpExePublishQuery += 'Sequences;'
+
+            if self.DoNotDropObjectTypesServices.get() is True:
+                self.CmpExePublishQuery += 'Services;'
+
+            if self.DoNotDropObjectTypesSignatures.get() is True:
+                self.CmpExePublishQuery += 'Signatures;'
+
+            if self.DoNotDropObjectTypesStoredProcedures.get() is True:
+                self.CmpExePublishQuery += 'StoredProcedures;'
+
+            if self.DoNotDropObjectTypesSymmetricKeys.get() is True:
+                self.CmpExePublishQuery += 'SymmetricKeys;'
+
+            if self.DoNotDropObjectTypesSynonyms.get() is True:
+                self.CmpExePublishQuery += 'Synonyms;'
+
+            if self.DoNotDropObjectTypesTables.get() is True:
+                self.CmpExePublishQuery += 'Tables;'
+
+            if self.DoNotDropObjectTypesTableValuedFunctions.get() is True:
+                self.CmpExePublishQuery += 'TableValuedFunctions;'
+
+            if self.DoNotDropObjectTypesUserDefinedDataTypes.get() is True:
+                self.CmpExePublishQuery += 'UserDefinedDataTypes;'
+
+            if self.DoNotDropObjectTypesUserDefinedTableTypes.get() is True:
+                self.CmpExePublishQuery += 'UserDefinedTableTypes;'
+
+            if self.DoNotDropObjectTypesClrUserDefinedTypes.get() is True:
+                self.CmpExePublishQuery += 'ClrUserDefinedTypes;'
+
+            if self.DoNotDropObjectTypesUsers.get() is True:
+                self.CmpExePublishQuery += 'Users;'
+
+            if self.DoNotDropObjectTypesViews.get() is True:
+                self.CmpExePublishQuery += 'Views;'
+
+            if self.DoNotDropObjectTypesXmlSchemaCollections.get() is True:
+                self.CmpExePublishQuery += 'XmlSchemaCollections;'
+
+            if self.DoNotDropObjectTypesAudits.get() is True:
+                self.CmpExePublishQuery += 'Audits;'
+
+            if self.DoNotDropObjectTypesCredentials.get() is True:
+                self.CmpExePublishQuery += 'Credentials;'
+
+            if self.DoNotDropObjectTypesCryptographicProviders.get() is True:
+                self.CmpExePublishQuery += 'CryptographicProviders;'
+
+            if self.DoNotDropObjectTypesDatabaseAuditSpecifications.get() is True:
+                self.CmpExePublishQuery += 'DatabaseAuditSpecifications;'
+
+            if self.DoNotDropObjectTypesEndpoints.get() is True:
+                self.CmpExePublishQuery += 'Endpoints;'
+
+            if self.DoNotDropObjectTypesErrorMessages.get() is True:
+                self.CmpExePublishQuery += 'ErrorMessages;'
+
+            if self.DoNotDropObjectTypesEventNotifications.get() is True:
+                self.CmpExePublishQuery += 'EventNotifications;'
+
+            if self.DoNotDropObjectTypesEventSessions.get() is True:
+                self.CmpExePublishQuery += 'EventSessions;'
+
+            if self.DoNotDropObjectTypesLinkedServerLogins.get() is True:
+                self.CmpExePublishQuery += 'LinkedServerLogins;'
+
+            if self.DoNotDropObjectTypesRoutes.get() is True:
+                self.CmpExePublishQuery += 'Routes;'
+
+            if self.DoNotDropObjectTypesServerAuditSpecifications.get() is True:
+                self.CmpExePublishQuery += 'ServerAuditSpecifications;'
+
+            if self.DoNotDropObjectTypesServerRoleMembership.get() is True:
+                self.CmpExePublishQuery += 'ServerRoleMembership;'
+
+            if self.DoNotDropObjectTypesServerRoles.get() is True:
+                self.CmpExePublishQuery += 'ServerRoles;'
+
+            if self.DoNotDropObjectTypesServerTriggers.get() is True:
+                self.CmpExePublishQuery += 'ServerTriggers;'
+
+        if self.ChkButtonDropConstraintsNotInSource.get() is True and self.ValueDropConstraintsNotInSource.get() == "False":
+            self.CmpExePublishQuery += ' /p:DropConstraintsNotInSource=False '
+        if self.ChkButtonDropDmlTriggersNotInSource.get() is True and self.ValueDropDmlTriggersNotInSource.get() == "False":
+            self.CmpExePublishQuery += ' /p:DropDmlTriggersNotInSource=False '
+        if self.ChkButtonDropExtendedPropertiesNotInSource.get() is True and self.ValueDropExtendedPropertiesNotInSource.get() == "False":
+            self.CmpExePublishQuery += ' /p:DropExtendedPropertiesNotInSource=False '
+        if self.ChkButtonDropIndexesNotInSource.get() is True and self.ValueDropIndexesNotInSource.get() == "False":
+            self.CmpExePublishQuery += ' /p:DropIndexesNotInSource=False '
+        if self.ChkButtonDropObjectsNotInSource.get() is True and self.ValueDropObjectsNotInSource.get() == "True":
+            self.CmpExePublishQuery += ' /p:DropObjectsNotInSource=True '
+        if self.ChkButtonDropPermissionsNotInSource.get() is True and self.ValueDropPermissionsNotInSource.get() == "True":
+            self.CmpExePublishQuery += ' /p:DropPermissionsNotInSource=True '
+        if self.ChkButtonDropRoleMembersNotInSource.get() is True and self.ValueDropRoleMembersNotInSource.get() == "True":
+            self.CmpExePublishQuery += ' /p:DropRoleMembersNotInSource=True '
+
+        if self.ChkButtonExcludeObjectTypes.get() is True:
+            self.CmpExePublishQuery += ' /p:ExcludeObjectTypes='
+            if self.ExcludeObjectTypesAggregates.get() is True:
+                self.CmpExePublishQuery += 'Aggregates;'
+            if self.ExcludeObjectTypesApplicationRoles.get() is True:
+                self.CmpExePublishQuery += 'ApplicationRoles;'
+
+            if self.ExcludeObjectTypesAssemblies.get() is True:
+                self.CmpExePublishQuery += 'Assemblies;'
+
+            if self.ExcludeObjectTypesAsymmetricKeys.get() is True:
+                self.CmpExePublishQuery += 'AsymmetricKeys;'
+
+            if self.ExcludeObjectTypesBrokerPriorities.get() is True:
+                self.CmpExePublishQuery += 'BrokerPriorities;'
+
+            if self.ExcludeObjectTypesCertificates.get() is True:
+                self.CmpExePublishQuery += 'Certificates;'
+
+            if self.ExcludeObjectTypesContracts.get() is True:
+                self.CmpExePublishQuery += 'Contracts;'
+
+            if self.ExcludeObjectTypesDatabaseRoles.get() is True:
+                self.CmpExePublishQuery += 'DatabaseRoles;'
+
+            if self.ExcludeObjectTypesDatabaseTriggers.get() is True:
+                self.CmpExePublishQuery += 'DatabaseTriggers;'
+
+            if self.ExcludeObjectTypesDefaults.get() is True:
+                self.CmpExePublishQuery += 'Defaults;'
+
+            if self.ExcludeObjectTypesExtendedProperties.get() is True:
+                self.CmpExePublishQuery += 'ExtendedProperties;'
+
+            if self.ExcludeObjectTypesFilegroups.get() is True:
+                self.CmpExePublishQuery += 'Filegroups;'
+
+            if self.ExcludeObjectTypesFileTables.get() is True:
+                self.CmpExePublishQuery += 'FileTables;'
+
+            if self.ExcludeObjectTypesFullTextCatalogs.get() is True:
+                self.CmpExePublishQuery += 'FullTextCatalogs;'
+
+            if self.ExcludeObjectTypesFullTextStoplists.get() is True:
+                self.CmpExePublishQuery += 'FullTextStoplists;'
+
+            if self.ExcludeObjectTypesMessageTypes.get() is True:
+                self.CmpExePublishQuery += 'MessageTypes;'
+
+            if self.ExcludeObjectTypesPartitionFunctions.get() is True:
+                self.CmpExePublishQuery += 'PartitionFunctions;'
+
+            if self.ExcludeObjectTypesPartitionSchemes.get() is True:
+                self.CmpExePublishQuery += 'PartitionSchemes;'
+
+            if self.ExcludeObjectTypesPermissions.get() is True:
+                self.CmpExePublishQuery += 'Permissions;'
+
+            if self.ExcludeObjectTypesQueues.get() is True:
+                self.CmpExePublishQuery += 'Queues;'
+
+            if self.ExcludeObjectTypesRemoteServiceBindings.get() is True:
+                self.CmpExePublishQuery += 'RemoteServiceBindings;'
+
+            if self.ExcludeObjectTypesRoleMembership.get() is True:
+                self.CmpExePublishQuery += 'RoleMembership;'
+
+            if self.ExcludeObjectTypesRules.get() is True:
+                self.CmpExePublishQuery += 'Rules;'
+
+            if self.ExcludeObjectTypesScalarValuedFunctions.get() is True:
+                self.CmpExePublishQuery += 'ScalarValuedFunctions;'
+
+            if self.ExcludeObjectTypesSearchPropertyLists.get() is True:
+                self.CmpExePublishQuery += 'SearchPropertyLists;'
+
+            if self.ExcludeObjectTypesSequences.get() is True:
+                self.CmpExePublishQuery += 'Sequences;'
+
+            if self.ExcludeObjectTypesServices.get() is True:
+                self.CmpExePublishQuery += 'Services;'
+
+            if self.ExcludeObjectTypesSignatures.get() is True:
+                self.CmpExePublishQuery += 'Signatures;'
+
+            if self.ExcludeObjectTypesStoredProcedures.get() is True:
+                self.CmpExePublishQuery += 'StoredProcedures;'
+
+            if self.ExcludeObjectTypesSymmetricKeys.get() is True:
+                self.CmpExePublishQuery += 'SymmetricKeys;'
+
+            if self.ExcludeObjectTypesSynonyms.get() is True:
+                self.CmpExePublishQuery += 'Synonyms;'
+
+            if self.ExcludeObjectTypesTables.get() is True:
+                self.CmpExePublishQuery += 'Tables;'
+
+            if self.ExcludeObjectTypesTableValuedFunctions.get() is True:
+                self.CmpExePublishQuery += 'TableValuedFunctions;'
+
+            if self.ExcludeObjectTypesUserDefinedDataTypes.get() is True:
+                self.CmpExePublishQuery += 'UserDefinedDataTypes;'
+
+            if self.ExcludeObjectTypesUserDefinedTableTypes.get() is True:
+                self.CmpExePublishQuery += 'UserDefinedTableTypes;'
+
+            if self.ExcludeObjectTypesClrUserDefinedTypes.get() is True:
+                self.CmpExePublishQuery += 'ClrUserDefinedTypes;'
+
+            if self.ExcludeObjectTypesUsers.get() is True:
+                self.CmpExePublishQuery += 'Users;'
+
+            if self.ExcludeObjectTypesViews.get() is True:
+                self.CmpExePublishQuery += 'Views;'
+
+            if self.ExcludeObjectTypesXmlSchemaCollections.get() is True:
+                self.CmpExePublishQuery += 'XmlSchemaCollections;'
+
+            if self.ExcludeObjectTypesAudits.get() is True:
+                self.CmpExePublishQuery += 'Audits;'
+
+            if self.ExcludeObjectTypesCredentials.get() is True:
+                self.CmpExePublishQuery += 'Credentials;'
+
+            if self.ExcludeObjectTypesCryptographicProviders.get() is True:
+                self.CmpExePublishQuery += 'CryptographicProviders;'
+
+            if self.ExcludeObjectTypesDatabaseAuditSpecifications.get() is True:
+                self.CmpExePublishQuery += 'DatabaseAuditSpecifications;'
+
+            if self.ExcludeObjectTypesEndpoints.get() is True:
+                self.CmpExePublishQuery += 'Endpoints;'
+
+            if self.ExcludeObjectTypesErrorMessages.get() is True:
+                self.CmpExePublishQuery += 'ErrorMessages;'
+
+            if self.ExcludeObjectTypesEventNotifications.get() is True:
+                self.CmpExePublishQuery += 'EventNotifications;'
+
+            if self.ExcludeObjectTypesEventSessions.get() is True:
+                self.CmpExePublishQuery += 'EventSessions;'
+
+            if self.ExcludeObjectTypesLinkedServerLogins.get() is True:
+                self.CmpExePublishQuery += 'LinkedServerLogins;'
+
+            if self.ExcludeObjectTypesRoutes.get() is True:
+                self.CmpExePublishQuery += 'Routes;'
+
+            if self.ExcludeObjectTypesServerAuditSpecifications.get() is True:
+                self.CmpExePublishQuery += 'ServerAuditSpecifications;'
+
+            if self.ExcludeObjectTypesServerRoleMembership.get() is True:
+                self.CmpExePublishQuery += 'ServerRoleMembership;'
+
+            if self.ExcludeObjectTypesServerRoles.get() is True:
+                self.CmpExePublishQuery += 'ServerRoles;'
+
+            if self.ExcludeObjectTypesServerTriggers.get() is True:
+                self.CmpExePublishQuery += 'ServerTriggers;'
+
+        if self.ChkButtonGenerateSmartDefaults.get() is True and self.ValueGenerateSmartDefaults.get() == "True":
+            self.CmpExePublishQuery += ' /p:GenerateSmartDefaults=True '
+        if self.ChkButtonIgnoreAnsiNulls.get() is True and self.ValueIgnoreAnsiNulls.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreAnsiNulls=True '
+        if self.ChkButtonIgnoreAuthorizer.get() is True and self.ValueIgnoreAuthorizer.get() == "True":
+            self.CmpExePublishQuery += ' /p: IgnoreAuthorizer=True '
+        if self.ChkButtonIgnoreColumnCollation.get() is True and self.ValueIgnoreColumnCollation.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreColumnCollation=True '
+        if self.ChkButtonIgnoreComments.get() is True and self.ValueIgnoreComments.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreComments=True '
+        if self.ChkButtonIgnoreCryptographicProviderFilePath.get() is True and self.ValueIgnoreCryptographicProviderFilePath.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreCryptographicProviderFilePath=False '
+        if self.ChkButtonIgnoreDdlTriggerOrder.get() is True and self.ValueIgnoreDdlTriggerOrder.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreDdlTriggerOrder=True '
+        if self.ChkButtonIgnoreDdlTriggerState.get() is True and self.ValueIgnoreDdlTriggerState.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreDdlTriggerState=True '
+        if self.ChkButtonIgnoreDefaultSchema.get() is True and self.ValueIgnoreDefaultSchema.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreDefaultSchema=True '
+        if self.ChkButtonIgnoreDmlTriggerOrder.get() is True and self.ValueIgnoreDmlTriggerOrder.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreDmlTriggerOrder=True '
+        if self.ChkButtonIgnoreDmlTriggerState.get() is True and self.ValueIgnoreDmlTriggerState.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreDmlTriggerState=True '
+        if self.ChkButtonIgnoreExtendedProperties.get() is True and self.ValueIgnoreExtendedProperties.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreExtendedProperties=True '
+        if self.ChkButtonIgnoreFileAndLogFilePath.get() is True and self.ValueIgnoreFileAndLogFilePath.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreFileAndLogFilePath=False '
+        if self.ChkButtonIgnoreFilegroupPlacement.get() is True and self.ValueIgnoreFilegroupPlacement.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreFilegroupPlacement=False '
+        if self.ChkButtonIgnoreFileSize.get() is True and self.ValueIgnoreFileSize.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreFileSize=False '
+        if self.ChkButtonIgnoreFillFactor.get() is True and self.ValueIgnoreFillFactor.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreFillFactor=False '
+        if self.ChkButtonIgnoreFullTextCatalogFilePath.get() is True and self.ValueIgnoreFullTextCatalogFilePath.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreFullTextCatalogFilePath=False '
+        if self.ChkButtonIgnoreIdentitySeed.get() is True and self.ValueIgnoreIdentitySeed.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreIdentitySeed=True '
+        if self.ChkButtonIgnoreIncrement.get() is True and self.ValueIgnoreIncrement.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreIncrement=True '
+        if self.ChkButtonIgnoreIndexOptions.get() is True and self.ValueIgnoreIndexOptions.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreIndexOptions=True '
+        if self.ChkButtonIgnoreIndexPadding.get() is True and self.ValueIgnoreIndexPadding.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreIndexPadding=False '
+        if self.ChkButtonIgnoreKeywordCasing.get() is True and self.ValueIgnoreKeywordCasing.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreKeywordCasing=False '
+        if self.ChkButtonIgnoreLockHintsOnIndexes.get() is True and self.ValueIgnoreLockHintsOnIndexes.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreLockHintsOnIndexes=True '
+        if self.ChkButtonIgnoreLoginSids.get() is True and self.ValueIgnoreLoginSids.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreLoginSids=False '
+        if self.ChkButtonIgnoreNotForReplication.get() is True and self.ValueIgnoreNotForReplication.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreNotForReplication=True '
+        if self.ChkButtonIgnoreObjectPlacementOnPartitionScheme.get() is True and self.ValueIgnoreObjectPlacementOnPartitionScheme.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreObjectPlacementOnPartitionScheme=False '
+        if self.ChkButtonIgnorePartitionSchemes.get() is True and self.ValueIgnorePartitionSchemes.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnorePartitionSchemes=True '
+        if self.ChkButtonIgnorePermissions.get() is True and self.ValueIgnorePermissions.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnorePermissions=True '
+        if self.ChkButtonIgnoreQuotedIdentifiers.get() is True and self.ValueIgnoreQuotedIdentifiers.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreQuotedIdentifiers=True '
+        if self.ChkButtonIgnoreRoleMembership.get() is True and self.ValueIgnoreRoleMembership.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreRoleMembership=True '
+        if self.ChkButtonIgnoreRouteLifetime.get() is True and self.ValueIgnoreRouteLifetime.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreRouteLifetime=False '
+        if self.ChkButtonIgnoreSemicolonBetweenStatements.get() is True and self.ValueIgnoreSemicolonBetweenStatements.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreSemicolonBetweenStatements=False '
+        if self.ChkButtonIgnoreTableOptions.get() is True and self.ValueIgnoreTableOptions.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreTableOptions=True '
+        if self.ChkButtonIgnoreUserSettingsObjects.get() is True and self.ValueIgnoreUserSettingsObjects.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreUserSettingsObjects=True '
+        if self.ChkButtonIgnoreWhitespace.get() is True and self.ValueIgnoreWhitespace.get() == "False":
+            self.CmpExePublishQuery += ' /p:IgnoreWhitespace=False '
+        if self.ChkButtonIgnoreWithNocheckOnCheckConstraints.get() is True and self.ValueIgnoreWithNocheckOnCheckConstraints.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreWithNocheckOnCheckConstraints=True '
+        if self.ChkButtonIgnoreWithNocheckOnForeignKeys.get() is True and self.ValueIgnoreWithNocheckOnForeignKeys.get() == "True":
+            self.CmpExePublishQuery += ' /p:IgnoreWithNocheckOnForeignKeys=True '
+        if self.ChkButtonIncludeCompositeObjects.get() is True and self.ValueIncludeCompositeObjects.get() == "True":
+            self.CmpExePublishQuery += ' /p:IncludeCompositeObjects=True '
+        if self.ChkButtonIncludeTransactionalScripts.get() is True and self.ValueIncludeTransactionalScripts.get() == "True":
+            self.CmpExePublishQuery += ' /p:IncludeTransactionalScripts=True '
+        if self.ChkButtonNoAlterStatementsToChangeClrTypes.get() is True and self.ValueNoAlterStatementsToChangeClrTypes.get() == "True":
+            self.CmpExePublishQuery += ' /p:NoAlterStatementsToChangeClrTypes=True '
+        if self.ChkButtonPopulateFilesOnFilegroups.get() is True and self.ValuePopulateFilesOnFilegroups.get() == "False":
+            self.CmpExePublishQuery += ' /p:PopulateFilesOnFilegroups=False '
+        if self.ChkButtonRegisterDataTierApplication.get() is True and self.ValueRegisterDataTierApplication.get() == "True":
+            self.CmpExePublishQuery += ' /p:RegisterDataTierApplication=True '
+        if self.ChkButtonRunDeploymentPlanExecutors.get() is True and self.ValueRunDeploymentPlanExecutors.get() == "True":
+            self.CmpExePublishQuery += ' /p:RunDeploymentPlanExecutors=True '
+        if self.ChkButtonScriptDatabaseCollation.get() is True and self.ValueScriptDatabaseCollation.get() == "True":
+            self.CmpExePublishQuery += ' /p:ScriptDatabaseCollation=True '
+        if self.ChkButtonScriptDatabaseCompatibility.get() is True and self.ValueScriptDatabaseCompatibility.get() == "False":
+            self.CmpExePublishQuery += ' /p:ScriptDatabaseCompatibility=False '
+        if self.ChkButtonScriptDatabaseOptions.get() is True and self.ValueScriptDatabaseOptions.get() == "False":
+            self.CmpExePublishQuery += ' /p:ScriptDatabaseOptions=False '
+        if self.ChkButtonScriptDeployStateChecks.get() is True and self.ValueScriptDeployStateChecks.get() == "True":
+            self.CmpExePublishQuery += ' /p:ScriptDeployStateChecks=True '
+        if self.ChkButtonScriptFileSize.get() is True and self.ValueScriptFileSize.get() == "True":
+            self.CmpExePublishQuery += ' /p:ScriptFileSize=True '
+        if self.ChkButtonScriptNewConstraintValidation.get() is True and self.ValueScriptNewConstraintValidation.get() == "False":
+            self.CmpExePublishQuery += ' /p:ScriptNewConstraintValidation=False '
+        if self.ChkButtonScriptRefreshModule.get() is True and self.ValueScriptRefreshModule.get() == "False":
+            self.CmpExePublishQuery += ' /p:ScriptRefreshModule=False '
+        if self.ChkButtonStorage.get() is True and self.ValueStorage.get() == "File":
+            self.CmpExePublishQuery += ' /p:Storage=File '
+        if self.ChkButtonTreatVerificationErrorsAsWarnings.get() is True and self.ValueTreatVerificationErrorsAsWarnings.get() == "True":
+            self.CmpExePublishQuery += ' /p:TreatVerificationErrorsAsWarnings=True '
+        if self.ChkButtonUnmodifiableObjectWarnings.get() is True and self.ValueUnmodifiableObjectWarnings.get() == "False":
+            self.CmpExePublishQuery += ' /p:UnmodifiableObjectWarnings=False '
+        if self.ChkButtonVerifyCollationCompatibility.get() is True and self.ValueVerifyCollationCompatibility.get() == "False":
+            self.CmpExePublishQuery += ' /p:VerifyCollationCompatibility=False '
+        if self.ChkButtonVerifyDeployment.get() is True and self.ValueVerifyDeployment.get() == "False":
+            self.CmpExePublishQuery += ' /p:VerifyDeployment=False '
+
+        print("self.CmpExePublishQuery=", self.CmpExePublishQuery)
+
 
 root = Tk()
+root.iconbitmap(default='M.ico')
 root.title("Compare and Deploy SQL Server database")
 root.geometry("850x900")
 app = Application(root)

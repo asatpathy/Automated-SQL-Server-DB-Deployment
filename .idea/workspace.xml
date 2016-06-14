@@ -14,7 +14,7 @@
   </component>
   <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/AutomatedSQLServerDeployments$GUI__1_.coverage" NAME="GUI (1) Coverage Results" MODIFIED="1465926625709" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/AutomatedSQLServerDeployments$GUI__1_.coverage" NAME="GUI (1) Coverage Results" MODIFIED="1465945569694" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AutomatedSQLServerDeployments$testPopen.coverage" NAME="testPopen Coverage Results" MODIFIED="1465576753505" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AutomatedSQLServerDeployments$runPowershell.coverage" NAME="runPowershell Coverage Results" MODIFIED="1465599489307" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/AutomatedSQLServerDeployments$test.coverage" NAME="test Coverage Results" MODIFIED="1465514293215" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/CompareDeploy" />
@@ -33,10 +33,10 @@
       <file leaf-file-name="GUI.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/GUI.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="411">
-              <caret line="1215" column="24" selection-start-line="1215" selection-start-column="24" selection-end-line="1215" selection-end-column="24" />
+            <state relative-caret-position="41116">
+              <caret line="2641" column="0" selection-start-line="2641" selection-start-column="0" selection-end-line="2641" selection-end-column="0" />
               <folding>
-                <marker date="1465927013666" expanded="true" signature="103195:103240" ph="Select the O... " />
+                <marker date="1465945565487" expanded="true" signature="101246:101291" ph="Select the O... " />
               </folding>
             </state>
           </provider>
@@ -45,7 +45,7 @@
       <file leaf-file-name="runPowershell.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/runPowershell.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3468">
+            <state relative-caret-position="681">
               <caret line="204" column="21" selection-start-line="204" selection-start-column="21" selection-end-line="204" selection-end-column="21" />
               <folding />
             </state>
@@ -500,7 +500,7 @@
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21458773" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2230444" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -557,7 +557,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1465927013666" expanded="true" signature="103195:103240" ph="Select the O... " />
+            <marker date="1465945565487" expanded="true" signature="101246:101291" ph="Select the O... " />
           </folding>
         </state>
       </provider>
@@ -575,7 +575,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1465927013666" expanded="true" signature="103195:103240" ph="Select the O... " />
+            <marker date="1465945565487" expanded="true" signature="101246:101291" ph="Select the O... " />
           </folding>
         </state>
       </provider>
@@ -593,7 +593,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1465927013666" expanded="true" signature="103195:103240" ph="Select the O... " />
+            <marker date="1465945565487" expanded="true" signature="101246:101291" ph="Select the O... " />
           </folding>
         </state>
       </provider>
@@ -611,7 +611,7 @@
         <state relative-caret-position="34">
           <caret line="4" column="23" selection-start-line="4" selection-start-column="18" selection-end-line="4" selection-end-column="23" />
           <folding>
-            <marker date="1465927013666" expanded="true" signature="103195:103240" ph="Select the O... " />
+            <marker date="1465945565487" expanded="true" signature="101246:101291" ph="Select the O... " />
           </folding>
         </state>
       </provider>
@@ -637,7 +637,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1465927013666" expanded="true" signature="103195:103240" ph="Select the O... " />
+            <marker date="1465945565487" expanded="true" signature="101246:101291" ph="Select the O... " />
           </folding>
         </state>
       </provider>
@@ -662,7 +662,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1465927013666" expanded="true" signature="103195:103240" ph="Select the O... " />
+            <marker date="1465945565487" expanded="true" signature="101246:101291" ph="Select the O... " />
           </folding>
         </state>
       </provider>
@@ -676,14 +676,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/runPowershell.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3468">
-          <caret line="204" column="21" selection-start-line="204" selection-start-column="21" selection-end-line="204" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python35-32/Lib/tkinter/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="131">
@@ -692,12 +684,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/runPowershell.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="681">
+          <caret line="204" column="21" selection-start-line="204" selection-start-column="21" selection-end-line="204" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/GUI.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="411">
-          <caret line="1215" column="24" selection-start-line="1215" selection-start-column="24" selection-end-line="1215" selection-end-column="24" />
+        <state relative-caret-position="41116">
+          <caret line="2641" column="0" selection-start-line="2641" selection-start-column="0" selection-end-line="2641" selection-end-column="0" />
           <folding>
-            <marker date="1465927013666" expanded="true" signature="103195:103240" ph="Select the O... " />
+            <marker date="1465945565487" expanded="true" signature="101246:101291" ph="Select the O... " />
           </folding>
         </state>
       </provider>
