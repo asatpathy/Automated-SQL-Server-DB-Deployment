@@ -1,6 +1,7 @@
 from tkinter import *
-# from tkinter.ttk import *
+from tkinter import filedialog
 import subprocess
+import json
 
 
 class Application(Frame):
@@ -419,6 +420,8 @@ class Application(Frame):
         self.DoNotDropObjectTypesEventNotifications = BooleanVar()
         self.DoNotDropObjectTypesEventSessions = BooleanVar()
         self.DoNotDropObjectTypesLinkedServerLogins = BooleanVar()
+        self.DoNotDropObjectTypesLinkedServers = BooleanVar()
+        self.DoNotDropObjectTypesLogins = BooleanVar()
         self.DoNotDropObjectTypesRoutes = BooleanVar()
         self.DoNotDropObjectTypesServerAuditSpecifications = BooleanVar()
         self.DoNotDropObjectTypesServerRoleMembership = BooleanVar()
@@ -536,6 +539,8 @@ class Application(Frame):
         self.ExcludeObjectTypesEventNotifications = BooleanVar()
         self.ExcludeObjectTypesEventSessions = BooleanVar()
         self.ExcludeObjectTypesLinkedServerLogins = BooleanVar()
+        self.ExcludeObjectTypesLinkedServers = BooleanVar()
+        self.ExcludeObjectTypesLogins = BooleanVar()
         self.ExcludeObjectTypesRoutes = BooleanVar()
         self.ExcludeObjectTypesServerAuditSpecifications = BooleanVar()
         self.ExcludeObjectTypesServerRoleMembership = BooleanVar()
@@ -604,6 +609,11 @@ class Application(Frame):
         # ###########################################################################
         # ###########################################################################
 
+        #Options to open JSON file
+        self.options = {}
+        self.options['defaultextension'] = '.json'
+        self.options['filetypes'] = [('JSON files', '.json'), ('All files', '.*')]
+
 
 
 
@@ -670,8 +680,8 @@ class Application(Frame):
         self.EncryptTrgtCheckButton.grid(row=6, column=2, sticky=W)
 
         # Set Deployment Property default parameters
-        self.EncryptTrgtCheckButton = Checkbutton(self, text="Set Deployment Properties", var=self.SetDplyPropertyVariable, command=self.DplyScroll_Visibility)
-        self.EncryptTrgtCheckButton.grid(row=7, column=2, sticky=W)
+        self.SetDplyPropertyCheckButton = Checkbutton(self, text="Set Deployment Properties", var=self.SetDplyPropertyVariable, command=self.DplyScroll_Visibility)
+        self.SetDplyPropertyCheckButton.grid(row=7, column=2, sticky=W)
 
         # Button(self, text="Ok", command=self.print_variable_values).grid(row=20, column=1, sticky=W)
 
@@ -1138,23 +1148,36 @@ class Application(Frame):
         ############################################################################
         ############################################################################
 
-        # Button for initiating the deployment
-        self.ExecuteButton = Button(self, text="Compare & Deploy", command=self.execute_all)  # button click calls execute_all method
-        self.ExecuteButton.grid(row=10, column=1, sticky=W)
-
         # Button to compare and Generate script
         self.ExecuteButton = Button(self, text="Compare & Generate Script", command=self.compare_generate_script)  # button click calls shell output
         self.ExecuteButton.grid(row=10, column=2, sticky=W)
+
+        # Button for initiating the deployment
+        self.ExecuteButton = Button(self, text="Compare & Deploy", command=self.compare_and_deploy)
+        self.ExecuteButton.grid(row=10, column=1, sticky=W)
 
         # Button to check Shell Output
         self.ExecuteButton = Button(self, text="Shell Output", command=self.shell_output)  # button click calls shell output
         self.ExecuteButton.grid(row=10, column=3, sticky=W)
 
+        # Button to save profile
+        self.SaveProfileButton = Button(self, text="Save Profile", command=self.save_profile)
+        self.SaveProfileButton.grid(row=1,column=4, sticky=W)
+
+        # Button to load profile
+        self.LoadProfileButton = Button(self, text="Load Profile", command=self.load_profile)
+        self.LoadProfileButton.grid(row=2,column=4, sticky=W)
+
         # Connection information
         self.InformationLabel = Label(self, text="Connection Info:", justify=LEFT)
-        self.InformationLabel.grid(row=11, column=0, sticky=W)
+        self.InformationLabel.grid(row=12, column=0, sticky=W)
 
-    # Methods######################################################################
+
+
+
+
+    ################################################################################
+    # METHODS ######################################################################
     # method that initiates the process to compare & deploy SQL Server database
     #self.PreDeploymentText.get(1.0, END)
     #self.SourceServerEntry.get()   |   self.SourceDatabaseEntry.get()
@@ -1162,33 +1185,8 @@ class Application(Frame):
     #self.SourceUsernameEntry.get() |   self.SourcePasswordEntry.get()
     #self.TargetUsernameEntry.get() |   self.TargetPasswordEntry.get()
 
-    def execute_all(self):
-        #Query string for Publish
-        #self.CmpExePublishQuery
-
-        # self.SourceServerString = self.SourceServerEntry.get()
-        # self.SourceDatabaseString = self.SourceDatabaseEntry.get()
-
-        # self.TargetServerString = self.TargetServerEntry.get()
-        # self.TargetDatabaseString = self.TargetDatabaseEntry.get()
-
-        # self.PreDeploymentQueryString = self.PreDeploymentText.get(1.0, END)
-
-        self.Prepare_Queries("CompareDeployButton")
-
-        SPPreDeployment = subprocess.Popen(self.CmpExePreDeploymentQuery, stdout=subprocess.PIPE)
-        SPPreDeployment.wait()
-        SPExtract = subprocess.Popen(self.CmpExeExtractQuery,stdout=subprocess.PIPE)
-        SPExtract.wait()
-        SPPublish = subprocess.Popen(self.CmpExePublishQuery,stdout=subprocess.PIPE)
 
 
-        self.ShellOutputPreDeploymentString = SPPreDeployment.communicate()[0]
-        self.ShellOutputExtractString = SPExtract.communicate()[0]
-        self.ShellOutputPublishString = SPPublish.communicate()[0]
-
-        self.InformationString = 'Connection Info:\nSource Server: ' + self.SourceServerEntry.get() + '\nSource Database: ' + self.SourceDatabaseEntry.get() + '\nTarget Server: ' + self.TargetServerEntry.get() + '\nTarget Database: ' + self.TargetDatabaseEntry.get()
-        self.InformationLabel["text"] = self.InformationString
 
     # method to display shell output
     def shell_output(self):
@@ -1299,11 +1297,13 @@ class Application(Frame):
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesEventNotifications, text="EventNotifications").grid(row=46, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesEventSessions, text="EventSessions").grid(row=47, column=0, sticky=W)
             Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesLinkedServerLogins, text="LinkedServerLogins").grid(row=48, column=0, sticky=W)
-            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesRoutes, text="Routes").grid(row=49, column=0, sticky=W)
-            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerAuditSpecifications, text="ServerAuditSpecifications").grid(row=50, column=0, sticky=W)
-            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerRoleMembership, text="ServerRoleMembership").grid(row=51, column=0, sticky=W)
-            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerRoles, text="ServerRoles").grid(row=52, column=0, sticky=W)
-            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerTriggers, text="ServerTriggers").grid(row=53, column=0, sticky=W)
+            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesLinkedServers, text="LinkedServers").grid(row=49, column=0, sticky=W)
+            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesLogins, text="Logins").grid(row=50, column=0, sticky=W)
+            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesRoutes, text="Routes").grid(row=51, column=0, sticky=W)
+            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerAuditSpecifications, text="ServerAuditSpecifications").grid(row=52, column=0, sticky=W)
+            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerRoleMembership, text="ServerRoleMembership").grid(row=53, column=0, sticky=W)
+            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerRoles, text="ServerRoles").grid(row=54, column=0, sticky=W)
+            Checkbutton(DoNotDropCanvasFrame, var=self.DoNotDropObjectTypesServerTriggers, text="ServerTriggers").grid(row=55, column=0, sticky=W)
 
         def configDoNotDropCanvasFunction(event):
             DoNotDropCanvas.configure(scrollregion=DoNotDropCanvas.bbox("all"), width=200, height=400)
@@ -1384,11 +1384,13 @@ class Application(Frame):
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesEventNotifications, text="EventNotifications").grid(row=46, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesEventSessions, text="EventSessions").grid(row=47, column=0, sticky=W)
             Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesLinkedServerLogins, text="LinkedServerLogins").grid(row=48, column=0, sticky=W)
-            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesRoutes, text="Routes").grid(row=49, column=0, sticky=W)
-            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerAuditSpecifications, text="ServerAuditSpecifications").grid(row=50, column=0, sticky=W)
-            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerRoleMembership, text="ServerRoleMembership").grid(row=51, column=0, sticky=W)
-            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerRoles, text="ServerRoles").grid(row=52, column=0, sticky=W)
-            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerTriggers, text="ServerTriggers").grid(row=53, column=0, sticky=W)
+            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesLinkedServers, text="LinkedServers").grid(row=49, column=0, sticky=W)
+            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesLogins, text="Logins").grid(row=50, column=0, sticky=W)
+            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesRoutes, text="Routes").grid(row=51, column=0, sticky=W)
+            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerAuditSpecifications, text="ServerAuditSpecifications").grid(row=52, column=0, sticky=W)
+            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerRoleMembership, text="ServerRoleMembership").grid(row=53, column=0, sticky=W)
+            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerRoles, text="ServerRoles").grid(row=54, column=0, sticky=W)
+            Checkbutton(ExcludeObjectCanvasFrame, var=self.ExcludeObjectTypesServerTriggers, text="ServerTriggers").grid(row=55, column=0, sticky=W)
 
         def configExcludeObjectCanvasFunction(event):
             ExcludeObjectCanvas.configure(scrollregion=ExcludeObjectCanvas.bbox("all"), width=200, height=400)
@@ -1797,6 +1799,8 @@ class Application(Frame):
             self.DoNotDropObjectTypesEventNotifications.set(False)
             self.DoNotDropObjectTypesEventSessions.set(False)
             self.DoNotDropObjectTypesLinkedServerLogins.set(False)
+            self.DoNotDropObjectTypesLinkedServers.set(False)
+            self.DoNotDropObjectTypesLogins.set(False)
             self.DoNotDropObjectTypesRoutes.set(False)
             self.DoNotDropObjectTypesServerAuditSpecifications.set(False)
             self.DoNotDropObjectTypesServerRoleMembership.set(False)
@@ -1853,6 +1857,8 @@ class Application(Frame):
             self.ExcludeObjectTypesEventNotifications.set(False)
             self.ExcludeObjectTypesEventSessions.set(False)
             self.ExcludeObjectTypesLinkedServerLogins.set(False)
+            self.ExcludeObjectTypesLinkedServers.set(False)
+            self.ExcludeObjectTypesLogins.set(False)
             self.ExcludeObjectTypesRoutes.set(False)
             self.ExcludeObjectTypesServerAuditSpecifications.set(False)
             self.ExcludeObjectTypesServerRoleMembership.set(False)
@@ -2686,11 +2692,11 @@ class Application(Frame):
             self.CmpExePublishQuery +=  ' /TargetUser:' + self.TargetUsernameEntry.get() + ' /TargetPassword:' + self.TargetPasswordEntry.get()
 
         if self.EncryptSrcVariable.get() is True:
-            self.CmpExeExtractQuery += ' /SourceEncryptConnection=True '
+            self.CmpExeExtractQuery += ' /SourceEncryptConnection:True '
 
         if self.EncryptTrgtVariable.get() is True:
             self.CmpExePreDeploymentQuery += ' -N '
-            self.CmpExePublishQuery += ' /TargetEncryptConnection=True'
+            self.CmpExePublishQuery += ' /TargetEncryptConnection:True'
 
 
 
@@ -2886,6 +2892,12 @@ class Application(Frame):
             if self.DoNotDropObjectTypesLinkedServerLogins.get() is True:
                 self.CmpExePublishQuery += 'LinkedServerLogins;'
 
+            if self.DoNotDropObjectTypesLinkedServers.get() is True:
+                self.CmpExePublishQuery += 'LinkedServers;'
+
+            if self.DoNotDropObjectTypesLogins.get() is True:
+                self.CmpExePublishQuery += 'Logins;'
+
             if self.DoNotDropObjectTypesRoutes.get() is True:
                 self.CmpExePublishQuery += 'Routes;'
 
@@ -3061,6 +3073,12 @@ class Application(Frame):
             if self.ExcludeObjectTypesLinkedServerLogins.get() is True:
                 self.CmpExePublishQuery += 'LinkedServerLogins;'
 
+            if self.ExcludeObjectTypesLinkedServers.get() is True:
+                self.CmpExePublishQuery += 'LinkedServers;'
+
+            if self.ExcludeObjectTypesLogins.get() is True:
+                self.CmpExePublishQuery += 'Logins;'
+
             if self.ExcludeObjectTypesRoutes.get() is True:
                 self.CmpExePublishQuery += 'Routes;'
 
@@ -3190,9 +3208,723 @@ class Application(Frame):
         print("self.CmpExePublishQuery=", self.CmpExePublishQuery)
 
 
+    def save_profile(self):
+        self.save_profile_data={
+            'self.PreDeploymentText': self.PreDeploymentText.get(1.0, END),
+            'self.SourceServerEntry': self.SourceServerEntry.get(),
+            'self.SourceDatabaseEntry': self.SourceDatabaseEntry.get(),
+            'self.TargetServerEntry': self.TargetServerEntry.get(),
+            'self.TargetDatabaseEntry': self.TargetDatabaseEntry.get(),
+            'self.SourceUsernameEntry': self.SourceUsernameEntry.get(),
+            'self.SourcePasswordEntry': self.SourcePasswordEntry.get(),
+            'self.TargetUsernameEntry': self.TargetUsernameEntry.get(),
+            'self.TargetPasswordEntry': self.TargetPasswordEntry.get(),
+            'self.WinAuthSrcVariable': self.WinAuthSrcVariable.get(),
+            'self.WinAuthTrgtVariable': self.WinAuthTrgtVariable.get(),
+            'self.EncryptSrcVariable': self.EncryptSrcVariable.get(),
+            'self.EncryptTrgtVariable': self.EncryptTrgtVariable.get(),
+            'self.SetDplyPropertyVariable': self.SetDplyPropertyVariable.get(),
+
+            'self.ChkButtonAllowDropBlockingAssemblies': self.ChkButtonAllowDropBlockingAssemblies.get(),
+            'self.ChkButtonAllowIncompatiblePlatform': self.ChkButtonAllowIncompatiblePlatform.get(),
+            'self.ChkButtonBackupDatabaseBeforeChanges': self.ChkButtonBackupDatabaseBeforeChanges.get(),
+            'self.ChkButtonBlockOnPossibleDataLoss': self.ChkButtonBlockOnPossibleDataLoss.get(),
+            'self.ChkButtonBlockWhenDriftDetected': self.ChkButtonBlockWhenDriftDetected.get(),
+            'self.ChkButtonCommandTimeout': self.ChkButtonCommandTimeout.get(),
+            'self.ChkButtonCommentOutSetVarDeclarations': self.ChkButtonCommentOutSetVarDeclarations.get(),
+            'self.ChkButtonCompareUsingTargetCollation': self.ChkButtonCompareUsingTargetCollation.get(),
+            'self.ChkButtonCreateNewDatabase': self.ChkButtonCreateNewDatabase.get(),
+            'self.ChkButtonDeployDatabaseInSingleUserMode': self.ChkButtonDeployDatabaseInSingleUserMode.get(),
+            'self.ChkButtonDisableAndReenableDdlTriggers': self.ChkButtonDisableAndReenableDdlTriggers.get(),
+            'self.ChkButtonDoNotAlterChangeDataCaptureObjects': self.ChkButtonDoNotAlterChangeDataCaptureObjects.get(),
+            'self.ChkButtonDoNotAlterReplicatedObjects': self.ChkButtonDoNotAlterReplicatedObjects.get(),
+            'self.ChkButtonDoNotDropObjectTypes': self.ChkButtonDoNotDropObjectTypes.get(),
+            'self.ChkButtonDropConstraintsNotInSource': self.ChkButtonDropConstraintsNotInSource.get(),
+            'self.ChkButtonDropDmlTriggersNotInSource': self.ChkButtonDropDmlTriggersNotInSource.get(),
+            'self.ChkButtonDropExtendedPropertiesNotInSource': self.ChkButtonDropExtendedPropertiesNotInSource.get(),
+            'self.ChkButtonDropIndexesNotInSource': self.ChkButtonDropIndexesNotInSource.get(),
+            'self.ChkButtonDropObjectsNotInSource': self.ChkButtonDropObjectsNotInSource.get(),
+            'self.ChkButtonDropPermissionsNotInSource': self.ChkButtonDropPermissionsNotInSource.get(),
+            'self.ChkButtonDropRoleMembersNotInSource': self.ChkButtonDropRoleMembersNotInSource.get(),
+            'self.ChkButtonExcludeObjectTypes': self.ChkButtonExcludeObjectTypes.get(),
+            'self.ChkButtonGenerateSmartDefaults': self.ChkButtonGenerateSmartDefaults.get(),
+            'self.ChkButtonIgnoreAnsiNulls': self.ChkButtonIgnoreAnsiNulls.get(),
+            'self.ChkButtonIgnoreAuthorizer': self.ChkButtonIgnoreAuthorizer.get(),
+            'self.ChkButtonIgnoreColumnCollation': self.ChkButtonIgnoreColumnCollation.get(),
+            'self.ChkButtonIgnoreComments': self.ChkButtonIgnoreComments.get(),
+            'self.ChkButtonIgnoreCryptographicProviderFilePath': self.ChkButtonIgnoreCryptographicProviderFilePath.get(),
+            'self.ChkButtonIgnoreDdlTriggerOrder': self.ChkButtonIgnoreDdlTriggerOrder.get(),
+            'self.ChkButtonIgnoreDdlTriggerState': self.ChkButtonIgnoreDdlTriggerState.get(),
+            'self.ChkButtonIgnoreDefaultSchema': self.ChkButtonIgnoreDefaultSchema.get(),
+            'self.ChkButtonIgnoreDmlTriggerOrder': self.ChkButtonIgnoreDmlTriggerOrder.get(),
+            'self.ChkButtonIgnoreDmlTriggerState': self.ChkButtonIgnoreDmlTriggerState.get(),
+            'self.ChkButtonIgnoreExtendedProperties': self.ChkButtonIgnoreExtendedProperties.get(),
+            'self.ChkButtonIgnoreFileAndLogFilePath': self.ChkButtonIgnoreFileAndLogFilePath.get(),
+            'self.ChkButtonIgnoreFilegroupPlacement': self.ChkButtonIgnoreFilegroupPlacement.get(),
+            'self.ChkButtonIgnoreFileSize': self.ChkButtonIgnoreFileSize.get(),
+            'self.ChkButtonIgnoreFillFactor': self.ChkButtonIgnoreFillFactor.get(),
+            'self.ChkButtonIgnoreFullTextCatalogFilePath': self.ChkButtonIgnoreFullTextCatalogFilePath.get(),
+            'self.ChkButtonIgnoreIdentitySeed': self.ChkButtonIgnoreIdentitySeed.get(),
+            'self.ChkButtonIgnoreIncrement': self.ChkButtonIgnoreIncrement.get(),
+            'self.ChkButtonIgnoreIndexOptions': self.ChkButtonIgnoreIndexOptions.get(),
+            'self.ChkButtonIgnoreIndexPadding': self.ChkButtonIgnoreIndexPadding.get(),
+            'self.ChkButtonIgnoreKeywordCasing': self.ChkButtonIgnoreKeywordCasing.get(),
+            'self.ChkButtonIgnoreLockHintsOnIndexes': self.ChkButtonIgnoreLockHintsOnIndexes.get(),
+            'self.ChkButtonIgnoreLoginSids': self.ChkButtonIgnoreLoginSids.get(),
+            'self.ChkButtonIgnoreNotForReplication': self.ChkButtonIgnoreNotForReplication.get(),
+            'self.ChkButtonIgnoreObjectPlacementOnPartitionScheme': self.ChkButtonIgnoreObjectPlacementOnPartitionScheme.get(),
+            'self.ChkButtonIgnorePartitionSchemes': self.ChkButtonIgnorePartitionSchemes.get(),
+            'self.ChkButtonIgnorePermissions': self.ChkButtonIgnorePermissions.get(),
+            'self.ChkButtonIgnoreQuotedIdentifiers': self.ChkButtonIgnoreQuotedIdentifiers.get(),
+            'self.ChkButtonIgnoreRoleMembership': self.ChkButtonIgnoreRoleMembership.get(),
+            'self.ChkButtonIgnoreRouteLifetime': self.ChkButtonIgnoreRouteLifetime.get(),
+            'self.ChkButtonIgnoreSemicolonBetweenStatements': self.ChkButtonIgnoreSemicolonBetweenStatements.get(),
+            'self.ChkButtonIgnoreTableOptions': self.ChkButtonIgnoreTableOptions.get(),
+            'self.ChkButtonIgnoreUserSettingsObjects': self.ChkButtonIgnoreUserSettingsObjects.get(),
+            'self.ChkButtonIgnoreWhitespace': self.ChkButtonIgnoreWhitespace.get(),
+            'self.ChkButtonIgnoreWithNocheckOnCheckConstraints': self.ChkButtonIgnoreWithNocheckOnCheckConstraints.get(),
+            'self.ChkButtonIgnoreWithNocheckOnForeignKeys': self.ChkButtonIgnoreWithNocheckOnForeignKeys.get(),
+            'self.ChkButtonIncludeCompositeObjects': self.ChkButtonIncludeCompositeObjects.get(),
+            'self.ChkButtonIncludeTransactionalScripts': self.ChkButtonIncludeTransactionalScripts.get(),
+            'self.ChkButtonNoAlterStatementsToChangeClrTypes': self.ChkButtonNoAlterStatementsToChangeClrTypes.get(),
+            'self.ChkButtonPopulateFilesOnFilegroups': self.ChkButtonPopulateFilesOnFilegroups.get(),
+            'self.ChkButtonRegisterDataTierApplication': self.ChkButtonRegisterDataTierApplication.get(),
+            'self.ChkButtonRunDeploymentPlanExecutors': self.ChkButtonRunDeploymentPlanExecutors.get(),
+            'self.ChkButtonScriptDatabaseCollation': self.ChkButtonScriptDatabaseCollation.get(),
+            'self.ChkButtonScriptDatabaseCompatibility': self.ChkButtonScriptDatabaseCompatibility.get(),
+            'self.ChkButtonScriptDatabaseOptions': self.ChkButtonScriptDatabaseOptions.get(),
+            'self.ChkButtonScriptDeployStateChecks': self.ChkButtonScriptDeployStateChecks.get(),
+            'self.ChkButtonScriptFileSize': self.ChkButtonScriptFileSize.get(),
+            'self.ChkButtonScriptNewConstraintValidation': self.ChkButtonScriptNewConstraintValidation.get(),
+            'self.ChkButtonScriptRefreshModule': self.ChkButtonScriptRefreshModule.get(),
+            'self.ChkButtonStorage': self.ChkButtonStorage.get(),
+            'self.ChkButtonTreatVerificationErrorsAsWarnings': self.ChkButtonTreatVerificationErrorsAsWarnings.get(),
+            'self.ChkButtonUnmodifiableObjectWarnings': self.ChkButtonUnmodifiableObjectWarnings.get(),
+            'self.ChkButtonVerifyCollationCompatibility': self.ChkButtonVerifyCollationCompatibility.get(),
+            'self.ChkButtonVerifyDeployment': self.ChkButtonVerifyDeployment.get(),
+
+            'self.ValueAllowDropBlockingAssemblies': self.ValueAllowDropBlockingAssemblies.get(),
+            'self.ValueAllowIncompatiblePlatform': self.ValueAllowIncompatiblePlatform.get(),
+            'self.ValueBackupDatabaseBeforeChanges': self.ValueBackupDatabaseBeforeChanges.get(),
+            'self.ValueBlockOnPossibleDataLoss': self.ValueBlockOnPossibleDataLoss.get(),
+            'self.ValueBlockWhenDriftDetected': self.ValueBlockWhenDriftDetected.get(),
+            'self.ValueCommandTimeout': self.ValueCommandTimeout.get(),
+            'self.ValueCommentOutSetVarDeclarations': self.ValueCommentOutSetVarDeclarations.get(),
+            'self.ValueCompareUsingTargetCollation': self.ValueCompareUsingTargetCollation.get(),
+            'self.ValueCreateNewDatabase': self.ValueCreateNewDatabase.get(),
+            'self.ValueDeployDatabaseInSingleUserMode': self.ValueDeployDatabaseInSingleUserMode.get(),
+            'self.ValueDisableAndReenableDdlTriggers': self.ValueDisableAndReenableDdlTriggers.get(),
+            'self.ValueDoNotAlterChangeDataCaptureObjects': self.ValueDoNotAlterChangeDataCaptureObjects.get(),
+            'self.ValueDoNotAlterReplicatedObjects': self.ValueDoNotAlterReplicatedObjects.get(),
+            'self.ValueDoNotDropObjectTypes': self.ValueDoNotDropObjectTypes.get(),
+            'self.ValueDropConstraintsNotInSource': self.ValueDropConstraintsNotInSource.get(),
+            'self.ValueDropDmlTriggersNotInSource': self.ValueDropDmlTriggersNotInSource.get(),
+            'self.ValueDropExtendedPropertiesNotInSource': self.ValueDropExtendedPropertiesNotInSource.get(),
+            'self.ValueDropIndexesNotInSource': self.ValueDropIndexesNotInSource.get(),
+            'self.ValueDropObjectsNotInSource': self.ValueDropObjectsNotInSource.get(),
+            'self.ValueDropPermissionsNotInSource': self.ValueDropPermissionsNotInSource.get(),
+            'self.ValueDropRoleMembersNotInSource': self.ValueDropRoleMembersNotInSource.get(),
+            'self.ValueExcludeObjectTypes': self.ValueExcludeObjectTypes.get(),
+            'self.ValueGenerateSmartDefaults': self.ValueGenerateSmartDefaults.get(),
+            'self.ValueIgnoreAnsiNulls': self.ValueIgnoreAnsiNulls.get(),
+            'self.ValueIgnoreAuthorizer': self.ValueIgnoreAuthorizer.get(),
+            'self.ValueIgnoreColumnCollation': self.ValueIgnoreColumnCollation.get(),
+            'self.ValueIgnoreComments': self.ValueIgnoreComments.get(),
+            'self.ValueIgnoreCryptographicProviderFilePath': self.ValueIgnoreCryptographicProviderFilePath.get(),
+            'self.ValueIgnoreDdlTriggerOrder': self.ValueIgnoreDdlTriggerOrder.get(),
+            'self.ValueIgnoreDdlTriggerState': self.ValueIgnoreDdlTriggerState.get(),
+            'self.ValueIgnoreDefaultSchema': self.ValueIgnoreDefaultSchema.get(),
+            'self.ValueIgnoreDmlTriggerOrder': self.ValueIgnoreDmlTriggerOrder.get(),
+            'self.ValueIgnoreDmlTriggerState': self.ValueIgnoreDmlTriggerState.get(),
+            'self.ValueIgnoreExtendedProperties': self.ValueIgnoreExtendedProperties.get(),
+            'self.ValueIgnoreFileAndLogFilePath': self.ValueIgnoreFileAndLogFilePath.get(),
+            'self.ValueIgnoreFilegroupPlacement': self.ValueIgnoreFilegroupPlacement.get(),
+            'self.ValueIgnoreFileSize': self.ValueIgnoreFileSize.get(),
+            'self.ValueIgnoreFillFactor': self.ValueIgnoreFillFactor.get(),
+            'self.ValueIgnoreFullTextCatalogFilePath': self.ValueIgnoreFullTextCatalogFilePath.get(),
+            'self.ValueIgnoreIdentitySeed': self.ValueIgnoreIdentitySeed.get(),
+            'self.ValueIgnoreIncrement': self.ValueIgnoreIncrement.get(),
+            'self.ValueIgnoreIndexOptions': self.ValueIgnoreIndexOptions.get(),
+            'self.ValueIgnoreIndexPadding': self.ValueIgnoreIndexPadding.get(),
+            'self.ValueIgnoreKeywordCasing': self.ValueIgnoreKeywordCasing.get(),
+            'self.ValueIgnoreLockHintsOnIndexes': self.ValueIgnoreLockHintsOnIndexes.get(),
+            'self.ValueIgnoreLoginSids': self.ValueIgnoreLoginSids.get(),
+            'self.ValueIgnoreNotForReplication': self.ValueIgnoreNotForReplication.get(),
+            'self.ValueIgnoreObjectPlacementOnPartitionScheme': self.ValueIgnoreObjectPlacementOnPartitionScheme.get(),
+            'self.ValueIgnorePartitionSchemes': self.ValueIgnorePartitionSchemes.get(),
+            'self.ValueIgnorePermissions': self.ValueIgnorePermissions.get(),
+            'self.ValueIgnoreQuotedIdentifiers': self.ValueIgnoreQuotedIdentifiers.get(),
+            'self.ValueIgnoreRoleMembership': self.ValueIgnoreRoleMembership.get(),
+            'self.ValueIgnoreRouteLifetime': self.ValueIgnoreRouteLifetime.get(),
+            'self.ValueIgnoreSemicolonBetweenStatements': self.ValueIgnoreSemicolonBetweenStatements.get(),
+            'self.ValueIgnoreTableOptions': self.ValueIgnoreTableOptions.get(),
+            'self.ValueIgnoreUserSettingsObjects': self.ValueIgnoreUserSettingsObjects.get(),
+            'self.ValueIgnoreWhitespace': self.ValueIgnoreWhitespace.get(),
+            'self.ValueIgnoreWithNocheckOnCheckConstraints': self.ValueIgnoreWithNocheckOnCheckConstraints.get(),
+            'self.ValueIgnoreWithNocheckOnForeignKeys': self.ValueIgnoreWithNocheckOnForeignKeys.get(),
+            'self.ValueIncludeCompositeObjects': self.ValueIncludeCompositeObjects.get(),
+            'self.ValueIncludeTransactionalScripts': self.ValueIncludeTransactionalScripts.get(),
+            'self.ValueNoAlterStatementsToChangeClrTypes': self.ValueNoAlterStatementsToChangeClrTypes.get(),
+            'self.ValuePopulateFilesOnFilegroups': self.ValuePopulateFilesOnFilegroups.get(),
+            'self.ValueRegisterDataTierApplication': self.ValueRegisterDataTierApplication.get(),
+            'self.ValueRunDeploymentPlanExecutors': self.ValueRunDeploymentPlanExecutors.get(),
+            'self.ValueScriptDatabaseCollation': self.ValueScriptDatabaseCollation.get(),
+            'self.ValueScriptDatabaseCompatibility': self.ValueScriptDatabaseCompatibility.get(),
+            'self.ValueScriptDatabaseOptions': self.ValueScriptDatabaseOptions.get(),
+            'self.ValueScriptDeployStateChecks': self.ValueScriptDeployStateChecks.get(),
+            'self.ValueScriptFileSize': self.ValueScriptFileSize.get(),
+            'self.ValueScriptNewConstraintValidation': self.ValueScriptNewConstraintValidation.get(),
+            'self.ValueScriptRefreshModule': self.ValueScriptRefreshModule.get(),
+            'self.ValueStorage': self.ValueStorage.get(),
+            'self.ValueTreatVerificationErrorsAsWarnings': self.ValueTreatVerificationErrorsAsWarnings.get(),
+            'self.ValueUnmodifiableObjectWarnings': self.ValueUnmodifiableObjectWarnings.get(),
+            'self.ValueVerifyCollationCompatibility': self.ValueVerifyCollationCompatibility.get(),
+            'self.ValueVerifyDeployment': self.ValueVerifyDeployment.get(),
+
+            'self.DoNotDropObjectTypesAggregates': self.DoNotDropObjectTypesAggregates.get(),
+            'self.DoNotDropObjectTypesApplicationRoles': self.DoNotDropObjectTypesApplicationRoles.get(),
+            'self.DoNotDropObjectTypesAssemblies': self.DoNotDropObjectTypesAssemblies.get(),
+            'self.DoNotDropObjectTypesAsymmetricKeys': self.DoNotDropObjectTypesAsymmetricKeys.get(),
+            'self.DoNotDropObjectTypesBrokerPriorities': self.DoNotDropObjectTypesBrokerPriorities.get(),
+            'self.DoNotDropObjectTypesCertificates': self.DoNotDropObjectTypesCertificates.get(),
+            'self.DoNotDropObjectTypesContracts': self.DoNotDropObjectTypesContracts.get(),
+            'self.DoNotDropObjectTypesDatabaseRoles': self.DoNotDropObjectTypesDatabaseRoles.get(),
+            'self.DoNotDropObjectTypesDatabaseTriggers': self.DoNotDropObjectTypesDatabaseTriggers.get(),
+            'self.DoNotDropObjectTypesDefaults': self.DoNotDropObjectTypesDefaults.get(),
+            'self.DoNotDropObjectTypesExtendedProperties': self.DoNotDropObjectTypesExtendedProperties.get(),
+            'self.DoNotDropObjectTypesFilegroups': self.DoNotDropObjectTypesFilegroups.get(),
+            'self.DoNotDropObjectTypesFileTables': self.DoNotDropObjectTypesFileTables.get(),
+            'self.DoNotDropObjectTypesFullTextCatalogs': self.DoNotDropObjectTypesFullTextCatalogs.get(),
+            'self.DoNotDropObjectTypesFullTextStoplists': self.DoNotDropObjectTypesFullTextStoplists.get(),
+            'self.DoNotDropObjectTypesMessageTypes': self.DoNotDropObjectTypesMessageTypes.get(),
+            'self.DoNotDropObjectTypesPartitionFunctions': self.DoNotDropObjectTypesPartitionFunctions.get(),
+            'self.DoNotDropObjectTypesPartitionSchemes': self.DoNotDropObjectTypesPartitionSchemes.get(),
+            'self.DoNotDropObjectTypesPermissions': self.DoNotDropObjectTypesPermissions.get(),
+            'self.DoNotDropObjectTypesQueues': self.DoNotDropObjectTypesQueues.get(),
+            'self.DoNotDropObjectTypesRemoteServiceBindings': self.DoNotDropObjectTypesRemoteServiceBindings.get(),
+            'self.DoNotDropObjectTypesRoleMembership': self.DoNotDropObjectTypesRoleMembership.get(),
+            'self.DoNotDropObjectTypesRules': self.DoNotDropObjectTypesRules.get(),
+            'self.DoNotDropObjectTypesScalarValuedFunctions': self.DoNotDropObjectTypesScalarValuedFunctions.get(),
+            'self.DoNotDropObjectTypesSearchPropertyLists': self.DoNotDropObjectTypesSearchPropertyLists.get(),
+            'self.DoNotDropObjectTypesSequences': self.DoNotDropObjectTypesSequences.get(),
+            'self.DoNotDropObjectTypesServices': self.DoNotDropObjectTypesServices.get(),
+            'self.DoNotDropObjectTypesSignatures': self.DoNotDropObjectTypesSignatures.get(),
+            'self.DoNotDropObjectTypesStoredProcedures': self.DoNotDropObjectTypesStoredProcedures.get(),
+            'self.DoNotDropObjectTypesSymmetricKeys': self.DoNotDropObjectTypesSymmetricKeys.get(),
+            'self.DoNotDropObjectTypesSynonyms': self.DoNotDropObjectTypesSynonyms.get(),
+            'self.DoNotDropObjectTypesTables': self.DoNotDropObjectTypesTables.get(),
+            'self.DoNotDropObjectTypesTableValuedFunctions': self.DoNotDropObjectTypesTableValuedFunctions.get(),
+            'self.DoNotDropObjectTypesUserDefinedDataTypes': self.DoNotDropObjectTypesUserDefinedDataTypes.get(),
+            'self.DoNotDropObjectTypesUserDefinedTableTypes': self.DoNotDropObjectTypesUserDefinedTableTypes.get(),
+            'self.DoNotDropObjectTypesClrUserDefinedTypes': self.DoNotDropObjectTypesClrUserDefinedTypes.get(),
+            'self.DoNotDropObjectTypesUsers': self.DoNotDropObjectTypesUsers.get(),
+            'self.DoNotDropObjectTypesViews': self.DoNotDropObjectTypesViews.get(),
+            'self.DoNotDropObjectTypesXmlSchemaCollections': self.DoNotDropObjectTypesXmlSchemaCollections.get(),
+            'self.DoNotDropObjectTypesAudits': self.DoNotDropObjectTypesAudits.get(),
+            'self.DoNotDropObjectTypesCredentials': self.DoNotDropObjectTypesCredentials.get(),
+            'self.DoNotDropObjectTypesCryptographicProviders': self.DoNotDropObjectTypesCryptographicProviders.get(),
+            'self.DoNotDropObjectTypesDatabaseAuditSpecifications': self.DoNotDropObjectTypesDatabaseAuditSpecifications.get(),
+            'self.DoNotDropObjectTypesEndpoints': self.DoNotDropObjectTypesEndpoints.get(),
+            'self.DoNotDropObjectTypesErrorMessages': self.DoNotDropObjectTypesErrorMessages.get(),
+            'self.DoNotDropObjectTypesEventNotifications': self.DoNotDropObjectTypesEventNotifications.get(),
+            'self.DoNotDropObjectTypesEventSessions': self.DoNotDropObjectTypesEventSessions.get(),
+            'self.DoNotDropObjectTypesLinkedServerLogins': self.DoNotDropObjectTypesLinkedServerLogins.get(),
+            'self.DoNotDropObjectTypesLinkedServers': self.DoNotDropObjectTypesLinkedServers.get(),
+            'self.DoNotDropObjectTypesLogins': self.DoNotDropObjectTypesLogins.get(),
+            'self.DoNotDropObjectTypesRoutes': self.DoNotDropObjectTypesRoutes.get(),
+            'self.DoNotDropObjectTypesServerAuditSpecifications': self.DoNotDropObjectTypesServerAuditSpecifications.get(),
+            'self.DoNotDropObjectTypesServerRoleMembership': self.DoNotDropObjectTypesServerRoleMembership.get(),
+            'self.DoNotDropObjectTypesServerRoles': self.DoNotDropObjectTypesServerRoles.get(),
+            'self.DoNotDropObjectTypesServerTriggers': self.DoNotDropObjectTypesServerTriggers.get(),
+
+            'self.ExcludeObjectTypesAggregates': self.ExcludeObjectTypesAggregates.get(),
+            'self.ExcludeObjectTypesApplicationRoles': self.ExcludeObjectTypesApplicationRoles.get(),
+            'self.ExcludeObjectTypesAssemblies': self.ExcludeObjectTypesAssemblies.get(),
+            'self.ExcludeObjectTypesAsymmetricKeys': self.ExcludeObjectTypesAsymmetricKeys.get(),
+            'self.ExcludeObjectTypesBrokerPriorities': self.ExcludeObjectTypesBrokerPriorities.get(),
+            'self.ExcludeObjectTypesCertificates': self.ExcludeObjectTypesCertificates.get(),
+            'self.ExcludeObjectTypesContracts': self.ExcludeObjectTypesContracts.get(),
+            'self.ExcludeObjectTypesDatabaseRoles': self.ExcludeObjectTypesDatabaseRoles.get(),
+            'self.ExcludeObjectTypesDatabaseTriggers': self.ExcludeObjectTypesDatabaseTriggers.get(),
+            'self.ExcludeObjectTypesDefaults': self.ExcludeObjectTypesDefaults.get(),
+            'self.ExcludeObjectTypesExtendedProperties': self.ExcludeObjectTypesExtendedProperties.get(),
+            'self.ExcludeObjectTypesFilegroups': self.ExcludeObjectTypesFilegroups.get(),
+            'self.ExcludeObjectTypesFileTables': self.ExcludeObjectTypesFileTables.get(),
+            'self.ExcludeObjectTypesFullTextCatalogs': self.ExcludeObjectTypesFullTextCatalogs.get(),
+            'self.ExcludeObjectTypesFullTextStoplists': self.ExcludeObjectTypesFullTextStoplists.get(),
+            'self.ExcludeObjectTypesMessageTypes': self.ExcludeObjectTypesMessageTypes.get(),
+            'self.ExcludeObjectTypesPartitionFunctions': self.ExcludeObjectTypesPartitionFunctions.get(),
+            'self.ExcludeObjectTypesPartitionSchemes': self.ExcludeObjectTypesPartitionSchemes.get(),
+            'self.ExcludeObjectTypesPermissions': self.ExcludeObjectTypesPermissions.get(),
+            'self.ExcludeObjectTypesQueues': self.ExcludeObjectTypesQueues.get(),
+            'self.ExcludeObjectTypesRemoteServiceBindings': self.ExcludeObjectTypesRemoteServiceBindings.get(),
+            'self.ExcludeObjectTypesRoleMembership': self.ExcludeObjectTypesRoleMembership.get(),
+            'self.ExcludeObjectTypesRules': self.ExcludeObjectTypesRules.get(),
+            'self.ExcludeObjectTypesScalarValuedFunctions': self.ExcludeObjectTypesScalarValuedFunctions.get(),
+            'self.ExcludeObjectTypesSearchPropertyLists': self.ExcludeObjectTypesSearchPropertyLists.get(),
+            'self.ExcludeObjectTypesSequences': self.ExcludeObjectTypesSequences.get(),
+            'self.ExcludeObjectTypesServices': self.ExcludeObjectTypesServices.get(),
+            'self.ExcludeObjectTypesSignatures': self.ExcludeObjectTypesSignatures.get(),
+            'self.ExcludeObjectTypesStoredProcedures': self.ExcludeObjectTypesStoredProcedures.get(),
+            'self.ExcludeObjectTypesSymmetricKeys': self.ExcludeObjectTypesSymmetricKeys.get(),
+            'self.ExcludeObjectTypesSynonyms': self.ExcludeObjectTypesSynonyms.get(),
+            'self.ExcludeObjectTypesTables': self.ExcludeObjectTypesTables.get(),
+            'self.ExcludeObjectTypesTableValuedFunctions': self.ExcludeObjectTypesTableValuedFunctions.get(),
+            'self.ExcludeObjectTypesUserDefinedDataTypes': self.ExcludeObjectTypesUserDefinedDataTypes.get(),
+            'self.ExcludeObjectTypesUserDefinedTableTypes': self.ExcludeObjectTypesUserDefinedTableTypes.get(),
+            'self.ExcludeObjectTypesClrUserDefinedTypes': self.ExcludeObjectTypesClrUserDefinedTypes.get(),
+            'self.ExcludeObjectTypesUsers': self.ExcludeObjectTypesUsers.get(),
+            'self.ExcludeObjectTypesViews': self.ExcludeObjectTypesViews.get(),
+            'self.ExcludeObjectTypesXmlSchemaCollections': self.ExcludeObjectTypesXmlSchemaCollections.get(),
+            'self.ExcludeObjectTypesAudits': self.ExcludeObjectTypesAudits.get(),
+            'self.ExcludeObjectTypesCredentials': self.ExcludeObjectTypesCredentials.get(),
+            'self.ExcludeObjectTypesCryptographicProviders': self.ExcludeObjectTypesCryptographicProviders.get(),
+            'self.ExcludeObjectTypesDatabaseAuditSpecifications': self.ExcludeObjectTypesDatabaseAuditSpecifications.get(),
+            'self.ExcludeObjectTypesEndpoints': self.ExcludeObjectTypesEndpoints.get(),
+            'self.ExcludeObjectTypesErrorMessages': self.ExcludeObjectTypesErrorMessages.get(),
+            'self.ExcludeObjectTypesEventNotifications': self.ExcludeObjectTypesEventNotifications.get(),
+            'self.ExcludeObjectTypesEventSessions': self.ExcludeObjectTypesEventSessions.get(),
+            'self.ExcludeObjectTypesLinkedServerLogins': self.ExcludeObjectTypesLinkedServerLogins.get(),
+            'self.ExcludeObjectTypesLinkedServers': self.ExcludeObjectTypesLinkedServers.get(),
+            'self.ExcludeObjectTypesLogins': self.ExcludeObjectTypesLogins.get(),
+            'self.ExcludeObjectTypesRoutes': self.ExcludeObjectTypesRoutes.get(),
+            'self.ExcludeObjectTypesServerAuditSpecifications': self.ExcludeObjectTypesServerAuditSpecifications.get(),
+            'self.ExcludeObjectTypesServerRoleMembership': self.ExcludeObjectTypesServerRoleMembership.get(),
+            'self.ExcludeObjectTypesServerRoles': self.ExcludeObjectTypesServerRoles.get(),
+            'self.ExcludeObjectTypesServerTriggers': self.ExcludeObjectTypesServerTriggers.get()
+
+        }
+
+        self.save_file_path = filedialog.asksaveasfilename(**self.options)
+
+        with open(self.save_file_path, 'w') as f:
+            json.dump(self.save_profile_data, f, indent=4)
+
+
+
+    def load_profile(self):
+        self.open_file_path = filedialog.askopenfilename(**self.options)
+
+        with open(self.open_file_path, 'r') as f:
+            self.open_profile_data = json.load(f)
+
+        self.PreDeploymentText.delete(1.0,END)
+        self.PreDeploymentText.insert(END, self.open_profile_data["self.PreDeploymentText"])
+
+        self.SourceServerEntry.delete(0, END)
+        self.SourceServerEntry.insert(0,self.open_profile_data["self.SourceServerEntry"])
+
+        self.SourceDatabaseEntry.delete(0, END)
+        self.SourceDatabaseEntry.insert(0, self.open_profile_data["self.SourceDatabaseEntry"])
+
+        self.TargetServerEntry.delete(0, END)
+        self.TargetServerEntry.insert(0, self.open_profile_data["self.TargetServerEntry"])
+
+        self.TargetDatabaseEntry.delete(0, END)
+        self.TargetDatabaseEntry.insert(0, self.open_profile_data["self.TargetDatabaseEntry"])
+
+        self.SourceUsernameEntry.delete(0, END)
+        self.SourceUsernameEntry.insert(0, self.open_profile_data["self.SourceUsernameEntry"])
+
+        self.SourcePasswordEntry.delete(0, END)
+        self.SourcePasswordEntry.insert(0, self.open_profile_data["self.SourcePasswordEntry"])
+
+        self.TargetUsernameEntry.delete(0, END)
+        self.TargetUsernameEntry.insert(0, self.open_profile_data["self.TargetUsernameEntry"])
+
+        self.TargetPasswordEntry.delete(0, END)
+        self.TargetPasswordEntry.insert(0, self.open_profile_data["self.TargetPasswordEntry"])
+
+        self.WinAuthSrcVariable.set(self.open_profile_data["self.WinAuthSrcVariable"])
+        self.WinAuthTrgtVariable.set(self.open_profile_data["self.WinAuthTrgtVariable"])
+        self.EncryptSrcVariable.set(self.open_profile_data["self.EncryptSrcVariable"])
+        self.EncryptTrgtVariable.set(self.open_profile_data["self.EncryptTrgtVariable"])
+        self.SetDplyPropertyVariable.set(self.open_profile_data["self.SetDplyPropertyVariable"])
+
+        self.ChkButtonAllowDropBlockingAssemblies.set(self.open_profile_data["self.ChkButtonAllowDropBlockingAssemblies"])
+        self.ChkButtonAllowIncompatiblePlatform.set(self.open_profile_data["self.ChkButtonAllowIncompatiblePlatform"])
+        self.ChkButtonBackupDatabaseBeforeChanges.set(self.open_profile_data["self.ChkButtonBackupDatabaseBeforeChanges"])
+        self.ChkButtonBlockOnPossibleDataLoss.set(self.open_profile_data["self.ChkButtonBlockOnPossibleDataLoss"])
+        self.ChkButtonBlockWhenDriftDetected.set(self.open_profile_data["self.ChkButtonBlockWhenDriftDetected"])
+        self.ChkButtonCommandTimeout.set(self.open_profile_data["self.ChkButtonCommandTimeout"])
+        self.ChkButtonCommentOutSetVarDeclarations.set(self.open_profile_data["self.ChkButtonCommentOutSetVarDeclarations"])
+        self.ChkButtonCompareUsingTargetCollation.set(self.open_profile_data["self.ChkButtonCompareUsingTargetCollation"])
+        self.ChkButtonCreateNewDatabase.set(self.open_profile_data["self.ChkButtonCreateNewDatabase"])
+        self.ChkButtonDeployDatabaseInSingleUserMode.set(self.open_profile_data["self.ChkButtonDeployDatabaseInSingleUserMode"])
+        self.ChkButtonDisableAndReenableDdlTriggers.set(self.open_profile_data["self.ChkButtonDisableAndReenableDdlTriggers"])
+        self.ChkButtonDoNotAlterChangeDataCaptureObjects.set(self.open_profile_data["self.ChkButtonDoNotAlterChangeDataCaptureObjects"])
+        self.ChkButtonDoNotAlterReplicatedObjects.set(self.open_profile_data["self.ChkButtonDoNotAlterReplicatedObjects"])
+        self.ChkButtonDoNotDropObjectTypes.set(self.open_profile_data["self.ChkButtonDoNotDropObjectTypes"])
+        self.ChkButtonDropConstraintsNotInSource.set(self.open_profile_data["self.ChkButtonDropConstraintsNotInSource"])
+        self.ChkButtonDropDmlTriggersNotInSource.set(self.open_profile_data["self.ChkButtonDropDmlTriggersNotInSource"])
+        self.ChkButtonDropExtendedPropertiesNotInSource.set(self.open_profile_data["self.ChkButtonDropExtendedPropertiesNotInSource"])
+        self.ChkButtonDropIndexesNotInSource.set(self.open_profile_data["self.ChkButtonDropIndexesNotInSource"])
+        self.ChkButtonDropObjectsNotInSource.set(self.open_profile_data["self.ChkButtonDropObjectsNotInSource"])
+        self.ChkButtonDropPermissionsNotInSource.set(self.open_profile_data["self.ChkButtonDropPermissionsNotInSource"])
+        self.ChkButtonDropRoleMembersNotInSource.set(self.open_profile_data["self.ChkButtonDropRoleMembersNotInSource"])
+        self.ChkButtonExcludeObjectTypes.set(self.open_profile_data["self.ChkButtonExcludeObjectTypes"])
+        self.ChkButtonGenerateSmartDefaults.set(self.open_profile_data["self.ChkButtonGenerateSmartDefaults"])
+        self.ChkButtonIgnoreAnsiNulls.set(self.open_profile_data["self.ChkButtonIgnoreAnsiNulls"])
+        self.ChkButtonIgnoreAuthorizer.set(self.open_profile_data["self.ChkButtonIgnoreAuthorizer"])
+        self.ChkButtonIgnoreColumnCollation.set(self.open_profile_data["self.ChkButtonIgnoreColumnCollation"])
+        self.ChkButtonIgnoreComments.set(self.open_profile_data["self.ChkButtonIgnoreComments"])
+        self.ChkButtonIgnoreCryptographicProviderFilePath.set(self.open_profile_data["self.ChkButtonIgnoreCryptographicProviderFilePath"])
+        self.ChkButtonIgnoreDdlTriggerOrder.set(self.open_profile_data["self.ChkButtonIgnoreDdlTriggerOrder"])
+        self.ChkButtonIgnoreDdlTriggerState.set(self.open_profile_data["self.ChkButtonIgnoreDdlTriggerState"])
+        self.ChkButtonIgnoreDefaultSchema.set(self.open_profile_data["self.ChkButtonIgnoreDefaultSchema"])
+        self.ChkButtonIgnoreDmlTriggerOrder.set(self.open_profile_data["self.ChkButtonIgnoreDmlTriggerOrder"])
+        self.ChkButtonIgnoreDmlTriggerState.set(self.open_profile_data["self.ChkButtonIgnoreDmlTriggerState"])
+        self.ChkButtonIgnoreExtendedProperties.set(self.open_profile_data["self.ChkButtonIgnoreExtendedProperties"])
+        self.ChkButtonIgnoreFileAndLogFilePath.set(self.open_profile_data["self.ChkButtonIgnoreFileAndLogFilePath"])
+        self.ChkButtonIgnoreFilegroupPlacement.set(self.open_profile_data["self.ChkButtonIgnoreFilegroupPlacement"])
+        self.ChkButtonIgnoreFileSize.set(self.open_profile_data["self.ChkButtonIgnoreFileSize"])
+        self.ChkButtonIgnoreFillFactor.set(self.open_profile_data["self.ChkButtonIgnoreFillFactor"])
+        self.ChkButtonIgnoreFullTextCatalogFilePath.set(self.open_profile_data["self.ChkButtonIgnoreFullTextCatalogFilePath"])
+        self.ChkButtonIgnoreIdentitySeed.set(self.open_profile_data["self.ChkButtonIgnoreIdentitySeed"])
+        self.ChkButtonIgnoreIncrement.set(self.open_profile_data["self.ChkButtonIgnoreIncrement"])
+        self.ChkButtonIgnoreIndexOptions.set(self.open_profile_data["self.ChkButtonIgnoreIndexOptions"])
+        self.ChkButtonIgnoreIndexPadding.set(self.open_profile_data["self.ChkButtonIgnoreIndexPadding"])
+        self.ChkButtonIgnoreKeywordCasing.set(self.open_profile_data["self.ChkButtonIgnoreKeywordCasing"])
+        self.ChkButtonIgnoreLockHintsOnIndexes.set(self.open_profile_data["self.ChkButtonIgnoreLockHintsOnIndexes"])
+        self.ChkButtonIgnoreLoginSids.set(self.open_profile_data["self.ChkButtonIgnoreLoginSids"])
+        self.ChkButtonIgnoreNotForReplication.set(self.open_profile_data["self.ChkButtonIgnoreNotForReplication"])
+        self.ChkButtonIgnoreObjectPlacementOnPartitionScheme.set(self.open_profile_data["self.ChkButtonIgnoreObjectPlacementOnPartitionScheme"])
+        self.ChkButtonIgnorePartitionSchemes.set(self.open_profile_data["self.ChkButtonIgnorePartitionSchemes"])
+        self.ChkButtonIgnorePermissions.set(self.open_profile_data["self.ChkButtonIgnorePermissions"])
+        self.ChkButtonIgnoreQuotedIdentifiers.set(self.open_profile_data["self.ChkButtonIgnoreQuotedIdentifiers"])
+        self.ChkButtonIgnoreRoleMembership.set(self.open_profile_data["self.ChkButtonIgnoreRoleMembership"])
+        self.ChkButtonIgnoreRouteLifetime.set(self.open_profile_data["self.ChkButtonIgnoreRouteLifetime"])
+        self.ChkButtonIgnoreSemicolonBetweenStatements.set(self.open_profile_data["self.ChkButtonIgnoreSemicolonBetweenStatements"])
+        self.ChkButtonIgnoreTableOptions.set(self.open_profile_data["self.ChkButtonIgnoreTableOptions"])
+        self.ChkButtonIgnoreUserSettingsObjects.set(self.open_profile_data["self.ChkButtonIgnoreUserSettingsObjects"])
+        self.ChkButtonIgnoreWhitespace.set(self.open_profile_data["self.ChkButtonIgnoreWhitespace"])
+        self.ChkButtonIgnoreWithNocheckOnCheckConstraints.set(self.open_profile_data["self.ChkButtonIgnoreWithNocheckOnCheckConstraints"])
+        self.ChkButtonIgnoreWithNocheckOnForeignKeys.set(self.open_profile_data["self.ChkButtonIgnoreWithNocheckOnForeignKeys"])
+        self.ChkButtonIncludeCompositeObjects.set(self.open_profile_data["self.ChkButtonIncludeCompositeObjects"])
+        self.ChkButtonIncludeTransactionalScripts.set(self.open_profile_data["self.ChkButtonIncludeTransactionalScripts"])
+        self.ChkButtonNoAlterStatementsToChangeClrTypes.set(self.open_profile_data["self.ChkButtonNoAlterStatementsToChangeClrTypes"])
+        self.ChkButtonPopulateFilesOnFilegroups.set(self.open_profile_data["self.ChkButtonPopulateFilesOnFilegroups"])
+        self.ChkButtonRegisterDataTierApplication.set(self.open_profile_data["self.ChkButtonRegisterDataTierApplication"])
+        self.ChkButtonRunDeploymentPlanExecutors.set(self.open_profile_data["self.ChkButtonRunDeploymentPlanExecutors"])
+        self.ChkButtonScriptDatabaseCollation.set(self.open_profile_data["self.ChkButtonScriptDatabaseCollation"])
+        self.ChkButtonScriptDatabaseCompatibility.set(self.open_profile_data["self.ChkButtonScriptDatabaseCompatibility"])
+        self.ChkButtonScriptDatabaseOptions.set(self.open_profile_data["self.ChkButtonScriptDatabaseOptions"])
+        self.ChkButtonScriptDeployStateChecks.set(self.open_profile_data["self.ChkButtonScriptDeployStateChecks"])
+        self.ChkButtonScriptFileSize.set(self.open_profile_data["self.ChkButtonScriptFileSize"])
+        self.ChkButtonScriptNewConstraintValidation.set(self.open_profile_data["self.ChkButtonScriptNewConstraintValidation"])
+        self.ChkButtonScriptRefreshModule.set(self.open_profile_data["self.ChkButtonScriptRefreshModule"])
+        self.ChkButtonStorage.set(self.open_profile_data["self.ChkButtonStorage"])
+        self.ChkButtonTreatVerificationErrorsAsWarnings.set(self.open_profile_data["self.ChkButtonTreatVerificationErrorsAsWarnings"])
+        self.ChkButtonUnmodifiableObjectWarnings.set(self.open_profile_data["self.ChkButtonUnmodifiableObjectWarnings"])
+        self.ChkButtonVerifyCollationCompatibility.set(self.open_profile_data["self.ChkButtonVerifyCollationCompatibility"])
+        self.ChkButtonVerifyDeployment.set(self.open_profile_data["self.ChkButtonVerifyDeployment"])
+
+        self.ValueAllowDropBlockingAssemblies.set(self.open_profile_data["self.ValueAllowDropBlockingAssemblies"])
+        self.ValueAllowIncompatiblePlatform.set(self.open_profile_data["self.ValueAllowIncompatiblePlatform"])
+        self.ValueBackupDatabaseBeforeChanges.set(self.open_profile_data["self.ValueBackupDatabaseBeforeChanges"])
+        self.ValueBlockOnPossibleDataLoss.set(self.open_profile_data["self.ValueBlockOnPossibleDataLoss"])
+        self.ValueBlockWhenDriftDetected.set(self.open_profile_data["self.ValueBlockWhenDriftDetected"])
+        self.EntryCommandTimeout.delete(0, END)
+        self.EntryCommandTimeout.insert(0, "60")
+        self.ValueCommentOutSetVarDeclarations.set(self.open_profile_data["self.ValueCommentOutSetVarDeclarations"])
+        self.ValueCompareUsingTargetCollation.set(self.open_profile_data["self.ValueCompareUsingTargetCollation"])
+        self.ValueCreateNewDatabase.set(self.open_profile_data["self.ValueCreateNewDatabase"])
+        self.ValueDeployDatabaseInSingleUserMode.set(self.open_profile_data["self.ValueDeployDatabaseInSingleUserMode"])
+        self.ValueDisableAndReenableDdlTriggers.set(self.open_profile_data["self.ValueDisableAndReenableDdlTriggers"])
+        self.ValueDoNotAlterChangeDataCaptureObjects.set(self.open_profile_data["self.ValueDoNotAlterChangeDataCaptureObjects"])
+        self.ValueDoNotAlterReplicatedObjects.set(self.open_profile_data["self.ValueDoNotAlterReplicatedObjects"])
+        self.ValueDoNotDropObjectTypes.set(self.open_profile_data["self.ValueDoNotDropObjectTypes"])
+        self.ValueDropConstraintsNotInSource.set(self.open_profile_data["self.ValueDropConstraintsNotInSource"])
+        self.ValueDropDmlTriggersNotInSource.set(self.open_profile_data["self.ValueDropDmlTriggersNotInSource"])
+        self.ValueDropExtendedPropertiesNotInSource.set(self.open_profile_data["self.ValueDropExtendedPropertiesNotInSource"])
+        self.ValueDropIndexesNotInSource.set(self.open_profile_data["self.ValueDropIndexesNotInSource"])
+        self.ValueDropObjectsNotInSource.set(self.open_profile_data["self.ValueDropObjectsNotInSource"])
+        self.ValueDropPermissionsNotInSource.set(self.open_profile_data["self.ValueDropPermissionsNotInSource"])
+        self.ValueDropRoleMembersNotInSource.set(self.open_profile_data["self.ValueDropRoleMembersNotInSource"])
+        self.ValueExcludeObjectTypes.set(self.open_profile_data["self.ValueExcludeObjectTypes"])
+        self.ValueGenerateSmartDefaults.set(self.open_profile_data["self.ValueGenerateSmartDefaults"])
+        self.ValueIgnoreAnsiNulls.set(self.open_profile_data["self.ValueIgnoreAnsiNulls"])
+        self.ValueIgnoreAuthorizer.set(self.open_profile_data["self.ValueIgnoreAuthorizer"])
+        self.ValueIgnoreColumnCollation.set(self.open_profile_data["self.ValueIgnoreColumnCollation"])
+        self.ValueIgnoreComments.set(self.open_profile_data["self.ValueIgnoreComments"])
+        self.ValueIgnoreCryptographicProviderFilePath.set(self.open_profile_data["self.ValueIgnoreCryptographicProviderFilePath"])
+        self.ValueIgnoreDdlTriggerOrder.set(self.open_profile_data["self.ValueIgnoreDdlTriggerOrder"])
+        self.ValueIgnoreDdlTriggerState.set(self.open_profile_data["self.ValueIgnoreDdlTriggerState"])
+        self.ValueIgnoreDefaultSchema.set(self.open_profile_data["self.ValueIgnoreDefaultSchema"])
+        self.ValueIgnoreDmlTriggerOrder.set(self.open_profile_data["self.ValueIgnoreDmlTriggerOrder"])
+        self.ValueIgnoreDmlTriggerState.set(self.open_profile_data["self.ValueIgnoreDmlTriggerState"])
+        self.ValueIgnoreExtendedProperties.set(self.open_profile_data["self.ValueIgnoreExtendedProperties"])
+        self.ValueIgnoreFileAndLogFilePath.set(self.open_profile_data["self.ValueIgnoreFileAndLogFilePath"])
+        self.ValueIgnoreFilegroupPlacement.set(self.open_profile_data["self.ValueIgnoreFilegroupPlacement"])
+        self.ValueIgnoreFileSize.set(self.open_profile_data["self.ValueIgnoreFileSize"])
+        self.ValueIgnoreFillFactor.set(self.open_profile_data["self.ValueIgnoreFillFactor"])
+        self.ValueIgnoreFullTextCatalogFilePath.set(self.open_profile_data["self.ValueIgnoreFullTextCatalogFilePath"])
+        self.ValueIgnoreIdentitySeed.set(self.open_profile_data["self.ValueIgnoreIdentitySeed"])
+        self.ValueIgnoreIncrement.set(self.open_profile_data["self.ValueIgnoreIncrement"])
+        self.ValueIgnoreIndexOptions.set(self.open_profile_data["self.ValueIgnoreIndexOptions"])
+        self.ValueIgnoreIndexPadding.set(self.open_profile_data["self.ValueIgnoreIndexPadding"])
+        self.ValueIgnoreKeywordCasing.set(self.open_profile_data["self.ValueIgnoreKeywordCasing"])
+        self.ValueIgnoreLockHintsOnIndexes.set(self.open_profile_data["self.ValueIgnoreLockHintsOnIndexes"])
+        self.ValueIgnoreLoginSids.set(self.open_profile_data["self.ValueIgnoreLoginSids"])
+        self.ValueIgnoreNotForReplication.set(self.open_profile_data["self.ValueIgnoreNotForReplication"])
+        self.ValueIgnoreObjectPlacementOnPartitionScheme.set(self.open_profile_data["self.ValueIgnoreObjectPlacementOnPartitionScheme"])
+        self.ValueIgnorePartitionSchemes.set(self.open_profile_data["self.ValueIgnorePartitionSchemes"])
+        self.ValueIgnorePermissions.set(self.open_profile_data["self.ValueIgnorePermissions"])
+        self.ValueIgnoreQuotedIdentifiers.set(self.open_profile_data["self.ValueIgnoreQuotedIdentifiers"])
+        self.ValueIgnoreRoleMembership.set(self.open_profile_data["self.ValueIgnoreRoleMembership"])
+        self.ValueIgnoreRouteLifetime.set(self.open_profile_data["self.ValueIgnoreRouteLifetime"])
+        self.ValueIgnoreSemicolonBetweenStatements.set(self.open_profile_data["self.ValueIgnoreSemicolonBetweenStatements"])
+        self.ValueIgnoreTableOptions.set(self.open_profile_data["self.ValueIgnoreTableOptions"])
+        self.ValueIgnoreUserSettingsObjects.set(self.open_profile_data["self.ValueIgnoreUserSettingsObjects"])
+        self.ValueIgnoreWhitespace.set(self.open_profile_data["self.ValueIgnoreWhitespace"])
+        self.ValueIgnoreWithNocheckOnCheckConstraints.set(self.open_profile_data["self.ValueIgnoreWithNocheckOnCheckConstraints"])
+        self.ValueIgnoreWithNocheckOnForeignKeys.set(self.open_profile_data["self.ValueIgnoreWithNocheckOnForeignKeys"])
+        self.ValueIncludeCompositeObjects.set(self.open_profile_data["self.ValueIncludeCompositeObjects"])
+        self.ValueIncludeTransactionalScripts.set(self.open_profile_data["self.ValueIncludeTransactionalScripts"])
+        self.ValueNoAlterStatementsToChangeClrTypes.set(self.open_profile_data["self.ValueNoAlterStatementsToChangeClrTypes"])
+        self.ValuePopulateFilesOnFilegroups.set(self.open_profile_data["self.ValuePopulateFilesOnFilegroups"])
+        self.ValueRegisterDataTierApplication.set(self.open_profile_data["self.ValueRegisterDataTierApplication"])
+        self.ValueRunDeploymentPlanExecutors.set(self.open_profile_data["self.ValueRunDeploymentPlanExecutors"])
+        self.ValueScriptDatabaseCollation.set(self.open_profile_data["self.ValueScriptDatabaseCollation"])
+        self.ValueScriptDatabaseCompatibility.set(self.open_profile_data["self.ValueScriptDatabaseCompatibility"])
+        self.ValueScriptDatabaseOptions.set(self.open_profile_data["self.ValueScriptDatabaseOptions"])
+        self.ValueScriptDeployStateChecks.set(self.open_profile_data["self.ValueScriptDeployStateChecks"])
+        self.ValueScriptFileSize.set(self.open_profile_data["self.ValueScriptFileSize"])
+        self.ValueScriptNewConstraintValidation.set(self.open_profile_data["self.ValueScriptNewConstraintValidation"])
+        self.ValueScriptRefreshModule.set(self.open_profile_data["self.ValueScriptRefreshModule"])
+        self.ValueStorage.set(self.open_profile_data["self.ValueStorage"])
+        self.ValueTreatVerificationErrorsAsWarnings.set(self.open_profile_data["self.ValueTreatVerificationErrorsAsWarnings"])
+        self.ValueUnmodifiableObjectWarnings.set(self.open_profile_data["self.ValueUnmodifiableObjectWarnings"])
+        self.ValueVerifyCollationCompatibility.set(self.open_profile_data["self.ValueVerifyCollationCompatibility"])
+        self.ValueVerifyDeployment.set(self.open_profile_data["self.ValueVerifyDeployment"])
+
+        self.DoNotDropObjectTypesAggregates.set(self.open_profile_data["self.DoNotDropObjectTypesAggregates"])
+        self.DoNotDropObjectTypesApplicationRoles.set(self.open_profile_data["self.DoNotDropObjectTypesApplicationRoles"])
+        self.DoNotDropObjectTypesAssemblies.set(self.open_profile_data["self.DoNotDropObjectTypesAssemblies"])
+        self.DoNotDropObjectTypesAsymmetricKeys.set(self.open_profile_data["self.DoNotDropObjectTypesAsymmetricKeys"])
+        self.DoNotDropObjectTypesBrokerPriorities.set(self.open_profile_data["self.DoNotDropObjectTypesBrokerPriorities"])
+        self.DoNotDropObjectTypesCertificates.set(self.open_profile_data["self.DoNotDropObjectTypesCertificates"])
+        self.DoNotDropObjectTypesContracts.set(self.open_profile_data["self.DoNotDropObjectTypesContracts"])
+        self.DoNotDropObjectTypesDatabaseRoles.set(self.open_profile_data["self.DoNotDropObjectTypesDatabaseRoles"])
+        self.DoNotDropObjectTypesDatabaseTriggers.set(self.open_profile_data["self.DoNotDropObjectTypesDatabaseTriggers"])
+        self.DoNotDropObjectTypesDefaults.set(self.open_profile_data["self.DoNotDropObjectTypesDefaults"])
+        self.DoNotDropObjectTypesExtendedProperties.set(self.open_profile_data["self.DoNotDropObjectTypesExtendedProperties"])
+        self.DoNotDropObjectTypesFilegroups.set(self.open_profile_data["self.DoNotDropObjectTypesFilegroups"])
+        self.DoNotDropObjectTypesFileTables.set(self.open_profile_data["self.DoNotDropObjectTypesFileTables"])
+        self.DoNotDropObjectTypesFullTextCatalogs.set(self.open_profile_data["self.DoNotDropObjectTypesFullTextCatalogs"])
+        self.DoNotDropObjectTypesFullTextStoplists.set(self.open_profile_data["self.DoNotDropObjectTypesFullTextStoplists"])
+        self.DoNotDropObjectTypesMessageTypes.set(self.open_profile_data["self.DoNotDropObjectTypesMessageTypes"])
+        self.DoNotDropObjectTypesPartitionFunctions.set(self.open_profile_data["self.DoNotDropObjectTypesPartitionFunctions"])
+        self.DoNotDropObjectTypesPartitionSchemes.set(self.open_profile_data["self.DoNotDropObjectTypesPartitionSchemes"])
+        self.DoNotDropObjectTypesPermissions.set(self.open_profile_data["self.DoNotDropObjectTypesPermissions"])
+        self.DoNotDropObjectTypesQueues.set(self.open_profile_data["self.DoNotDropObjectTypesQueues"])
+        self.DoNotDropObjectTypesRemoteServiceBindings.set(self.open_profile_data["self.DoNotDropObjectTypesRemoteServiceBindings"])
+        self.DoNotDropObjectTypesRoleMembership.set(self.open_profile_data["self.DoNotDropObjectTypesRoleMembership"])
+        self.DoNotDropObjectTypesRules.set(self.open_profile_data["self.DoNotDropObjectTypesRules"])
+        self.DoNotDropObjectTypesScalarValuedFunctions.set(self.open_profile_data["self.DoNotDropObjectTypesScalarValuedFunctions"])
+        self.DoNotDropObjectTypesSearchPropertyLists.set(self.open_profile_data["self.DoNotDropObjectTypesSearchPropertyLists"])
+        self.DoNotDropObjectTypesSequences.set(self.open_profile_data["self.DoNotDropObjectTypesSequences"])
+        self.DoNotDropObjectTypesServices.set(self.open_profile_data["self.DoNotDropObjectTypesServices"])
+        self.DoNotDropObjectTypesSignatures.set(self.open_profile_data["self.DoNotDropObjectTypesSignatures"])
+        self.DoNotDropObjectTypesStoredProcedures.set(self.open_profile_data["self.DoNotDropObjectTypesStoredProcedures"])
+        self.DoNotDropObjectTypesSymmetricKeys.set(self.open_profile_data["self.DoNotDropObjectTypesSymmetricKeys"])
+        self.DoNotDropObjectTypesSynonyms.set(self.open_profile_data["self.DoNotDropObjectTypesSynonyms"])
+        self.DoNotDropObjectTypesTables.set(self.open_profile_data["self.DoNotDropObjectTypesTables"])
+        self.DoNotDropObjectTypesTableValuedFunctions.set(self.open_profile_data["self.DoNotDropObjectTypesTableValuedFunctions"])
+        self.DoNotDropObjectTypesUserDefinedDataTypes.set(self.open_profile_data["self.DoNotDropObjectTypesUserDefinedDataTypes"])
+        self.DoNotDropObjectTypesUserDefinedTableTypes.set(self.open_profile_data["self.DoNotDropObjectTypesUserDefinedTableTypes"])
+        self.DoNotDropObjectTypesClrUserDefinedTypes.set(self.open_profile_data["self.DoNotDropObjectTypesClrUserDefinedTypes"])
+        self.DoNotDropObjectTypesUsers.set(self.open_profile_data["self.DoNotDropObjectTypesUsers"])
+        self.DoNotDropObjectTypesViews.set(self.open_profile_data["self.DoNotDropObjectTypesViews"])
+        self.DoNotDropObjectTypesXmlSchemaCollections.set(self.open_profile_data["self.DoNotDropObjectTypesXmlSchemaCollections"])
+        self.DoNotDropObjectTypesAudits.set(self.open_profile_data["self.DoNotDropObjectTypesAudits"])
+        self.DoNotDropObjectTypesCredentials.set(self.open_profile_data["self.DoNotDropObjectTypesCredentials"])
+        self.DoNotDropObjectTypesCryptographicProviders.set(self.open_profile_data["self.DoNotDropObjectTypesCryptographicProviders"])
+        self.DoNotDropObjectTypesDatabaseAuditSpecifications.set(self.open_profile_data["self.DoNotDropObjectTypesDatabaseAuditSpecifications"])
+        self.DoNotDropObjectTypesEndpoints.set(self.open_profile_data["self.DoNotDropObjectTypesEndpoints"])
+        self.DoNotDropObjectTypesErrorMessages.set(self.open_profile_data["self.DoNotDropObjectTypesErrorMessages"])
+        self.DoNotDropObjectTypesEventNotifications.set(self.open_profile_data["self.DoNotDropObjectTypesEventNotifications"])
+        self.DoNotDropObjectTypesEventSessions.set(self.open_profile_data["self.DoNotDropObjectTypesEventSessions"])
+        self.DoNotDropObjectTypesLinkedServerLogins.set(self.open_profile_data["self.DoNotDropObjectTypesLinkedServerLogins"])
+        self.DoNotDropObjectTypesLinkedServers.set(self.open_profile_data["self.DoNotDropObjectTypesLinkedServers"])
+        self.DoNotDropObjectTypesLogins.set(self.open_profile_data["self.DoNotDropObjectTypesLogins"])
+        self.DoNotDropObjectTypesRoutes.set(self.open_profile_data["self.DoNotDropObjectTypesRoutes"])
+        self.DoNotDropObjectTypesServerAuditSpecifications.set(self.open_profile_data["self.DoNotDropObjectTypesServerAuditSpecifications"])
+        self.DoNotDropObjectTypesServerRoleMembership.set(self.open_profile_data["self.DoNotDropObjectTypesServerRoleMembership"])
+        self.DoNotDropObjectTypesServerRoles.set(self.open_profile_data["self.DoNotDropObjectTypesServerRoles"])
+        self.DoNotDropObjectTypesServerTriggers.set(self.open_profile_data["self.DoNotDropObjectTypesServerTriggers"])
+
+        self.ExcludeObjectTypesAggregates.set(self.open_profile_data["self.ExcludeObjectTypesAggregates"])
+        self.ExcludeObjectTypesApplicationRoles.set(self.open_profile_data["self.ExcludeObjectTypesApplicationRoles"])
+        self.ExcludeObjectTypesAssemblies.set(self.open_profile_data["self.ExcludeObjectTypesAssemblies"])
+        self.ExcludeObjectTypesAsymmetricKeys.set(self.open_profile_data["self.ExcludeObjectTypesAsymmetricKeys"])
+        self.ExcludeObjectTypesBrokerPriorities.set(self.open_profile_data["self.ExcludeObjectTypesBrokerPriorities"])
+        self.ExcludeObjectTypesCertificates.set(self.open_profile_data["self.ExcludeObjectTypesCertificates"])
+        self.ExcludeObjectTypesContracts.set(self.open_profile_data["self.ExcludeObjectTypesContracts"])
+        self.ExcludeObjectTypesDatabaseRoles.set(self.open_profile_data["self.ExcludeObjectTypesDatabaseRoles"])
+        self.ExcludeObjectTypesDatabaseTriggers.set(self.open_profile_data["self.ExcludeObjectTypesDatabaseTriggers"])
+        self.ExcludeObjectTypesDefaults.set(self.open_profile_data["self.ExcludeObjectTypesDefaults"])
+        self.ExcludeObjectTypesExtendedProperties.set(self.open_profile_data["self.ExcludeObjectTypesExtendedProperties"])
+        self.ExcludeObjectTypesFilegroups.set(self.open_profile_data["self.ExcludeObjectTypesFilegroups"])
+        self.ExcludeObjectTypesFileTables.set(self.open_profile_data["self.ExcludeObjectTypesFileTables"])
+        self.ExcludeObjectTypesFullTextCatalogs.set(self.open_profile_data["self.ExcludeObjectTypesFullTextCatalogs"])
+        self.ExcludeObjectTypesFullTextStoplists.set(self.open_profile_data["self.ExcludeObjectTypesFullTextStoplists"])
+        self.ExcludeObjectTypesMessageTypes.set(self.open_profile_data["self.ExcludeObjectTypesMessageTypes"])
+        self.ExcludeObjectTypesPartitionFunctions.set(self.open_profile_data["self.ExcludeObjectTypesPartitionFunctions"])
+        self.ExcludeObjectTypesPartitionSchemes.set(self.open_profile_data["self.ExcludeObjectTypesPartitionSchemes"])
+        self.ExcludeObjectTypesPermissions.set(self.open_profile_data["self.ExcludeObjectTypesPermissions"])
+        self.ExcludeObjectTypesQueues.set(self.open_profile_data["self.ExcludeObjectTypesQueues"])
+        self.ExcludeObjectTypesRemoteServiceBindings.set(self.open_profile_data["self.ExcludeObjectTypesRemoteServiceBindings"])
+        self.ExcludeObjectTypesRoleMembership.set(self.open_profile_data["self.ExcludeObjectTypesRoleMembership"])
+        self.ExcludeObjectTypesRules.set(self.open_profile_data["self.ExcludeObjectTypesRules"])
+        self.ExcludeObjectTypesScalarValuedFunctions.set(self.open_profile_data["self.ExcludeObjectTypesScalarValuedFunctions"])
+        self.ExcludeObjectTypesSearchPropertyLists.set(self.open_profile_data["self.ExcludeObjectTypesSearchPropertyLists"])
+        self.ExcludeObjectTypesSequences.set(self.open_profile_data["self.ExcludeObjectTypesSequences"])
+        self.ExcludeObjectTypesServices.set(self.open_profile_data["self.ExcludeObjectTypesServices"])
+        self.ExcludeObjectTypesSignatures.set(self.open_profile_data["self.ExcludeObjectTypesSignatures"])
+        self.ExcludeObjectTypesStoredProcedures.set(self.open_profile_data["self.ExcludeObjectTypesStoredProcedures"])
+        self.ExcludeObjectTypesSymmetricKeys.set(self.open_profile_data["self.ExcludeObjectTypesSymmetricKeys"])
+        self.ExcludeObjectTypesSynonyms.set(self.open_profile_data["self.ExcludeObjectTypesSynonyms"])
+        self.ExcludeObjectTypesTables.set(self.open_profile_data["self.ExcludeObjectTypesTables"])
+        self.ExcludeObjectTypesTableValuedFunctions.set(self.open_profile_data["self.ExcludeObjectTypesTableValuedFunctions"])
+        self.ExcludeObjectTypesUserDefinedDataTypes.set(self.open_profile_data["self.ExcludeObjectTypesUserDefinedDataTypes"])
+        self.ExcludeObjectTypesUserDefinedTableTypes.set(self.open_profile_data["self.ExcludeObjectTypesUserDefinedTableTypes"])
+        self.ExcludeObjectTypesClrUserDefinedTypes.set(self.open_profile_data["self.ExcludeObjectTypesClrUserDefinedTypes"])
+        self.ExcludeObjectTypesUsers.set(self.open_profile_data["self.ExcludeObjectTypesUsers"])
+        self.ExcludeObjectTypesViews.set(self.open_profile_data["self.ExcludeObjectTypesViews"])
+        self.ExcludeObjectTypesXmlSchemaCollections.set(self.open_profile_data["self.ExcludeObjectTypesXmlSchemaCollections"])
+        self.ExcludeObjectTypesAudits.set(self.open_profile_data["self.ExcludeObjectTypesAudits"])
+        self.ExcludeObjectTypesCredentials.set(self.open_profile_data["self.ExcludeObjectTypesCredentials"])
+        self.ExcludeObjectTypesCryptographicProviders.set(self.open_profile_data["self.ExcludeObjectTypesCryptographicProviders"])
+        self.ExcludeObjectTypesDatabaseAuditSpecifications.set(self.open_profile_data["self.ExcludeObjectTypesDatabaseAuditSpecifications"])
+        self.ExcludeObjectTypesEndpoints.set(self.open_profile_data["self.ExcludeObjectTypesEndpoints"])
+        self.ExcludeObjectTypesErrorMessages.set(self.open_profile_data["self.ExcludeObjectTypesErrorMessages"])
+        self.ExcludeObjectTypesEventNotifications.set(self.open_profile_data["self.ExcludeObjectTypesEventNotifications"])
+        self.ExcludeObjectTypesEventSessions.set(self.open_profile_data["self.ExcludeObjectTypesEventSessions"])
+        self.ExcludeObjectTypesLinkedServerLogins.set(self.open_profile_data["self.ExcludeObjectTypesLinkedServerLogins"])
+        self.ExcludeObjectTypesLinkedServers.set(self.open_profile_data["self.ExcludeObjectTypesLinkedServers"])
+        self.ExcludeObjectTypesLogins.set(self.open_profile_data["self.ExcludeObjectTypesLogins"])
+        self.ExcludeObjectTypesRoutes.set(self.open_profile_data["self.ExcludeObjectTypesRoutes"])
+        self.ExcludeObjectTypesServerAuditSpecifications.set(self.open_profile_data["self.ExcludeObjectTypesServerAuditSpecifications"])
+        self.ExcludeObjectTypesServerRoleMembership.set(self.open_profile_data["self.ExcludeObjectTypesServerRoleMembership"])
+        self.ExcludeObjectTypesServerRoles.set(self.open_profile_data["self.ExcludeObjectTypesServerRoles"])
+        self.ExcludeObjectTypesServerTriggers.set(self.open_profile_data["self.ExcludeObjectTypesServerTriggers"])
+
+        self.SrcCredentials_Visibility()
+        self.TrgtCredentials_Visibility()
+        self.DplyScroll_Visibility()
+
+        self.EnDisScrAllowDropBlockingAssemblies()
+        self.EnDisScrAllowIncompatiblePlatform()
+        self.EnDisScrBackupDatabaseBeforeChanges()
+        self.EnDisScrBlockOnPossibleDataLoss()
+        self.EnDisScrBlockWhenDriftDetected()
+        self.EnDisScrCommandTimeout()
+        self.EnDisScrCommentOutSetVarDeclarations()
+        self.EnDisScrCompareUsingTargetCollation()
+        self.EnDisScrCreateNewDatabase()
+        self.EnDisScrDeployDatabaseInSingleUserMode()
+        self.EnDisScrDisableAndReenableDdlTriggers()
+        self.EnDisScrDoNotAlterChangeDataCaptureObjects()
+        self.EnDisScrDoNotAlterReplicatedObjects()
+        self.EnDisScrDoNotDropObjectTypes()
+        self.EnDisScrDropConstraintsNotInSource()
+        self.EnDisScrDropDmlTriggersNotInSource()
+        self.EnDisScrDropExtendedPropertiesNotInSource()
+        self.EnDisScrDropIndexesNotInSource()
+        self.EnDisScrDropObjectsNotInSource()
+        self.EnDisScrDropPermissionsNotInSource()
+        self.EnDisScrDropRoleMembersNotInSource()
+        self.EnDisScrExcludeObjectTypes()
+        self.EnDisScrGenerateSmartDefaults()
+        self.EnDisScrIgnoreAnsiNulls()
+        self.EnDisScrIgnoreAuthorizer()
+        self.EnDisScrIgnoreColumnCollation()
+        self.EnDisScrIgnoreComments()
+        self.EnDisScrIgnoreCryptographicProviderFilePath()
+        self.EnDisScrIgnoreDdlTriggerOrder()
+        self.EnDisScrIgnoreDdlTriggerState()
+        self.EnDisScrIgnoreDefaultSchema()
+        self.EnDisScrIgnoreDmlTriggerOrder()
+        self.EnDisScrIgnoreDmlTriggerState()
+        self.EnDisScrIgnoreExtendedProperties()
+        self.EnDisScrIgnoreFileAndLogFilePath()
+        self.EnDisScrIgnoreFilegroupPlacement()
+        self.EnDisScrIgnoreFileSize()
+        self.EnDisScrIgnoreFillFactor()
+        self.EnDisScrIgnoreFullTextCatalogFilePath()
+        self.EnDisScrIgnoreIdentitySeed()
+        self.EnDisScrIgnoreIncrement()
+        self.EnDisScrIgnoreIndexOptions()
+        self.EnDisScrIgnoreIndexPadding()
+        self.EnDisScrIgnoreKeywordCasing()
+        self.EnDisScrIgnoreLockHintsOnIndexes()
+        self.EnDisScrIgnoreLoginSids()
+        self.EnDisScrIgnoreNotForReplication()
+        self.EnDisScrIgnoreObjectPlacementOnPartitionScheme()
+        self.EnDisScrIgnorePartitionSchemes()
+        self.EnDisScrIgnorePermissions()
+        self.EnDisScrIgnoreQuotedIdentifiers()
+        self.EnDisScrIgnoreRoleMembership()
+        self.EnDisScrIgnoreRouteLifetime()
+        self.EnDisScrIgnoreSemicolonBetweenStatements()
+        self.EnDisScrIgnoreTableOptions()
+        self.EnDisScrIgnoreUserSettingsObjects()
+        self.EnDisScrIgnoreWhitespace()
+        self.EnDisScrIgnoreWithNocheckOnCheckConstraints()
+        self.EnDisScrIgnoreWithNocheckOnForeignKeys()
+        self.EnDisScrIncludeCompositeObjects()
+        self.EnDisScrIncludeTransactionalScripts()
+        self.EnDisScrNoAlterStatementsToChangeClrTypes()
+        self.EnDisScrPopulateFilesOnFilegroups()
+        self.EnDisScrRegisterDataTierApplication()
+        self.EnDisScrRunDeploymentPlanExecutors()
+        self.EnDisScrScriptDatabaseCollation()
+        self.EnDisScrScriptDatabaseCompatibility()
+        self.EnDisScrScriptDatabaseOptions()
+        self.EnDisScrScriptDeployStateChecks()
+        self.EnDisScrScriptFileSize()
+        self.EnDisScrScriptNewConstraintValidation()
+        self.EnDisScrScriptRefreshModule()
+        self.EnDisScrStorage()
+        self.EnDisScrTreatVerificationErrorsAsWarnings()
+        self.EnDisScrUnmodifiableObjectWarnings()
+        self.EnDisScrVerifyCollationCompatibility()
+        self.EnDisScrVerifyDeployment()
+
+
+    def compare_and_deploy(self):
+        #Query string for Publish
+        #self.CmpExePublishQuery
+
+        # self.SourceServerString = self.SourceServerEntry.get()
+        # self.SourceDatabaseString = self.SourceDatabaseEntry.get()
+
+        # self.TargetServerString = self.TargetServerEntry.get()
+        # self.TargetDatabaseString = self.TargetDatabaseEntry.get()
+
+        # self.PreDeploymentQueryString = self.PreDeploymentText.get(1.0, END)
+
+        self.Prepare_Queries("CompareDeployButton")
+
+        SPPreDeployment = subprocess.Popen(self.CmpExePreDeploymentQuery, stdout=subprocess.PIPE)
+        SPPreDeployment.wait()
+        SPExtract = subprocess.Popen(self.CmpExeExtractQuery,stdout=subprocess.PIPE)
+        SPExtract.wait()
+        SPPublish = subprocess.Popen(self.CmpExePublishQuery,stdout=subprocess.PIPE)
+
+
+        self.ShellOutputPreDeploymentString = SPPreDeployment.communicate()[0]
+        self.ShellOutputExtractString = SPExtract.communicate()[0]
+        self.ShellOutputPublishString = SPPublish.communicate()[0]
+
+        self.InformationString = 'Connection Info:\nSource Server: ' + self.SourceServerEntry.get() + '\nSource Database: ' + self.SourceDatabaseEntry.get() + '\nTarget Server: ' + self.TargetServerEntry.get() + '\nTarget Database: ' + self.TargetDatabaseEntry.get()
+        self.InformationLabel["text"] = self.InformationString
+
+
 root = Tk()
 root.iconbitmap(default='M.ico')
 root.title("Compare and Deploy SQL Server database")
-root.geometry("850x900")
+root.geometry("950x900")
 app = Application(root)
 root.mainloop()
