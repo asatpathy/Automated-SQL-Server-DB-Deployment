@@ -283,11 +283,11 @@ class Application(Frame):
         self.ValueUnmodifiableObjectWarnings = StringVar()
         self.ValueVerifyCollationCompatibility = StringVar()
         self.ValueVerifyDeployment = StringVar()
-        ###########################################################################
-        ###########################################################################
+        #############################################################################
+        #############################################################################
 
 
-        # #Set Values of ScrollOptions ENTRY/DROPDOWN############################################
+        # #Set Values of ScrollOptions ENTRY/DROPDOWN################################
         # ###########################################################################
         # self.ValueAllowDropBlockingAssemblies.set("False")
         # self.ValueAllowIncompatiblePlatform.set("False")
@@ -1197,7 +1197,9 @@ class Application(Frame):
 
         ShellOutputText = Text(ShellOutputWindow, width=100, height=40, wrap=WORD)
         ShellOutputText.grid(row=0, column=1, columnspan=2, sticky=W)
-        ShellOutputText.insert(END, self.ShellOutputPreDeploymentString + self.ShellOutputExtractString + self.ShellOutputPublishString)
+        ShellOutputText.insert(END, self.ShellOutputPreDeploymentString)
+        ShellOutputText.insert(END, self.ShellOutputExtractString)
+        ShellOutputText.insert(END, self.ShellOutputPublishString)
 
         # print("Check Button Allow Drop Block Assemblies: ",self.ChkButtonAllowDropBlockingAssemblies)
         # print("Value Drop Down Allow Drop Block Assemblies",self.ValueAllowDropBlockingAssemblies)
@@ -3894,29 +3896,20 @@ class Application(Frame):
 
 
     def compare_and_deploy(self):
-        #Query string for Publish
-        #self.CmpExePublishQuery
-
-        # self.SourceServerString = self.SourceServerEntry.get()
-        # self.SourceDatabaseString = self.SourceDatabaseEntry.get()
-
-        # self.TargetServerString = self.TargetServerEntry.get()
-        # self.TargetDatabaseString = self.TargetDatabaseEntry.get()
-
-        # self.PreDeploymentQueryString = self.PreDeploymentText.get(1.0, END)
-
         self.Prepare_Queries("CompareDeployButton")
 
-        SPPreDeployment = subprocess.Popen(self.CmpExePreDeploymentQuery, stdout=subprocess.PIPE)
+        SPPreDeployment = subprocess.Popen(self.CmpExePreDeploymentQuery, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         SPPreDeployment.wait()
-        SPExtract = subprocess.Popen(self.CmpExeExtractQuery,stdout=subprocess.PIPE)
-        SPExtract.wait()
-        SPPublish = subprocess.Popen(self.CmpExePublishQuery,stdout=subprocess.PIPE)
 
+        SPExtract = subprocess.Popen(self.CmpExeExtractQuery,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        SPExtract.wait()
+
+        SPPublish = subprocess.Popen(self.CmpExePublishQuery,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         self.ShellOutputPreDeploymentString = SPPreDeployment.communicate()[0]
         self.ShellOutputExtractString = SPExtract.communicate()[0]
         self.ShellOutputPublishString = SPPublish.communicate()[0]
+
 
         self.InformationString = 'Connection Info:\nSource Server: ' + self.SourceServerEntry.get() + '\nSource Database: ' + self.SourceDatabaseEntry.get() + '\nTarget Server: ' + self.TargetServerEntry.get() + '\nTarget Database: ' + self.TargetDatabaseEntry.get()
         self.InformationLabel["text"] = self.InformationString

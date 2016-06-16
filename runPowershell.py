@@ -246,39 +246,71 @@
 # root.mainloop()
 
 
-import json
+# import json
+# import tkinter as tk
+# from tkinter import filedialog
+#
+# x = 'new'
+# y = True
+# z = 1234
+#
+# data = {
+#     'x' : x,
+#     'y' : y,
+#     'z' : z
+# }
+#
+# options = {}
+# options['defaultextension'] = '.json'
+# options['filetypes'] = [('JSON files', '.json'),('All files', '.*')]
+#
+# save_file_path=filedialog.asksaveasfilename(**options)
+#
+# with open(save_file_path, 'w') as f:
+#     json.dump(data,f, indent=4)
+#
+# print(options)
+# print(data)
+#
+# open_file_path = filedialog.askopenfilename(**options)
+#
+# with open(open_file_path, 'r') as f:
+#     config = json.load(f)
+#
+# print(config["x"])
+#
+# root = tk.Tk()
+# root.withdraw()
+
+
+
+
+# !/usr/bin/env python
+
 import tkinter as tk
-from tkinter import filedialog
+import time
 
-x = 'new'
-y = True
-z = 1234
+top = tk.Tk()
 
-data = {
-    'x' : x,
-    'y' : y,
-    'z' : z
-}
 
-options = {}
-options['defaultextension'] = '.json'
-options['filetypes'] = [('JSON files', '.json'),('All files', '.*')]
+def addText():
+    # make first change
+    oldText = L.cget("text")
+    newText = oldText + '\nfirst change'
+    L.configure(text=newText)
 
-save_file_path=filedialog.asksaveasfilename(**options)
+    # wait 2 seconds
+    top.update_idletasks()
+    time.sleep(2)
 
-with open(save_file_path, 'w') as f:
-    json.dump(data,f, indent=4)
+    # make second change
+    newText += '\nsecond change'
+    L.configure(text=newText)
 
-print(options)
-print(data)
 
-open_file_path = filedialog.askopenfilename(**options)
+B = tk.Button(top, text="Change text", command=addText)
+L = tk.Label(top, text='orignal text')
 
-with open(open_file_path, 'r') as f:
-    config = json.load(f)
-
-print(config["x"])
-
-root = tk.Tk()
-root.withdraw()
-
+B.pack()
+L.pack()
+top.mainloop()
