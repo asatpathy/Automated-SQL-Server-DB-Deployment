@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import filedialog
 import subprocess
 import json
+import re
 
 
 class Application(Frame):
@@ -9,6 +10,7 @@ class Application(Frame):
         Frame.__init__(self, master)
         self.grid()
         self.create_widgets()
+        self.create_scrollbar_data()
 
     def create_widgets(self):
         # Declare variables ######################################################
@@ -25,6 +27,7 @@ class Application(Frame):
         self.ShellOutputPreDeploymentString = StringVar()
         self.ShellOutputExtractString = StringVar()
         self.ShellOutputPublishString = StringVar()
+        self.ShellOutputScriptString = StringVar()
 
         self.WinAuthSrcVariable = BooleanVar()
         self.WinAuthSrcVariable.set(True)
@@ -1240,8 +1243,6 @@ class Application(Frame):
         else:
             self.DplyPrpFrame.grid(row=8, column=2, sticky=W)
 
-    def compare_generate_script(self):
-        print("To be implemented")
 
     def DoNotDropObjectTypes(self):
         DoNotDropObjectTypesWindow = Toplevel(width=500, height=700)
@@ -2685,6 +2686,8 @@ class Application(Frame):
         self.CmpExeExtractQuery = 'CompareDeploy\\sqlpackage /Action:Extract /SourceServerName:' + self.SourceServerEntry.get() + ' /SourceDatabaseName:' + self.SourceDatabaseEntry.get()
         # Query string for Publish
         self.CmpExePublishQuery = 'CompareDeploy\\sqlpackage /Action:Publish /SourceFile:CompareDeploy\\temp\\' + self.SourceDatabaseEntry.get() + '.dacpac /TargetServerName:' + self.TargetServerEntry.get() + ' /TargetDatabaseName:' + self.TargetDatabaseEntry.get()
+        #Query string for Script Generation
+        self.CmpExeScriptQuery = 'CompareDeploy\\sqlpackage /Action:Script /SourceFile:CompareDeploy\\temp\\' + self.SourceDatabaseEntry.get() + '.dacpac /TargetServerName:' + self.TargetServerEntry.get() + ' /TargetDatabaseName:' + self.TargetDatabaseEntry.get() + ' /OutputPath:CompareDeploy\\temp\\' + self.TargetDatabaseEntry.get() + '.sql'
 
         if self.WinAuthSrcVariable.get() is False:
             self.CmpExeExtractQuery += ' /SourceUser:' + self.SourceUsernameEntry.get() + ' /SourcePassword:' + self.SourcePasswordEntry.get()
@@ -2692,6 +2695,7 @@ class Application(Frame):
         if self.WinAuthTrgtVariable.get() is False:
             self.CmpExePreDeploymentQuery += ' -U '+ self.TargetUsernameEntry.get() +' -P '+ self.TargetPasswordEntry.get()
             self.CmpExePublishQuery +=  ' /TargetUser:' + self.TargetUsernameEntry.get() + ' /TargetPassword:' + self.TargetPasswordEntry.get()
+            self.CmpExeScriptQuery +=   ' /TargetUser:' + self.TargetUsernameEntry.get() + ' /TargetPassword:' + self.TargetPasswordEntry.get()
 
         if self.EncryptSrcVariable.get() is True:
             self.CmpExeExtractQuery += ' /SourceEncryptConnection:True '
@@ -2699,6 +2703,7 @@ class Application(Frame):
         if self.EncryptTrgtVariable.get() is True:
             self.CmpExePreDeploymentQuery += ' -N '
             self.CmpExePublishQuery += ' /TargetEncryptConnection:True'
+            self.CmpExeScriptQuery +=  ' /TargetEncryptConnection:True'
 
 
 
@@ -2707,6 +2712,8 @@ class Application(Frame):
 
         self.CmpExeExtractQuery += ' /TargetFile:CompareDeploy\\temp\\' + self.SourceDatabaseEntry.get() + '.dacpac'
         print("self.CmpExeExtractQuery=", self.CmpExeExtractQuery)
+
+        print("self.CmpExeScriptQuery", self.CmpExeScriptQuery)
 
         # self.CmpExePublishQuery += ' /p:ExcludeObjectTypes=RoleMembership;Users /p:ScriptDatabaseOptions=False'
 
@@ -3910,9 +3917,231 @@ class Application(Frame):
         self.ShellOutputExtractString = SPExtract.communicate()[0]
         self.ShellOutputPublishString = SPPublish.communicate()[0]
 
-
         self.InformationString = 'Connection Info:\nSource Server: ' + self.SourceServerEntry.get() + '\nSource Database: ' + self.SourceDatabaseEntry.get() + '\nTarget Server: ' + self.TargetServerEntry.get() + '\nTarget Database: ' + self.TargetDatabaseEntry.get()
         self.InformationLabel["text"] = self.InformationString
+
+
+    def compare_generate_script(self):
+        CompareGenerateWindow = Toplevel(width=700, height=700)
+        CompareGenerateWindow.title("Script")
+        CompareGenerateWindow.grid()
+        self.update_idletasks()
+
+        self.Prepare_Queries("CompareDeployButton")
+
+        CompareGenerateText = Text(CompareGenerateWindow, width=130, height=40, wrap=WORD)
+        CompareGenerateText.grid(row=0, column=1, columnspan=2, sticky=W)
+
+        SPExtract = subprocess.Popen(self.CmpExeExtractQuery, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        SPExtract.wait()
+
+        SPGenerate = subprocess.Popen(self.CmpExeScriptQuery, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        # self.update_idletasks()
+
+        self.ShellOutputExtractString = SPExtract.communicate()[0]
+        self.ShellOutputScriptString = SPGenerate.communicate()[0]
+
+        # exit_codes = [p.wait() for p in (SPExtract, SPGenerate)]
+        #
+        # scriptRead = open('CompareDeploy\\temp\\'+self.TargetDatabaseEntry.get()+'.sql','r')
+
+        with open('CompareDeploy\\temp\\'+self.TargetDatabaseEntry.get()+'.sql', 'r') as f:
+            CompareGenerateText.insert(END, f.read())
+        #
+        # self.update_idletasks()
+
+
+
+    ################################################################################################
+    ################################################################################################
+    ################################## DATA MIGRATION ##############################################
+    ################################################################################################
+    ################################################################################################
+
+
+
+
+
+
+    def create_scrollbar_data(self):
+        self.ChkVarDataMigration = BooleanVar()
+
+        #Function to ENABLE/DISABLE
+        def EnDisScrDataMigration():
+            if self.ChkVarDataMigration.get() is True:
+                self.DataFrame.grid(row=15, column=0, sticky=W)
+
+                DataWidgetsFunction()
+
+            else:
+                self.DataFrame.grid_forget()
+
+        #BUTTON to ENABLE/DISABLE Data Migration
+        ChkDataMigration=Checkbutton(self, text="Perform Data Migration", var=self.ChkVarDataMigration, command=EnDisScrDataMigration)
+        ChkDataMigration.grid(row=14,column=0,sticky=W)
+
+        #Source Tables List
+        self.SourceTables = {}
+
+        #Function to CREATE WIDGETS
+        def DataWidgetsFunction():
+            #PREPARE Query and GET TABLE NAMES
+            GetTableQuery = "sqlcmd -S "+ self.SourceServerEntry.get() +" -d " + self.SourceDatabaseEntry.get() + " -Q \"SELECT s.name + '.' + t.name AS table_name FROM sys.tables t JOIN sys.schemas s ON t.schema_id = s.schema_id ORDER BY s.name + '.' + t.name ASC\""
+            SPGetTables = subprocess.Popen(GetTableQuery, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            GetTableOutputString = SPGetTables.communicate()[0]
+
+            # print(GetTableQuery)
+
+            #EXTRACT TABLE NAMES ONLY
+            self.TablesStringList = re.split(r'\\r\\n',re.sub(r'(\s*)', '', str(GetTableOutputString)))
+
+            #CREATE CHECKBUTTON FOR EACH
+            for i in range(2,len(self.TablesStringList)-3):
+                self.sKey=self.TablesStringList[i]
+                self.SourceTables[self.sKey] = BooleanVar()
+                self.SourceTables[self.sKey].set(False)
+                Checkbutton(DataCanvasFrame, text=self.TablesStringList[i], var=self.SourceTables[self.sKey]).grid(row=i - 2, column=0, sticky=W)
+                # print("self.substituteGetTables[i]=" ,self.TablesStringList[i], " i=", i, " self.sKey=", self.sKey, " self.SourceTables[self.sKey].get()=",self.SourceTables[self.sKey].get(), "\n")
+
+            # self.x = BooleanVar()
+            # self.x.set(True)
+            # Checkbutton(DataCanvasFrame, var=self.x, command=self.EnDisScrAllowDropBlockingAssemblies).grid(row=20, column=0, sticky=W)
+
+        self.delimitedRequiredTables=""
+
+        #FUNCTION on button click to check table dependencies
+        def chkRequiredTablesFn():
+            for sKey in self.SourceTables.keys():
+                if self.SourceTables[sKey].get()==True:
+                    self.delimitedRequiredTables += "'" + sKey + "', "
+
+            print(self.delimitedRequiredTables[:-2])
+
+            GetTableDependenciesQuery = """sqlcmd -S """ + self.SourceServerEntry.get() + """ -d """ + self.SourceDatabaseEntry.get() + """ -Q \"declare @level int      -- Current depth
+                   ,@count int
+
+            -- Step 1: Start with tables that have no FK dependencies
+            --
+            if object_id ('tempdb..#Tables') is not null
+                drop table #Tables
+
+            select s.name + '.' + t.name  as TableName
+                  ,t.object_id            as TableID
+                  ,0                      as Ordinal
+              into #Tables
+              from sys.tables t
+              join sys.schemas s
+                on t.schema_id = s.schema_id
+             where not exists
+                   (select 1
+                      from sys.foreign_keys f
+                     where f.parent_object_id = t.object_id)
+
+            set @count = @@rowcount
+            set @level = 0
+
+
+            -- Step 2: For a given depth this finds tables joined to
+            -- tables at this given depth.  A table can live at multiple
+            -- depths if it has more than one join path into it, so we
+            -- filter these out in step 3 at the end.
+            --
+            while @count > 0 begin
+
+                insert #Tables (
+                       TableName
+                      ,TableID
+                      ,Ordinal
+                )
+                select s.name + '.' + t.name  as TableName
+                      ,t.object_id            as TableID
+                      ,@level + 1             as Ordinal
+                  from sys.tables t
+                  join sys.schemas s
+                    on s.schema_id = t.schema_id
+                 where exists
+                       (select 1
+                          from sys.foreign_keys f
+                          join #Tables tt
+                            on f.referenced_object_id = tt.TableID
+                           and tt.Ordinal = @level
+                           and f.parent_object_id = t.object_id
+                           and f.parent_object_id != f.referenced_object_id)
+                               -- The last line ignores self-joins.  You'll
+                               -- need to deal with these separately
+
+               set @count = @@rowcount
+               set @level = @level + 1
+            end
+
+            -- Step 3: This filters out the maximum depth an object occurs at
+            -- and displays the deepest first.
+            --
+            select t.Ordinal
+                  ,t.TableID
+                  ,t.TableName
+              from #Tables t
+              join (select TableName     as TableName
+                          ,Max (Ordinal) as Ordinal
+                      from #Tables
+                     group by TableName) tt
+                on t.TableName = tt.TableName
+               and t.Ordinal = tt.Ordinal
+               WHERE t.TableName IN ('PreId.ContextStaging', 'ps.Permission_', 'testmgmt.Admin_', 'testmgmt.AdminUserSubject', 'testmonitor.TestMonitor', 'xib.Item', 'xib.ItemDistractorRubric')
+             order by t.Ordinal asc\""""""
+
+            print(GetTableDependenciesQuery)
+            SPGetTableDependencies = subprocess.Popen(GetTableDependenciesQuery, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            GetTableDependenciesString = SPGetTableDependencies.communicate()[0]
+
+            print("GetTableDependenciesString=", GetTableDependenciesString)
+
+
+        #BUTTON to trigger check table dependencies and FUNCTION it calls above it
+        checkRequiredTablesButton=Button(self, text="Check Required Tables",command=chkRequiredTablesFn).grid(row=14,column=1,sticky=W)
+
+
+
+        # self.SourceTables["dbo.test1"].set(False)
+            # Checkbutton(DataCanvasFrame, text=self.substituteGetTables[i], var=self.SourceTables[self.sKey]).grid(row=i - 2, column=0, sticky=W)
+            # print(self.SourceTables[self.TablesStringList[2]].get(), self.TablesStringList[2])
+            #
+            # for machine in SourceTables:
+            #     SourceTables[machine] = Variable()
+            #     l = Checkbutton(DataCanvasFrame, text=machine, var=SourceTables[machine])
+            #     l.pack()
+
+            # temp = substituteGetTables[2]
+            # print("value=",SourceTables[temp].get())
+
+            # temp=substituteGetTables[2]
+            # print(substituteGetTables[2], SourceTables[temp])
+            # SourceTables[temp]=True
+            # print(substituteGetTables[2], SourceTables[temp].get())
+            # print(sub)
+            # print(GetTableQuery)
+            # print(len(sub))
+
+            # Checkbuttons, Labels and option menus #################################
+            #########################################################################
+
+
+        def DataCanvasFunction(event):
+            DataCanvas.configure(scrollregion=DataCanvas.bbox("all"), width=200, height=300)
+
+        self.DataFrame = Frame(self, relief=GROOVE, width=80, height=100, bd=1)
+        # self.DataFrame.grid(row=15, column=0, sticky=W)
+
+        DataCanvas = Canvas(self.DataFrame)
+        DataCanvasFrame = Frame(DataCanvas)
+        DataScrollbar = Scrollbar(self.DataFrame, orient="vertical", command=DataCanvas.yview)
+        DataCanvas.configure(yscrollcommand=DataScrollbar.set)
+
+        DataScrollbar.pack(side="right", fill="y")
+        DataCanvas.pack(side="left")
+        DataCanvas.create_window((0, 0), window=DataCanvasFrame, anchor='nw')
+        DataCanvasFrame.bind("<Configure>", DataCanvasFunction)
 
 
 root = Tk()

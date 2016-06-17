@@ -285,32 +285,81 @@
 
 
 
-# !/usr/bin/env python
+# # !/usr/bin/env python
+#
+# import tkinter as tk
+# import time
+#
+# top = tk.Tk()
+#
+#
+# def addText():
+#     # make first change
+#     oldText = L.cget("text")
+#     newText = oldText + '\nfirst change'
+#     L.configure(text=newText)
+#
+#     # wait 2 seconds
+#     top.update_idletasks()
+#     time.sleep(2)
+#
+#     # make second change
+#     newText += '\nsecond change'
+#     L.configure(text=newText)
+#
+#
+# B = tk.Button(top, text="Change text", command=addText)
+# L = tk.Label(top, text='orignal text')
+#
+# B.pack()
+# L.pack()
+# top.mainloop()
 
-import tkinter as tk
-import time
-
-top = tk.Tk()
 
 
-def addText():
-    # make first change
-    oldText = L.cget("text")
-    newText = oldText + '\nfirst change'
-    L.configure(text=newText)
+# from tkinter import *
+#
+# class Application(Frame):
+#     def __init__(self, master):
+#         Frame.__init__(self, master)
+#         self.grid()
+#         self.Create_Widgets()
+#
+#     def Create_Widgets(self):
+#         for i in range(1, 11):
+#             self.newmessage = Button(self, text="Button ID: %d" % i, command=lambda i=i: self.access(i))
+#             self.newmessage.config(height=3, width=100)
+#             self.newmessage.grid(column=0, row=i, sticky=NW)
+#
+#     def access(self,i):
+#         print("hello",i)
+#
+# root=Tk()
+# app = Application(root)
+# root.mainloop()
 
-    # wait 2 seconds
-    top.update_idletasks()
-    time.sleep(2)
 
-    # make second change
-    newText += '\nsecond change'
-    L.configure(text=newText)
+# from tkinter import *
+# # from tkinter import ttk
+# import xml.etree.ElementTree as ET
+#
+# root = Tk()
+#
+# def Readstatus(key):
+#     print(var.get(key))
+#
+# listTree = ET.parse('test.xml')
+# listRoot = listTree.getroot()
+#
+# var = dict()
+# count=1
+# for child in listRoot:
+#     var[child]=IntVar()
+#     chk = Checkbutton(root, text='Text'+str(count), variable=var[child],
+#                       command=lambda key=child: Readstatus(key))
+#     count += 1
+#     chk.pack()
+#
+# root.mainloop()
 
 
-B = tk.Button(top, text="Change text", command=addText)
-L = tk.Label(top, text='orignal text')
-
-B.pack()
-L.pack()
-top.mainloop()
