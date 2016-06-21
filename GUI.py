@@ -612,14 +612,10 @@ class Application(Frame):
         # ###########################################################################
         # ###########################################################################
 
-        #Options to open JSON file
+        # Options to open JSON file
         self.options = {}
         self.options['defaultextension'] = '.json'
         self.options['filetypes'] = [('JSON files', '.json'), ('All files', '.*')]
-
-
-
-
 
         ########  Widgets  ######################################################################################
         #########################################################################################################
@@ -631,9 +627,9 @@ class Application(Frame):
         self.PreDeploymentText = Text(self, width=40, height=5, wrap=WORD)
         self.PreDeploymentText.grid(row=0, column=1, columnspan=2, sticky=W)
 
-        self.emetricImage=PhotoImage(file="emetric.gif")
-        self.emetricImageLabel=Label(self,image=self.emetricImage)
-        self.emetricImageLabel.grid(row=0,column=3,sticky=W)
+        self.emetricImage = PhotoImage(file="emetric.gif")
+        self.emetricImageLabel = Label(self, image=self.emetricImage)
+        self.emetricImageLabel.grid(row=0, column=3, sticky=W)
 
         # Label and Textbox for Source Connection
         self.SourceServerLabel = Label(self, text="Source Server")
@@ -1165,28 +1161,24 @@ class Application(Frame):
 
         # Button to save profile
         self.SaveProfileButton = Button(self, text="Save Profile", command=self.save_profile)
-        self.SaveProfileButton.grid(row=1,column=4, sticky=W)
+        self.SaveProfileButton.grid(row=1, column=4, sticky=W)
 
         # Button to load profile
         self.LoadProfileButton = Button(self, text="Load Profile", command=self.load_profile)
-        self.LoadProfileButton.grid(row=2,column=4, sticky=W)
+        self.LoadProfileButton.grid(row=2, column=4, sticky=W)
 
         # Connection information
         self.InformationLabel = Label(self, text="Connection Info:", justify=LEFT)
         self.InformationLabel.grid(row=12, column=0, sticky=W)
 
-
-
-
-
     ################################################################################
     # METHODS ######################################################################
     # method that initiates the process to compare & deploy SQL Server database
-    #self.PreDeploymentText.get(1.0, END)
-    #self.SourceServerEntry.get()   |   self.SourceDatabaseEntry.get()
-    #self.TargetServerEntry.get()   |   self.TargetDatabaseEntry.get()
-    #self.SourceUsernameEntry.get() |   self.SourcePasswordEntry.get()
-    #self.TargetUsernameEntry.get() |   self.TargetPasswordEntry.get()
+    # self.PreDeploymentText.get(1.0, END)
+    # self.SourceServerEntry.get()   |   self.SourceDatabaseEntry.get()
+    # self.TargetServerEntry.get()   |   self.TargetDatabaseEntry.get()
+    # self.SourceUsernameEntry.get() |   self.SourcePasswordEntry.get()
+    # self.TargetUsernameEntry.get() |   self.TargetPasswordEntry.get()
 
 
 
@@ -1242,7 +1234,6 @@ class Application(Frame):
 
         else:
             self.DplyPrpFrame.grid(row=8, column=2, sticky=W)
-
 
     def DoNotDropObjectTypes(self):
         DoNotDropObjectTypesWindow = Toplevel(width=500, height=700)
@@ -1868,7 +1859,6 @@ class Application(Frame):
             self.ExcludeObjectTypesServerRoles.set(False)
             self.ExcludeObjectTypesServerTriggers.set(False)
 
-
     def EnDisScrAllowDropBlockingAssemblies(self):
         if self.ChkButtonAllowDropBlockingAssemblies.get() is True:
             self.LblAllowDropBlockingAssemblies.config(state='normal')
@@ -1900,7 +1890,6 @@ class Application(Frame):
             self.LblBackupDatabaseBeforeChanges.config(state='disabled')
             self.EnDisValueBackupDatabaseBeforeChanges.config(state='disabled')
 
-
     def EnDisScrBlockOnPossibleDataLoss(self):
         if self.ChkButtonBlockOnPossibleDataLoss.get() is True:
             self.LblBlockOnPossibleDataLoss.config(state='normal')
@@ -1910,7 +1899,6 @@ class Application(Frame):
             self.ValueBlockOnPossibleDataLoss.set("True")
             self.LblBlockOnPossibleDataLoss.config(state='disabled')
             self.EnDisValueBlockOnPossibleDataLoss.config(state='disabled')
-
 
     def EnDisScrBlockWhenDriftDetected(self):
         if self.ChkButtonBlockWhenDriftDetected.get() is True:
@@ -1922,18 +1910,16 @@ class Application(Frame):
             self.LblBlockWhenDriftDetected.config(state='disabled')
             self.EnDisValueBlockWhenDriftDetected.config(state='disabled')
 
-
     def EnDisScrCommandTimeout(self):
         if self.ChkButtonCommandTimeout.get() is True:
             self.LblCommandTimeout.config(state='normal')
             self.EntryCommandTimeout.config(state='normal')
 
         elif self.ChkButtonCommandTimeout.get() is False:
-            self.EntryCommandTimeout.delete(0,END)
+            self.EntryCommandTimeout.delete(0, END)
             self.EntryCommandTimeout.insert(0, "60")
             self.LblCommandTimeout.config(state='disabled')
             self.EntryCommandTimeout.config(state='disabled')
-
 
     def EnDisScrCommentOutSetVarDeclarations(self):
         if self.ChkButtonCommentOutSetVarDeclarations.get() is True:
@@ -1945,7 +1931,6 @@ class Application(Frame):
             self.LblCommentOutSetVarDeclarations.config(state='disabled')
             self.EnDisValueCommentOutSetVarDeclarations.config(state='disabled')
 
-
     def EnDisScrCompareUsingTargetCollation(self):
         if self.ChkButtonCompareUsingTargetCollation.get() is True:
             self.LblCompareUsingTargetCollation.config(state='normal')
@@ -1955,7 +1940,6 @@ class Application(Frame):
             self.ValueCompareUsingTargetCollation.set("False")
             self.LblCompareUsingTargetCollation.config(state='disabled')
             self.EnDisValueCompareUsingTargetCollation.config(state='disabled')
-
 
     def EnDisScrCreateNewDatabase(self):
         if self.ChkButtonCreateNewDatabase.get() is True:
@@ -1967,7 +1951,6 @@ class Application(Frame):
             self.LblCreateNewDatabase.config(state='disabled')
             self.EnDisValueCreateNewDatabase.config(state='disabled')
 
-
     def EnDisScrDeployDatabaseInSingleUserMode(self):
         if self.ChkButtonDeployDatabaseInSingleUserMode.get() is True:
             self.LblDeployDatabaseInSingleUserMode.config(state='normal')
@@ -1977,7 +1960,6 @@ class Application(Frame):
             self.ValueDeployDatabaseInSingleUserMode.set("False")
             self.LblDeployDatabaseInSingleUserMode.config(state='disabled')
             self.EnDisValueDeployDatabaseInSingleUserMode.config(state='disabled')
-
 
     def EnDisScrDisableAndReenableDdlTriggers(self):
         if self.ChkButtonDisableAndReenableDdlTriggers.get() is True:
@@ -1989,7 +1971,6 @@ class Application(Frame):
             self.LblDisableAndReenableDdlTriggers.config(state='disabled')
             self.EnDisValueDisableAndReenableDdlTriggers.config(state='disabled')
 
-
     def EnDisScrDoNotAlterChangeDataCaptureObjects(self):
         if self.ChkButtonDoNotAlterChangeDataCaptureObjects.get() is True:
             self.LblDoNotAlterChangeDataCaptureObjects.config(state='normal')
@@ -2000,7 +1981,6 @@ class Application(Frame):
             self.LblDoNotAlterChangeDataCaptureObjects.config(state='disabled')
             self.EnDisValueDoNotAlterChangeDataCaptureObjects.config(state='disabled')
 
-
     def EnDisScrDoNotAlterReplicatedObjects(self):
         if self.ChkButtonDoNotAlterReplicatedObjects.get() is True:
             self.LblDoNotAlterReplicatedObjects.config(state='normal')
@@ -2010,7 +1990,6 @@ class Application(Frame):
             self.ValueDoNotAlterReplicatedObjects.set("True")
             self.LblDoNotAlterReplicatedObjects.config(state='disabled')
             self.EnDisValueDoNotAlterReplicatedObjects.config(state='disabled')
-
 
     def EnDisScrDoNotDropObjectTypes(self):
         if self.ChkButtonDoNotDropObjectTypes.get() is True:
@@ -2023,7 +2002,6 @@ class Application(Frame):
             self.LblDoNotDropObjectTypes.config(state='disabled')
             self.EnDisValueDoNotDropObjectTypes.config(state='disabled')
 
-
     def EnDisScrDropConstraintsNotInSource(self):
         if self.ChkButtonDropConstraintsNotInSource.get() is True:
             self.LblDropConstraintsNotInSource.config(state='normal')
@@ -2033,7 +2011,6 @@ class Application(Frame):
             self.ValueDropConstraintsNotInSource.set("True")
             self.LblDropConstraintsNotInSource.config(state='disabled')
             self.EnDisValueDropConstraintsNotInSource.config(state='disabled')
-
 
     def EnDisScrDropDmlTriggersNotInSource(self):
         if self.ChkButtonDropDmlTriggersNotInSource.get() is True:
@@ -2045,7 +2022,6 @@ class Application(Frame):
             self.LblDropDmlTriggersNotInSource.config(state='disabled')
             self.EnDisValueDropDmlTriggersNotInSource.config(state='disabled')
 
-
     def EnDisScrDropExtendedPropertiesNotInSource(self):
         if self.ChkButtonDropExtendedPropertiesNotInSource.get() is True:
             self.LblDropExtendedPropertiesNotInSource.config(state='normal')
@@ -2055,7 +2031,6 @@ class Application(Frame):
             self.ValueDropExtendedPropertiesNotInSource.set("True")
             self.LblDropExtendedPropertiesNotInSource.config(state='disabled')
             self.EnDisValueDropExtendedPropertiesNotInSource.config(state='disabled')
-
 
     def EnDisScrDropIndexesNotInSource(self):
         if self.ChkButtonDropIndexesNotInSource.get() is True:
@@ -2067,7 +2042,6 @@ class Application(Frame):
             self.LblDropIndexesNotInSource.config(state='disabled')
             self.EnDisValueDropIndexesNotInSource.config(state='disabled')
 
-
     def EnDisScrDropObjectsNotInSource(self):
         if self.ChkButtonDropObjectsNotInSource.get() is True:
             self.LblDropObjectsNotInSource.config(state='normal')
@@ -2077,7 +2051,6 @@ class Application(Frame):
             self.ValueDropObjectsNotInSource.set("False")
             self.LblDropObjectsNotInSource.config(state='disabled')
             self.EnDisValueDropObjectsNotInSource.config(state='disabled')
-
 
     def EnDisScrDropPermissionsNotInSource(self):
         if self.ChkButtonDropPermissionsNotInSource.get() is True:
@@ -2089,7 +2062,6 @@ class Application(Frame):
             self.LblDropPermissionsNotInSource.config(state='disabled')
             self.EnDisValueDropPermissionsNotInSource.config(state='disabled')
 
-
     def EnDisScrDropRoleMembersNotInSource(self):
         if self.ChkButtonDropRoleMembersNotInSource.get() is True:
             self.LblDropRoleMembersNotInSource.config(state='normal')
@@ -2099,7 +2071,6 @@ class Application(Frame):
             self.ValueDropRoleMembersNotInSource.set("False")
             self.LblDropRoleMembersNotInSource.config(state='disabled')
             self.EnDisValueDropRoleMembersNotInSource.config(state='disabled')
-
 
     def EnDisScrExcludeObjectTypes(self):
         if self.ChkButtonExcludeObjectTypes.get() is True:
@@ -2112,7 +2083,6 @@ class Application(Frame):
             self.LblExcludeObjectTypes.config(state='disabled')
             self.EnDisValueExcludeObjectTypes.config(state='disabled')
 
-
     def EnDisScrGenerateSmartDefaults(self):
         if self.ChkButtonGenerateSmartDefaults.get() is True:
             self.LblGenerateSmartDefaults.config(state='normal')
@@ -2122,7 +2092,6 @@ class Application(Frame):
             self.ValueGenerateSmartDefaults.set("False")
             self.LblGenerateSmartDefaults.config(state='disabled')
             self.EnDisValueGenerateSmartDefaults.config(state='disabled')
-
 
     def EnDisScrIgnoreAnsiNulls(self):
         if self.ChkButtonIgnoreAnsiNulls.get() is True:
@@ -2134,7 +2103,6 @@ class Application(Frame):
             self.LblIgnoreAnsiNulls.config(state='disabled')
             self.EnDisValueIgnoreAnsiNulls.config(state='disabled')
 
-
     def EnDisScrIgnoreAuthorizer(self):
         if self.ChkButtonIgnoreAuthorizer.get() is True:
             self.LblIgnoreAuthorizer.config(state='normal')
@@ -2144,7 +2112,6 @@ class Application(Frame):
             self.ValueIgnoreAuthorizer.set("False")
             self.LblIgnoreAuthorizer.config(state='disabled')
             self.EnDisValueIgnoreAuthorizer.config(state='disabled')
-
 
     def EnDisScrIgnoreColumnCollation(self):
         if self.ChkButtonIgnoreColumnCollation.get() is True:
@@ -2156,7 +2123,6 @@ class Application(Frame):
             self.LblIgnoreColumnCollation.config(state='disabled')
             self.EnDisValueIgnoreColumnCollation.config(state='disabled')
 
-
     def EnDisScrIgnoreComments(self):
         if self.ChkButtonIgnoreComments.get() is True:
             self.LblIgnoreComments.config(state='normal')
@@ -2166,7 +2132,6 @@ class Application(Frame):
             self.ValueIgnoreComments.set("False")
             self.LblIgnoreComments.config(state='disabled')
             self.EnDisValueIgnoreComments.config(state='disabled')
-
 
     def EnDisScrIgnoreCryptographicProviderFilePath(self):
         if self.ChkButtonIgnoreCryptographicProviderFilePath.get() is True:
@@ -2178,7 +2143,6 @@ class Application(Frame):
             self.LblIgnoreCryptographicProviderFilePath.config(state='disabled')
             self.EnDisValueIgnoreCryptographicProviderFilePath.config(state='disabled')
 
-
     def EnDisScrIgnoreDdlTriggerOrder(self):
         if self.ChkButtonIgnoreDdlTriggerOrder.get() is True:
             self.LblIgnoreDdlTriggerOrder.config(state='normal')
@@ -2188,7 +2152,6 @@ class Application(Frame):
             self.ValueIgnoreDdlTriggerOrder.set("False")
             self.LblIgnoreDdlTriggerOrder.config(state='disabled')
             self.EnDisValueIgnoreDdlTriggerOrder.config(state='disabled')
-
 
     def EnDisScrIgnoreDdlTriggerState(self):
         if self.ChkButtonIgnoreDdlTriggerState.get() is True:
@@ -2200,7 +2163,6 @@ class Application(Frame):
             self.LblIgnoreDdlTriggerState.config(state='disabled')
             self.EnDisValueIgnoreDdlTriggerState.config(state='disabled')
 
-
     def EnDisScrIgnoreDefaultSchema(self):
         if self.ChkButtonIgnoreDefaultSchema.get() is True:
             self.LblIgnoreDefaultSchema.config(state='normal')
@@ -2210,7 +2172,6 @@ class Application(Frame):
             self.ValueIgnoreDefaultSchema.set("False")
             self.LblIgnoreDefaultSchema.config(state='disabled')
             self.EnDisValueIgnoreDefaultSchema.config(state='disabled')
-
 
     def EnDisScrIgnoreDmlTriggerOrder(self):
         if self.ChkButtonIgnoreDmlTriggerOrder.get() is True:
@@ -2222,7 +2183,6 @@ class Application(Frame):
             self.LblIgnoreDmlTriggerOrder.config(state='disabled')
             self.EnDisValueIgnoreDmlTriggerOrder.config(state='disabled')
 
-
     def EnDisScrIgnoreDmlTriggerState(self):
         if self.ChkButtonIgnoreDmlTriggerState.get() is True:
             self.LblIgnoreDmlTriggerState.config(state='normal')
@@ -2232,7 +2192,6 @@ class Application(Frame):
             self.ValueIgnoreDmlTriggerState.set("False")
             self.LblIgnoreDmlTriggerState.config(state='disabled')
             self.EnDisValueIgnoreDmlTriggerState.config(state='disabled')
-
 
     def EnDisScrIgnoreExtendedProperties(self):
         if self.ChkButtonIgnoreExtendedProperties.get() is True:
@@ -2244,7 +2203,6 @@ class Application(Frame):
             self.LblIgnoreExtendedProperties.config(state='disabled')
             self.EnDisValueIgnoreExtendedProperties.config(state='disabled')
 
-
     def EnDisScrIgnoreFileAndLogFilePath(self):
         if self.ChkButtonIgnoreFileAndLogFilePath.get() is True:
             self.LblIgnoreFileAndLogFilePath.config(state='normal')
@@ -2254,7 +2212,6 @@ class Application(Frame):
             self.ValueIgnoreFileAndLogFilePath.set("True")
             self.LblIgnoreFileAndLogFilePath.config(state='disabled')
             self.EnDisValueIgnoreFileAndLogFilePath.config(state='disabled')
-
 
     def EnDisScrIgnoreFilegroupPlacement(self):
         if self.ChkButtonIgnoreFilegroupPlacement.get() is True:
@@ -2266,7 +2223,6 @@ class Application(Frame):
             self.LblIgnoreFilegroupPlacement.config(state='disabled')
             self.EnDisValueIgnoreFilegroupPlacement.config(state='disabled')
 
-
     def EnDisScrIgnoreFileSize(self):
         if self.ChkButtonIgnoreFileSize.get() is True:
             self.LblIgnoreFileSize.config(state='normal')
@@ -2277,7 +2233,6 @@ class Application(Frame):
             self.LblIgnoreFileSize.config(state='disabled')
             self.EnDisValueIgnoreFileSize.config(state='disabled')
 
-
     def EnDisScrIgnoreFillFactor(self):
         if self.ChkButtonIgnoreFillFactor.get() is True:
             self.LblIgnoreFillFactor.config(state='normal')
@@ -2287,7 +2242,6 @@ class Application(Frame):
             self.ValueIgnoreFillFactor.set("True")
             self.LblIgnoreFillFactor.config(state='disabled')
             self.EnDisValueIgnoreFillFactor.config(state='disabled')
-
 
     def EnDisScrIgnoreFullTextCatalogFilePath(self):
         if self.ChkButtonIgnoreFullTextCatalogFilePath.get() is True:
@@ -2680,22 +2634,22 @@ class Application(Frame):
             self.EnDisValueVerifyDeployment.config(state='disabled')
 
     def Prepare_Queries(self, source_button):
-        #Query string for Pre-Deployment
+        # Query string for Pre-Deployment
         self.CmpExePreDeploymentQuery = 'sqlcmd -S ' + self.TargetServerEntry.get()
-        #Query string for Extract
+        # Query string for Extract
         self.CmpExeExtractQuery = 'CompareDeploy\\sqlpackage /Action:Extract /SourceServerName:' + self.SourceServerEntry.get() + ' /SourceDatabaseName:' + self.SourceDatabaseEntry.get()
         # Query string for Publish
         self.CmpExePublishQuery = 'CompareDeploy\\sqlpackage /Action:Publish /SourceFile:CompareDeploy\\temp\\' + self.SourceDatabaseEntry.get() + '.dacpac /TargetServerName:' + self.TargetServerEntry.get() + ' /TargetDatabaseName:' + self.TargetDatabaseEntry.get()
-        #Query string for Script Generation
+        # Query string for Script Generation
         self.CmpExeScriptQuery = 'CompareDeploy\\sqlpackage /Action:Script /SourceFile:CompareDeploy\\temp\\' + self.SourceDatabaseEntry.get() + '.dacpac /TargetServerName:' + self.TargetServerEntry.get() + ' /TargetDatabaseName:' + self.TargetDatabaseEntry.get() + ' /OutputPath:CompareDeploy\\temp\\' + self.TargetDatabaseEntry.get() + '.sql'
 
         if self.WinAuthSrcVariable.get() is False:
             self.CmpExeExtractQuery += ' /SourceUser:' + self.SourceUsernameEntry.get() + ' /SourcePassword:' + self.SourcePasswordEntry.get()
 
         if self.WinAuthTrgtVariable.get() is False:
-            self.CmpExePreDeploymentQuery += ' -U '+ self.TargetUsernameEntry.get() +' -P '+ self.TargetPasswordEntry.get()
-            self.CmpExePublishQuery +=  ' /TargetUser:' + self.TargetUsernameEntry.get() + ' /TargetPassword:' + self.TargetPasswordEntry.get()
-            self.CmpExeScriptQuery +=   ' /TargetUser:' + self.TargetUsernameEntry.get() + ' /TargetPassword:' + self.TargetPasswordEntry.get()
+            self.CmpExePreDeploymentQuery += ' -U ' + self.TargetUsernameEntry.get() + ' -P ' + self.TargetPasswordEntry.get()
+            self.CmpExePublishQuery += ' /TargetUser:' + self.TargetUsernameEntry.get() + ' /TargetPassword:' + self.TargetPasswordEntry.get()
+            self.CmpExeScriptQuery += ' /TargetUser:' + self.TargetUsernameEntry.get() + ' /TargetPassword:' + self.TargetPasswordEntry.get()
 
         if self.EncryptSrcVariable.get() is True:
             self.CmpExeExtractQuery += ' /SourceEncryptConnection:True '
@@ -2703,9 +2657,7 @@ class Application(Frame):
         if self.EncryptTrgtVariable.get() is True:
             self.CmpExePreDeploymentQuery += ' -N '
             self.CmpExePublishQuery += ' /TargetEncryptConnection:True'
-            self.CmpExeScriptQuery +=  ' /TargetEncryptConnection:True'
-
-
+            self.CmpExeScriptQuery += ' /TargetEncryptConnection:True'
 
         self.CmpExePreDeploymentQuery += ' -d master -Q " ' + self.PreDeploymentText.get(1.0, END) + ' "'
         print("self.CmpExePreDeploymentQuery=", self.CmpExePreDeploymentQuery)
@@ -2732,7 +2684,7 @@ class Application(Frame):
         if self.ChkButtonBlockWhenDriftDetected.get() is True and self.ValueBlockWhenDriftDetected.get() == "False":
             self.CmpExePublishQuery += ' /p:BlockWhenDriftDetected=False '
 
-        if self.ChkButtonCommandTimeout.get() is True and  self.EntryCommandTimeout.get()!="60":
+        if self.ChkButtonCommandTimeout.get() is True and self.EntryCommandTimeout.get() != "60":
             self.CmpExePublishQuery += ' /p:CommandTimeout=' + self.EntryCommandTimeout.get() + ' '
 
         if self.ChkButtonCommentOutSetVarDeclarations.get() is True and self.ValueCommentOutSetVarDeclarations.get() == "True":
@@ -3216,9 +3168,8 @@ class Application(Frame):
 
         print("self.CmpExePublishQuery=", self.CmpExePublishQuery)
 
-
     def save_profile(self):
-        self.save_profile_data={
+        self.save_profile_data = {
             'self.PreDeploymentText': self.PreDeploymentText.get(1.0, END),
             'self.SourceServerEntry': self.SourceServerEntry.get(),
             'self.SourceDatabaseEntry': self.SourceDatabaseEntry.get(),
@@ -3509,19 +3460,17 @@ class Application(Frame):
         with open(self.save_file_path, 'w') as f:
             json.dump(self.save_profile_data, f, indent=4)
 
-
-
     def load_profile(self):
         self.open_file_path = filedialog.askopenfilename(**self.options)
 
         with open(self.open_file_path, 'r') as f:
             self.open_profile_data = json.load(f)
 
-        self.PreDeploymentText.delete(1.0,END)
+        self.PreDeploymentText.delete(1.0, END)
         self.PreDeploymentText.insert(END, self.open_profile_data["self.PreDeploymentText"])
 
         self.SourceServerEntry.delete(0, END)
-        self.SourceServerEntry.insert(0,self.open_profile_data["self.SourceServerEntry"])
+        self.SourceServerEntry.insert(0, self.open_profile_data["self.SourceServerEntry"])
 
         self.SourceDatabaseEntry.delete(0, END)
         self.SourceDatabaseEntry.insert(0, self.open_profile_data["self.SourceDatabaseEntry"])
@@ -3901,17 +3850,16 @@ class Application(Frame):
         self.EnDisScrVerifyCollationCompatibility()
         self.EnDisScrVerifyDeployment()
 
-
     def compare_and_deploy(self):
         self.Prepare_Queries("CompareDeployButton")
 
-        SPPreDeployment = subprocess.Popen(self.CmpExePreDeploymentQuery, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        SPPreDeployment = subprocess.Popen(self.CmpExePreDeploymentQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         SPPreDeployment.wait()
 
-        SPExtract = subprocess.Popen(self.CmpExeExtractQuery,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        SPExtract = subprocess.Popen(self.CmpExeExtractQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         SPExtract.wait()
 
-        SPPublish = subprocess.Popen(self.CmpExePublishQuery,stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        SPPublish = subprocess.Popen(self.CmpExePublishQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
         self.ShellOutputPreDeploymentString = SPPreDeployment.communicate()[0]
         self.ShellOutputExtractString = SPExtract.communicate()[0]
@@ -3919,7 +3867,6 @@ class Application(Frame):
 
         self.InformationString = 'Connection Info:\nSource Server: ' + self.SourceServerEntry.get() + '\nSource Database: ' + self.SourceDatabaseEntry.get() + '\nTarget Server: ' + self.TargetServerEntry.get() + '\nTarget Database: ' + self.TargetDatabaseEntry.get()
         self.InformationLabel["text"] = self.InformationString
-
 
     def compare_generate_script(self):
         CompareGenerateWindow = Toplevel(width=700, height=700)
@@ -3932,10 +3879,10 @@ class Application(Frame):
         CompareGenerateText = Text(CompareGenerateWindow, width=130, height=40, wrap=WORD)
         CompareGenerateText.grid(row=0, column=1, columnspan=2, sticky=W)
 
-        SPExtract = subprocess.Popen(self.CmpExeExtractQuery, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        SPExtract = subprocess.Popen(self.CmpExeExtractQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         SPExtract.wait()
 
-        SPGenerate = subprocess.Popen(self.CmpExeScriptQuery, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        SPGenerate = subprocess.Popen(self.CmpExeScriptQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
         # self.update_idletasks()
 
@@ -3946,12 +3893,10 @@ class Application(Frame):
         #
         # scriptRead = open('CompareDeploy\\temp\\'+self.TargetDatabaseEntry.get()+'.sql','r')
 
-        with open('CompareDeploy\\temp\\'+self.TargetDatabaseEntry.get()+'.sql', 'r') as f:
+        with open('CompareDeploy\\temp\\' + self.TargetDatabaseEntry.get() + '.sql', 'r') as f:
             CompareGenerateText.insert(END, f.read())
-        #
-        # self.update_idletasks()
-
-
+            #
+            # self.update_idletasks()
 
     ################################################################################################
     ################################################################################################
@@ -3961,68 +3906,72 @@ class Application(Frame):
 
 
 
-
-
-
     def create_scrollbar_data(self):
         self.ChkVarDataMigration = BooleanVar()
 
-        #Function to ENABLE/DISABLE
+        # Function to ENABLE/DISABLE
         def EnDisScrDataMigration():
             if self.ChkVarDataMigration.get() is True:
                 self.DataFrame.grid(row=15, column=0, sticky=W)
+                chkDependenciesCheckButton.grid(row=16, column=1, sticky=W)
+                GenerateScriptButton.grid(row=17, column=1, sticky=W)
+                DeployDataButton.grid(row=18, column=1, sticky=W)
 
                 DataWidgetsFunction()
 
             else:
                 self.DataFrame.grid_forget()
+                chkDependenciesCheckButton.grid_forget()
+                GenerateScriptButton.grid_forget()
+                DeployDataButton.grid_forget()
+                chkDependenciesLabel.grid_forget()
 
-        #BUTTON to ENABLE/DISABLE Data Migration
-        ChkDataMigration=Checkbutton(self, text="Perform Data Migration", var=self.ChkVarDataMigration, command=EnDisScrDataMigration)
-        ChkDataMigration.grid(row=14,column=0,sticky=W)
+        # BUTTON to ENABLE/DISABLE Data Migration
+        ChkDataMigration = Checkbutton(self, text="Perform Data Migration", var=self.ChkVarDataMigration, command=EnDisScrDataMigration)
+        ChkDataMigration.grid(row=14, column=0, sticky=W)
 
-        #Source Tables List
+        # Source Tables List
         self.SourceTables = {}
 
-        #Function to CREATE WIDGETS
+        # Function to CREATE WIDGETS
         def DataWidgetsFunction():
-            #PREPARE Query and GET TABLE NAMES
-            GetTableQuery = "sqlcmd -S "+ self.SourceServerEntry.get() +" -d " + self.SourceDatabaseEntry.get() + " -Q \"SELECT s.name + '.' + t.name AS table_name FROM sys.tables t JOIN sys.schemas s ON t.schema_id = s.schema_id ORDER BY s.name + '.' + t.name ASC\""
-            SPGetTables = subprocess.Popen(GetTableQuery, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # PREPARE Query and GET TABLE NAMES
+            GetTableQuery = "sqlcmd -S " + self.SourceServerEntry.get() + " -d " + self.SourceDatabaseEntry.get() + " -Q \"SELECT s.name + '.' + t.name AS table_name FROM sys.tables t JOIN sys.schemas s ON t.schema_id = s.schema_id ORDER BY s.name + '.' + t.name ASC\""
+            SPGetTables = subprocess.Popen(GetTableQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             GetTableOutputString = SPGetTables.communicate()[0]
 
             # print(GetTableQuery)
 
-            #EXTRACT TABLE NAMES ONLY
-            self.TablesStringList = re.split(r'\\r\\n',re.sub(r'(\s*)', '', str(GetTableOutputString)))
+            # EXTRACT TABLE NAMES ONLY
+            self.TablesStringList = re.split(r'\\r\\n', re.sub(r'(\s*)', '', str(GetTableOutputString)))
 
-            #CREATE CHECKBUTTON FOR EACH
-            for i in range(2,len(self.TablesStringList)-3):
-                self.sKey=self.TablesStringList[i]
+            # CREATE CHECKBUTTON FOR EACH
+            for i in range(2, len(self.TablesStringList) - 3):
+                self.sKey = self.TablesStringList[i]
                 self.SourceTables[self.sKey] = BooleanVar()
                 self.SourceTables[self.sKey].set(False)
                 Checkbutton(DataCanvasFrame, text=self.TablesStringList[i], var=self.SourceTables[self.sKey]).grid(row=i - 2, column=0, sticky=W)
                 # print("self.substituteGetTables[i]=" ,self.TablesStringList[i], " i=", i, " self.sKey=", self.sKey, " self.SourceTables[self.sKey].get()=",self.SourceTables[self.sKey].get(), "\n")
 
-            # self.x = BooleanVar()
-            # self.x.set(True)
-            # Checkbutton(DataCanvasFrame, var=self.x, command=self.EnDisScrAllowDropBlockingAssemblies).grid(row=20, column=0, sticky=W)
+                # self.x = BooleanVar()
+                # self.x.set(True)
+                # Checkbutton(DataCanvasFrame, var=self.x, command=self.EnDisScrAllowDropBlockingAssemblies).grid(row=20, column=0, sticky=W)
 
-        self.delimitedRequiredTables=""
+        self.delimitedRequiredTables = ""
+        self.OrderedTables = ""
+        self.TableDiffDependenciesOrder = BooleanVar()
+        self.TableDiffDependenciesOrder.set("False")
 
-        #FUNCTION on button click to check table dependencies
+        # FUNCTION on button click to check table dependencies
         def chkRequiredTablesFn():
             for sKey in self.SourceTables.keys():
-                if self.SourceTables[sKey].get()==True:
+                if self.SourceTables[sKey].get() == True:
                     self.delimitedRequiredTables += "'" + sKey + "', "
 
-            print(self.delimitedRequiredTables[:-2])
+            # print(self.delimitedRequiredTables[:-2])
 
             GetTableDependenciesQuery = """sqlcmd -S """ + self.SourceServerEntry.get() + """ -d """ + self.SourceDatabaseEntry.get() + """ -Q \"declare @level int      -- Current depth
                    ,@count int
-
-            -- Step 1: Start with tables that have no FK dependencies
-            --
             if object_id ('tempdb..#Tables') is not null
                 drop table #Tables
 
@@ -4041,12 +3990,6 @@ class Application(Frame):
             set @count = @@rowcount
             set @level = 0
 
-
-            -- Step 2: For a given depth this finds tables joined to
-            -- tables at this given depth.  A table can live at multiple
-            -- depths if it has more than one join path into it, so we
-            -- filter these out in step 3 at the end.
-            --
             while @count > 0 begin
 
                 insert #Tables (
@@ -4068,19 +4011,14 @@ class Application(Frame):
                            and tt.Ordinal = @level
                            and f.parent_object_id = t.object_id
                            and f.parent_object_id != f.referenced_object_id)
-                               -- The last line ignores self-joins.  You'll
-                               -- need to deal with these separately
 
                set @count = @@rowcount
                set @level = @level + 1
             end
 
-            -- Step 3: This filters out the maximum depth an object occurs at
-            -- and displays the deepest first.
-            --
             select t.Ordinal
                   ,t.TableID
-                  ,t.TableName
+                  ,'|' + t.TableName AS TableName
               from #Tables t
               join (select TableName     as TableName
                           ,Max (Ordinal) as Ordinal
@@ -4088,49 +4026,103 @@ class Application(Frame):
                      group by TableName) tt
                 on t.TableName = tt.TableName
                and t.Ordinal = tt.Ordinal
-               WHERE t.TableName IN ('PreId.ContextStaging', 'ps.Permission_', 'testmgmt.Admin_', 'testmgmt.AdminUserSubject', 'testmonitor.TestMonitor', 'xib.Item', 'xib.ItemDistractorRubric')
+               WHERE t.TableName IN (""" + self.delimitedRequiredTables[:-2] + """)
              order by t.Ordinal asc\""""""
 
-            print(GetTableDependenciesQuery)
-            SPGetTableDependencies = subprocess.Popen(GetTableDependenciesQuery, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            # print(GetTableDependenciesQuery)
+            SPGetTableDependencies = subprocess.Popen(GetTableDependenciesQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             GetTableDependenciesString = SPGetTableDependencies.communicate()[0]
 
-            print("GetTableDependenciesString=", GetTableDependenciesString)
+            self.OrderedTables = re.split(r'\\r\\n', re.split(r'OrdinalTableIDTableName', re.sub(r'(\s*)', '', str(GetTableDependenciesString)))[1])
+            print("self.OrderedTables=", self.OrderedTables)
 
+        def TableDiffGenerateQuery():
+            chkRequiredTablesFn()
+            self.save_scripts_directory = filedialog.askdirectory()
+            for i in range(2, len(self.OrderedTables) - 3):
+                TableDiffInsertQuery = "CompareDeploy\\tablediff -sourceserver " + self.SourceServerEntry.get() + " -sourcedatabase " + self.SourceDatabaseEntry.get() + " -sourceschema " + \
+                                       re.split(r'\.', (re.split(r'\|', self.OrderedTables[i])[1]))[0] + " -sourcetable " + re.split(r'\.', (re.split(r'\|', self.OrderedTables[i])[1]))[
+                                           1] + " -destinationserver " + self.TargetServerEntry.get() + " -destinationdatabase " + self.TargetDatabaseEntry.get() + " -destinationschema " + \
+                                       re.split(r'\.', re.split(r'\|', self.OrderedTables[i])[1])[0] + " -destinationtable " + re.split(r'\.', re.split(r'\|', self.OrderedTables[i])[1])[
+                                           1] + " -f \"" + self.save_scripts_directory + "\\" + re.split(r'\|', self.OrderedTables[i])[1] + ".sql\""
+                print(TableDiffInsertQuery)
+                # TableDiffInsertQuery = "sqlcmd -S " + self.SourceServerEntry.get() + " -d " + self.SourceDatabaseEntry.get() + " -Q \"SELECT s.name + '.' + t.name AS table_name FROM sys.tables t JOIN sys.schemas s ON t.schema_id = s.schema_id ORDER BY s.name + '.' + t.name ASC\""
+                SPTableDiffInsert = subprocess.Popen(TableDiffInsertQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                TableDiffInsertString = SPTableDiffInsert.communicate()[0]
 
-        #BUTTON to trigger check table dependencies and FUNCTION it calls above it
-        checkRequiredTablesButton=Button(self, text="Check Required Tables",command=chkRequiredTablesFn).grid(row=14,column=1,sticky=W)
+                print(re.split(r'\|', self.OrderedTables[i])[1])
 
+        def TableDiffDeployData():
+            chkRequiredTablesFn()
+            for i in range(2, len(self.OrderedTables) - 3):
+                TableDiffInsertQuery = "CompareDeploy\\tablediff -sourceserver " + self.SourceServerEntry.get() + " -sourcedatabase " + self.SourceDatabaseEntry.get() + " -sourceschema " + \
+                                       re.split(r'\.', (re.split(r'\|', self.OrderedTables[i])[1]))[0] + " -sourcetable " + re.split(r'\.', (re.split(r'\|', self.OrderedTables[i])[1]))[
+                                           1] + " -destinationserver " + self.TargetServerEntry.get() + " -destinationdatabase " + self.TargetDatabaseEntry.get() + " -destinationschema " + \
+                                       re.split(r'\.', re.split(r'\|', self.OrderedTables[i])[1])[0] + " -destinationtable " + re.split(r'\.', re.split(r'\|', self.OrderedTables[i])[1])[
+                                           1] + " -f CompareDeploy\\temp\\" + re.split(r'\|', self.OrderedTables[i])[1] + ".sql"
+                print(TableDiffInsertQuery)
+                # TableDiffInsertQuery = "sqlcmd -S " + self.SourceServerEntry.get() + " -d " + self.SourceDatabaseEntry.get() + " -Q \"SELECT s.name + '.' + t.name AS table_name FROM sys.tables t JOIN sys.schemas s ON t.schema_id = s.schema_id ORDER BY s.name + '.' + t.name ASC\""
+                SPTableDiffInsert = subprocess.Popen(TableDiffInsertQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                TableDiffInsertString = SPTableDiffInsert.communicate()[0]
 
+                DeployDataQuery = "sqlcmd -S " + self.TargetServerEntry.get() + " -d " + self.TargetDatabaseEntry.get() + " -i CompareDeploy\\temp\\" + re.split(r'\|', self.OrderedTables[i])[
+                    1] + ".sql"
+                print(DeployDataQuery)
+                SPDeployData = subprocess.Popen(DeployDataQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                DeployDataString = SPDeployData.communicate()[0]
+
+                print(re.split(r'\|', self.OrderedTables[i])[1])
+
+        def CheckTableDepFunction():
+            if self.TableDiffDependenciesOrder.get() is True:
+                chkDependenciesLabel.grid(row=15, column=1, sticky=W)
+                print("Hello")
+                chkRequiredTablesFn()
+                for i in range(2, len(self.OrderedTables) - 3):
+                    appendtext = chkDependenciesLabel.cget("text") + '\n' + re.split(r'\|', self.OrderedTables[i])[1]
+                    chkDependenciesLabel.configure(text=appendtext)
+                    print(re.split(r'\|', self.OrderedTables[i])[1])
+            else:
+                chkDependenciesLabel.grid_forget()
+                chkDependenciesLabel.configure(text="Dependencies: \n")
+
+        # BUTTON to trigger check table dependencies and FUNCTION it calls above it
+        chkDependenciesCheckButton = Checkbutton(self, text="Check Table Dependencies", var=self.TableDiffDependenciesOrder, command=CheckTableDepFunction)
+
+        GenerateScriptButton = Button(self, text="Generate Data Migration Script", command=TableDiffGenerateQuery)
+
+        DeployDataButton = Button(self, text="Compare & Migrate data", command=TableDiffDeployData)
+
+        chkDependenciesLabel = Label(self, text="Dependencies: \n", justify=LEFT)
 
         # self.SourceTables["dbo.test1"].set(False)
-            # Checkbutton(DataCanvasFrame, text=self.substituteGetTables[i], var=self.SourceTables[self.sKey]).grid(row=i - 2, column=0, sticky=W)
-            # print(self.SourceTables[self.TablesStringList[2]].get(), self.TablesStringList[2])
-            #
-            # for machine in SourceTables:
-            #     SourceTables[machine] = Variable()
-            #     l = Checkbutton(DataCanvasFrame, text=machine, var=SourceTables[machine])
-            #     l.pack()
+        # Checkbutton(DataCanvasFrame, text=self.substituteGetTables[i], var=self.SourceTables[self.sKey]).grid(row=i - 2, column=0, sticky=W)
+        # print(self.SourceTables[self.TablesStringList[2]].get(), self.TablesStringList[2])
+        #
+        # for machine in SourceTables:
+        #     SourceTables[machine] = Variable()
+        #     l = Checkbutton(DataCanvasFrame, text=machine, var=SourceTables[machine])
+        #     l.pack()
 
-            # temp = substituteGetTables[2]
-            # print("value=",SourceTables[temp].get())
+        # temp = substituteGetTables[2]
+        # print("value=",SourceTables[temp].get())
 
-            # temp=substituteGetTables[2]
-            # print(substituteGetTables[2], SourceTables[temp])
-            # SourceTables[temp]=True
-            # print(substituteGetTables[2], SourceTables[temp].get())
-            # print(sub)
-            # print(GetTableQuery)
-            # print(len(sub))
+        # temp=substituteGetTables[2]
+        # print(substituteGetTables[2], SourceTables[temp])
+        # SourceTables[temp]=True
+        # print(substituteGetTables[2], SourceTables[temp].get())
+        # print(sub)
+        # print(GetTableQuery)
+        # print(len(sub))
 
-            # Checkbuttons, Labels and option menus #################################
-            #########################################################################
+        # Checkbuttons, Labels and option menus #################################
+        #########################################################################
 
 
         def DataCanvasFunction(event):
-            DataCanvas.configure(scrollregion=DataCanvas.bbox("all"), width=200, height=300)
+            DataCanvas.configure(scrollregion=DataCanvas.bbox("all"), width=300, height=300)
 
-        self.DataFrame = Frame(self, relief=GROOVE, width=80, height=100, bd=1)
+        self.DataFrame = Frame(self, relief=GROOVE, width=100, height=100, bd=1)
         # self.DataFrame.grid(row=15, column=0, sticky=W)
 
         DataCanvas = Canvas(self.DataFrame)
@@ -4147,6 +4139,6 @@ class Application(Frame):
 root = Tk()
 root.iconbitmap(default='M.ico')
 root.title("Compare and Deploy SQL Server database")
-root.geometry("950x900")
+root.geometry("1150x900")
 app = Application(root)
 root.mainloop()
