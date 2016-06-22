@@ -2,15 +2,40 @@ from tkinter import *
 from tkinter import filedialog
 import subprocess
 import json
+from collections import deque
+from itertools import islice
+from subprocess import Popen, PIPE, STDOUT
+from threading import Thread
+from queue import Queue, Empty
 import re
 
+def iter_except(function, exception):
+    """Works like builtin 2-argument `iter()`, but stops on `exception`."""
+    try:
+        while True:
+            yield function()
+    except exception:
+        return
 
 class Application(Frame):
     def __init__(self, master):
         Frame.__init__(self, master)
+        self.root = root
         self.grid()
         self.create_widgets()
         self.create_scrollbar_data()
+
+
+
+        self._var = StringVar()
+
+        self.ShellOutputWindow = Toplevel(width=500, height=700)
+        self.ShellOutputWindow.title("Shell Output")
+        self.ShellOutputWindow.grid()
+
+
+        self.ShellOutputText = Text(self.ShellOutputWindow, width=100, height=40, wrap=WORD)
+        self.ShellOutputText.grid(row=0, column=1, columnspan=2, sticky=W)
 
     def create_widgets(self):
         # Declare variables ######################################################
@@ -20,7 +45,7 @@ class Application(Frame):
         # self.TargetServerString = StringVar()
         # self.TargetDatabaseString = StringVar()
 
-        self.InformationString = StringVar()
+        # self.InformationString = StringVar()
 
         # self.PreDeploymentQueryString = StringVar()
 
@@ -1167,9 +1192,9 @@ class Application(Frame):
         self.LoadProfileButton = Button(self, text="Load Profile", command=self.load_profile)
         self.LoadProfileButton.grid(row=2, column=4, sticky=W)
 
-        # Connection information
-        self.InformationLabel = Label(self, text="Connection Info:", justify=LEFT)
-        self.InformationLabel.grid(row=12, column=0, sticky=W)
+        # # Connection information
+        # self.InformationLabel = Label(self, text="Connection Info:", justify=LEFT)
+        # self.InformationLabel.grid(row=12, column=0, sticky=W)
 
     ################################################################################
     # METHODS ######################################################################
@@ -1186,15 +1211,16 @@ class Application(Frame):
     # method to display shell output
     def shell_output(self):
         # Shell output window
-        ShellOutputWindow = Toplevel(width=500, height=700)
-        ShellOutputWindow.title("Shell Output")
-        ShellOutputWindow.grid()
+        self.ShellOutputnewWindow = Toplevel(width=500, height=700)
+        self.ShellOutputnewWindow.title("Shell Output")
+        self.ShellOutputnewWindow.grid()
 
-        ShellOutputText = Text(ShellOutputWindow, width=100, height=40, wrap=WORD)
-        ShellOutputText.grid(row=0, column=1, columnspan=2, sticky=W)
-        ShellOutputText.insert(END, self.ShellOutputPreDeploymentString)
-        ShellOutputText.insert(END, self.ShellOutputExtractString)
-        ShellOutputText.insert(END, self.ShellOutputPublishString)
+
+        self.ShellOutputnewText = Text(self.ShellOutputnewWindow, width=100, height=40, wrap=WORD)
+        self.ShellOutputnewText.grid(row=0, column=1, columnspan=2, sticky=W)
+        self.ShellOutputnewText.insert(END,self.ShellOutputText.get(1.0,END))
+        # ShellOutputText.insert(END, self.ShellOutputExtractString)
+        # ShellOutputText.insert(END, self.ShellOutputPublishString)
 
         # print("Check Button Allow Drop Block Assemblies: ",self.ChkButtonAllowDropBlockingAssemblies)
         # print("Value Drop Down Allow Drop Block Assemblies",self.ValueAllowDropBlockingAssemblies)
@@ -3850,23 +3876,46 @@ class Application(Frame):
         self.EnDisScrVerifyCollationCompatibility()
         self.EnDisScrVerifyDeployment()
 
+
+
     def compare_and_deploy(self):
         self.Prepare_Queries("CompareDeployButton")
 
-        SPPreDeployment = subprocess.Popen(self.CmpExePreDeploymentQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        SPPreDeployment.wait()
+        q = Queue()
+        t = Thread(target=self.reader_thread_CompareDeploy, args=[q])
+        t.start()
+        self.update(q)
 
-        SPExtract = subprocess.Popen(self.CmpExeExtractQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        SPExtract.wait()
+        # # self.SPPreDeployment.wait()\
+        # t.join()
+        #
+        #
+        #
+        # self.SPExtract = Popen(self.CmpExeExtractQuery, stdout=PIPE, stderr=STDOUT)
+        # t = Thread(target=self.reader_thread, args=(q, self.SPExtract))
+        # t.start()
+        # # q = Queue()
+        # self.update(q)
+        #
+        # # self.SPExtract.wait()
+        # t.join()
+        #
+        #
+        #
+        # self.SPPublish = Popen(self.CmpExePublishQuery, stdout=PIPE, stderr=STDOUT)
+        # # q = Queue()
+        # t = Thread(target=self.reader_thread, args=(q,self.SPPublish)).start()
+        # self.update(q)
 
-        SPPublish = subprocess.Popen(self.CmpExePublishQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-        self.ShellOutputPreDeploymentString = SPPreDeployment.communicate()[0]
-        self.ShellOutputExtractString = SPExtract.communicate()[0]
-        self.ShellOutputPublishString = SPPublish.communicate()[0]
 
-        self.InformationString = 'Connection Info:\nSource Server: ' + self.SourceServerEntry.get() + '\nSource Database: ' + self.SourceDatabaseEntry.get() + '\nTarget Server: ' + self.TargetServerEntry.get() + '\nTarget Database: ' + self.TargetDatabaseEntry.get()
-        self.InformationLabel["text"] = self.InformationString
+        # self.ShellOutputPreDeploymentString = SPPreDeployment.communicate()[0]
+        # self.ShellOutputExtractString = SPExtract.communicate()[0]
+        # self.ShellOutputPublishString = SPPublish.communicate()[0]
+
+        # self.InformationString = 'Connection Info:\nSource Server: ' + self.SourceServerEntry.get() + '\nSource Database: ' + self.SourceDatabaseEntry.get() + '\nTarget Server: ' + self.TargetServerEntry.get() + '\nTarget Database: ' + self.TargetDatabaseEntry.get()
+        # self.InformationLabel["text"] = self.InformationString
+
 
     def compare_generate_script(self):
         CompareGenerateWindow = Toplevel(width=700, height=700)
@@ -3876,25 +3925,30 @@ class Application(Frame):
 
         self.Prepare_Queries("CompareDeployButton")
 
-        CompareGenerateText = Text(CompareGenerateWindow, width=130, height=40, wrap=WORD)
-        CompareGenerateText.grid(row=0, column=1, columnspan=2, sticky=W)
+        self.CompareGenerateText = Text(CompareGenerateWindow, width=130, height=40, wrap=WORD)
+        self.CompareGenerateText.grid(row=0, column=1, columnspan=2, sticky=W)
 
-        SPExtract = subprocess.Popen(self.CmpExeExtractQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        SPExtract.wait()
+        # SPExtract = subprocess.Popen(self.CmpExeExtractQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        # SPExtract.wait()
+        #
+        # SPGenerate = subprocess.Popen(self.CmpExeScriptQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-        SPGenerate = subprocess.Popen(self.CmpExeScriptQuery, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        q = Queue()
+        t = Thread(target=self.reader_thread_GenerateScript, args=[q])
+        t.start()
+        self.update(q)
 
         # self.update_idletasks()
 
-        self.ShellOutputExtractString = SPExtract.communicate()[0]
-        self.ShellOutputScriptString = SPGenerate.communicate()[0]
+        # self.ShellOutputExtractString = SPExtract.communicate()[0]
+        # self.ShellOutputScriptString = SPGenerate.communicate()[0]
 
         # exit_codes = [p.wait() for p in (SPExtract, SPGenerate)]
         #
         # scriptRead = open('CompareDeploy\\temp\\'+self.TargetDatabaseEntry.get()+'.sql','r')
 
-        with open('CompareDeploy\\temp\\' + self.TargetDatabaseEntry.get() + '.sql', 'r') as f:
-            CompareGenerateText.insert(END, f.read())
+        # with open('CompareDeploy\\temp\\' + self.TargetDatabaseEntry.get() + '.sql', 'r') as f:
+        #     CompareGenerateText.insert(END, f.read())
             #
             # self.update_idletasks()
 
@@ -4134,6 +4188,78 @@ class Application(Frame):
         DataCanvas.pack(side="left")
         DataCanvas.create_window((0, 0), window=DataCanvasFrame, anchor='nw')
         DataCanvasFrame.bind("<Configure>", DataCanvasFunction)
+
+    def reader_thread_CompareDeploy(self, q):
+        """Read subprocess output and put it into the queue."""
+        self.SPPreDeployment = Popen(self.CmpExePreDeploymentQuery, stdout=PIPE, stderr=STDOUT)
+        for line in iter(self.SPPreDeployment.stdout.readline, b''):
+            q.put(line)
+        print('done reading')
+        self.SPPreDeployment.wait()
+
+        self.SPExtract = Popen(self.CmpExeExtractQuery, stdout=PIPE, stderr=STDOUT)
+        for line in iter(self.SPExtract.stdout.readline, b''):
+            q.put(line)
+        print('done reading')
+        self.SPExtract.wait()
+
+        self.SPPublish = Popen(self.CmpExePublishQuery, stdout=PIPE, stderr=STDOUT)
+        for line in iter(self.SPPublish.stdout.readline, b''):
+            q.put(line)
+        print('done reading')
+        self.SPPublish.wait()
+
+    def reader_thread_GenerateScript(self, q):
+        self.SPExtract = Popen(self.CmpExeExtractQuery, stdout=PIPE, stderr=STDOUT)
+        for line in iter(self.SPExtract.stdout.readline, b''):
+            q.put(line)
+        print('done reading')
+        self.SPExtract.wait()
+
+        self.SPGenerate = Popen(self.CmpExeScriptQuery, stdout=PIPE, stderr=STDOUT)
+        for line in iter(self.SPGenerate.stdout.readline, b''):
+            q.put(line)
+        print('done reading')
+
+        with open('CompareDeploy\\temp\\' + self.TargetDatabaseEntry.get() + '.sql', 'r') as f:
+            self.CompareGenerateText.insert(END, f.read())
+
+
+    def update(self, q):
+        """Update GUI with items from the queue."""
+        # read no more than 10000 lines, use deque to discard lines except the last one,
+        for line in deque(islice(iter_except(q.get_nowait, Empty), 10000), maxlen=1):
+            if line is None:
+                return  # stop updating
+            else:
+                self.ShellOutputText.insert(END, line)
+                self.ShellOutputText.see(END)
+                # newline = self._var.get() + '\n' + (re.sub(r'\\r\\n', '', str(line))[:-1])[2:]
+                # self._var.set(newline)  # update GUI
+
+        self.after(40, self.update, q)  # schedule next update
+
+    def stop(self, PopenProcess):
+        """Stop subprocess and quit GUI."""
+        print('stoping')
+        PopenProcess.terminate()  # tell the subprocess to exit
+
+        # kill subprocess if it hasn't exited after a countdown
+        def kill_after(countdown):
+            if PopenProcess.poll() is None:  # subprocess hasn't exited yet
+                countdown -= 1
+                if countdown < 0:  # do kill
+                    print('killing')
+                    PopenProcess.kill()  # more likely to kill on *nix
+                else:
+                    self.after(1000, kill_after, countdown)
+                    return  # continue countdown in a second
+            # clean up
+            PopenProcess.stdout.close()  # close fd
+            PopenProcess.wait()  # wait for the subprocess' exit
+            self.destroy()  # exit GUI
+
+        kill_after(countdown=5)
 
 
 root = Tk()
